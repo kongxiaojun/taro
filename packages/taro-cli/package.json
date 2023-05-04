@@ -1,6 +1,6 @@
 {
   "name": "@tarojs/cli",
-  "version": "3.6.5",
+  "version": "3.6.6",
   "description": "cli tool for taro",
   "main": "index.js",
   "scripts": {
@@ -67,6 +67,7 @@
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.5",
     "babel-jest": "^29.5.0",
     "jest": "^29.3.1",
     "jest-cli": "^29.3.1",
