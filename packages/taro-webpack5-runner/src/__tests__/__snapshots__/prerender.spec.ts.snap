@@ -557,7 +557,6 @@ require("./runtime");
 
 /** filePath: dist/app.wxss **/
 
-
 /** filePath: dist/base.wxml **/
 <wxs module="xs" src="./utils.wxs" />
 <template name="taro_tmpl">
@@ -7369,9 +7368,7 @@ require("./runtime");
 
 /** filePath: dist/pages/index/index.wxss **/
 
-
 /** filePath: dist/runtime.js **/
-
 
 /** filePath: dist/utils.wxs **/
 module.exports = {
@@ -8456,7 +8453,6 @@ require("./runtime");
 {"pages":["pages/index/index","others/detail/index","others/normal/index"],"window":{"backgroundTextStyle":"light","navigationBarBackgroundColor":"#fff","navigationBarTitleText":"WeChat","navigationBarTextStyle":"black"}}
 
 /** filePath: dist/app.wxss **/
-
 
 /** filePath: dist/base.wxml **/
 <wxs module="xs" src="./utils.wxs" />
@@ -15269,9 +15265,7 @@ require("./runtime");
 
 /** filePath: dist/pages/index/index.wxss **/
 
-
 /** filePath: dist/runtime.js **/
-
 
 /** filePath: dist/utils.wxs **/
 module.exports = {
@@ -16356,7 +16350,6 @@ require("./runtime");
 {"pages":["pages/index/index","others/detail/index","others/normal/index"],"window":{"backgroundTextStyle":"light","navigationBarBackgroundColor":"#fff","navigationBarTitleText":"WeChat","navigationBarTextStyle":"black"}}
 
 /** filePath: dist/app.wxss **/
-
 
 /** filePath: dist/base.wxml **/
 <wxs module="xs" src="./utils.wxs" />
@@ -23169,9 +23162,7 @@ require("./runtime");
 
 /** filePath: dist/pages/index/index.wxss **/
 
-
 /** filePath: dist/runtime.js **/
-
 
 /** filePath: dist/utils.wxs **/
 module.exports = {

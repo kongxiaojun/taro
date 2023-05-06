@@ -400,6 +400,18 @@ importers:
       eslint-plugin-vue: registry.npmjs.org/eslint-plugin-vue/8.7.1_eslint@8.37.0
       typescript: registry.npmjs.org/typescript/4.9.5
 
+  packages/jest-helper:
+    specifiers:
+      '@jest/test-sequencer': ^29.5.0
+      jest-runner: ^29.5.0
+      pretty-format: ^29.5.0
+      typescript: ^4.7.4
+    devDependencies:
+      '@jest/test-sequencer': registry.npmjs.org/@jest/test-sequencer/29.5.0
+      jest-runner: registry.npmjs.org/jest-runner/29.5.0
+      pretty-format: registry.npmjs.org/pretty-format/29.5.0
+      typescript: registry.npmjs.org/typescript/4.9.5
+
   packages/postcss-html-transform:
     specifiers:
       postcss: ^8.4.18
@@ -1163,6 +1175,7 @@ importers:
       jest: ^29.3.1
       jest-cli: ^29.3.1
       jest-environment-node: ^29.5.0
+      jest-taro-helper: workspace:*
       jest-transform-css: ^6.0.1
       jsdom: ^21.1.0
       less: ^4.1.0
@@ -1264,6 +1277,7 @@ importers:
       jest: registry.npmjs.org/jest/29.5.0
       jest-cli: registry.npmjs.org/jest-cli/29.5.0
       jest-environment-node: registry.npmjs.org/jest-environment-node/29.5.0
+      jest-taro-helper: link:../jest-helper
       jest-transform-css: registry.npmjs.org/jest-transform-css/6.0.1_postcss@8.4.21
       memfs: registry.npmjs.org/memfs/3.5.0
       memory-fs: registry.npmjs.org/memory-fs/0.5.0
@@ -1339,7 +1353,7 @@ importers:
 
   packages/taro-plugin-http:
     specifiers:
-      '@rollup/plugin-json': ^4.1.0
+      '@rollup/plugin-json': ^6.0.0
       '@rollup/plugin-node-resolve': ^15.0.1
       '@tarojs/runtime': workspace:*
       '@tarojs/service': workspace:*
@@ -1358,7 +1372,7 @@ importers:
       '@tarojs/service': link:../taro-service
       '@tarojs/shared': link:../shared
     devDependencies:
-      '@rollup/plugin-json': registry.npmjs.org/@rollup/plugin-json/4.1.0_rollup@3.20.2
+      '@rollup/plugin-json': registry.npmjs.org/@rollup/plugin-json/6.0.0_rollup@3.20.2
       '@rollup/plugin-node-resolve': registry.npmjs.org/@rollup/plugin-node-resolve/15.0.2_rollup@3.20.2
       jest: registry.npmjs.org/jest/29.5.0
       jest-cli: registry.npmjs.org/jest-cli/29.5.0
@@ -2143,6 +2157,7 @@ importers:
       jest: ^29.3.1
       jest-cli: ^29.3.1
       jest-environment-node: ^29.5.0
+      jest-taro-helper: workspace:*
       jest-transform-css: ^6.0.1
       less: ^4.1.0
       less-loader: 7.3.0
@@ -2223,6 +2238,7 @@ importers:
       jest: registry.npmjs.org/jest/29.5.0
       jest-cli: registry.npmjs.org/jest-cli/29.5.0
       jest-environment-node: registry.npmjs.org/jest-environment-node/29.5.0
+      jest-taro-helper: link:../jest-helper
       jest-transform-css: registry.npmjs.org/jest-transform-css/6.0.1_postcss@8.4.21
       memfs: registry.npmjs.org/memfs/3.5.0
       memory-fs: registry.npmjs.org/memory-fs/0.5.0
@@ -2302,6 +2318,7 @@ importers:
       jest: ^29.3.1
       jest-cli: ^29.3.1
       jest-environment-node: ^29.5.0
+      jest-taro-helper: workspace:*
       jest-transform-css: ^6.0.1
       jsdom: ^21.1.0
       less: ^4.1.0
@@ -2415,6 +2432,7 @@ importers:
       jest: registry.npmjs.org/jest/29.5.0_gqulfxhyzfqtic2rv7g3qldecm
       jest-cli: registry.npmjs.org/jest-cli/29.5.0_gqulfxhyzfqtic2rv7g3qldecm
       jest-environment-node: registry.npmjs.org/jest-environment-node/29.5.0
+      jest-taro-helper: link:../jest-helper
       jest-transform-css: registry.npmjs.org/jest-transform-css/6.0.1_aesdjsunmf4wiehhujt67my7tu
       memfs: registry.npmjs.org/memfs/3.5.0
       memory-fs: registry.npmjs.org/memory-fs/0.5.0
@@ -8919,15 +8937,19 @@ packages:
       rollup: registry.npmjs.org/rollup/2.79.1
     dev: false
 
-  registry.npmjs.org/@rollup/plugin-json/4.1.0_rollup@3.20.2:
-    resolution: {integrity: sha512-yfLbTdNS6amI/2OpmbiBoW12vngr5NW2jCJVZSBEz+H5KfUJZ2M7sDjk0U6GOOdCWFVScShte29o9NezJ53TPw==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@rollup/plugin-json/-/plugin-json-4.1.0.tgz}
-    id: registry.npmjs.org/@rollup/plugin-json/4.1.0
+  registry.npmjs.org/@rollup/plugin-json/6.0.0_rollup@3.20.2:
+    resolution: {integrity: sha512-i/4C5Jrdr1XUarRhVu27EEwjt4GObltD7c+MkCIpO2QIbojw8MUs+CCTqOphQi3Qtg1FLmYt+l+6YeoIf51J7w==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@rollup/plugin-json/-/plugin-json-6.0.0.tgz}
+    id: registry.npmjs.org/@rollup/plugin-json/6.0.0
     name: '@rollup/plugin-json'
-    version: 4.1.0
+    version: 6.0.0
+    engines: {node: '>=14.0.0'}
     peerDependencies:
-      rollup: ^1.20.0 || ^2.0.0
+      rollup: ^1.20.0||^2.0.0||^3.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
     dependencies:
-      '@rollup/pluginutils': registry.npmjs.org/@rollup/pluginutils/3.1.0_rollup@3.20.2
+      '@rollup/pluginutils': registry.npmjs.org/@rollup/pluginutils/5.0.2_rollup@3.20.2
       rollup: registry.npmjs.org/rollup/3.20.2
     dev: true
 
@@ -9015,21 +9037,6 @@ packages:
       estree-walker: registry.npmjs.org/estree-walker/1.0.1
       picomatch: registry.npmjs.org/picomatch/2.3.1
       rollup: registry.npmjs.org/rollup/2.79.1
-
-  registry.npmjs.org/@rollup/pluginutils/3.1.0_rollup@3.20.2:
-    resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@rollup/pluginutils/-/pluginutils-3.1.0.tgz}
-    id: registry.npmjs.org/@rollup/pluginutils/3.1.0
-    name: '@rollup/pluginutils'
-    version: 3.1.0
-    engines: {node: '>= 8.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0
-    dependencies:
-      '@types/estree': registry.npmjs.org/@types/estree/0.0.39
-      estree-walker: registry.npmjs.org/estree-walker/1.0.1
-      picomatch: registry.npmjs.org/picomatch/2.3.1
-      rollup: registry.npmjs.org/rollup/3.20.2
-    dev: true
 
   registry.npmjs.org/@rollup/pluginutils/5.0.2_rollup@2.79.1:
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@rollup/pluginutils/-/pluginutils-5.0.2.tgz}
@@ -13733,6 +13740,7 @@ packages:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/bindings/-/bindings-1.5.0.tgz}
     name: bindings
     version: 1.5.0
+    requiresBuild: true
     dependencies:
       file-uri-to-path: registry.npmjs.org/file-uri-to-path/1.0.0
     optional: true
@@ -19981,6 +19989,7 @@ packages:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz}
     name: file-uri-to-path
     version: 1.0.0
+    requiresBuild: true
     optional: true
 
   registry.npmjs.org/filelist/1.0.4:
@@ -27431,6 +27440,7 @@ packages:
     resolution: {integrity: sha512-2ZTgtl0nJsO0KQCjEpxcIr5D+Yv90plTitZt9JBfQvVJDS5seMl3FOvsh3+9CoYWXf/1l5OaZzzF6nDm4cagaQ==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/nan/-/nan-2.17.0.tgz}
     name: nan
     version: 2.17.0
+    requiresBuild: true
     optional: true
 
   registry.npmjs.org/nanoid/3.3.6:
@@ -34892,7 +34902,6 @@ packages:
       serialize-javascript: registry.npmjs.org/serialize-javascript/6.0.1
       terser: registry.npmjs.org/terser/5.16.8
       webpack: registry.npmjs.org/webpack/5.78.0
-    dev: true
 
   registry.npmjs.org/terser/4.8.0:
     resolution: {integrity: sha512-EAPipTNeWsb/3wLPeup1tVPaXfIaU68xMnVdPafIL1TV05OhASArYyIfFvnvJCNrR2NIOvDVNNTFRa+Re2MWyw==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/terser/-/terser-4.8.0.tgz}
@@ -36829,7 +36838,7 @@ packages:
       mime-types: registry.npmjs.org/mime-types/2.1.35
       range-parser: registry.npmjs.org/range-parser/1.2.1
       schema-utils: registry.npmjs.org/schema-utils/4.0.0
-      webpack: registry.npmjs.org/webpack/5.78.0_esbuild@0.14.54
+      webpack: registry.npmjs.org/webpack/5.78.0
 
   registry.npmjs.org/webpack-dev-server/3.11.3_webpack@4.46.0:
     resolution: {integrity: sha512-3x31rjbEQWKMNzacUZRE6wXvUFuGpH7vr0lIEbYpMAG9BOxi0928QU1BBswOAP3kg3H1O4hiS+sq4YyAn6ANnA==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/webpack-dev-server/-/webpack-dev-server-3.11.3.tgz}
@@ -36926,7 +36935,7 @@ packages:
       sockjs: registry.npmjs.org/sockjs/0.3.24
       spdy: registry.npmjs.org/spdy/4.0.2
       strip-ansi: registry.npmjs.org/strip-ansi/7.0.1
-      webpack: registry.npmjs.org/webpack/5.78.0_esbuild@0.14.54
+      webpack: registry.npmjs.org/webpack/5.78.0
       webpack-dev-middleware: registry.npmjs.org/webpack-dev-middleware/5.3.3_webpack@5.78.0
       ws: registry.npmjs.org/ws/8.13.0
     transitivePeerDependencies:
@@ -37072,7 +37081,6 @@ packages:
       - '@swc/core'
       - esbuild
       - uglify-js
-    dev: true
 
   registry.npmjs.org/webpack/5.78.0_esbuild@0.14.54:
     resolution: {integrity: sha512-gT5DP72KInmE/3azEaQrISjTvLYlSM0j1Ezhht/KLVkrqtv10JoP/RXhwmX/frrutOPuSq3o5Vq0ehR/4Vmd1g==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/webpack/-/webpack-5.78.0.tgz}
