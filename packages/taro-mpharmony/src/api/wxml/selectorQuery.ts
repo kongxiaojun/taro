@@ -63,7 +63,21 @@ function filter (fields, dom?: HTMLElement, selector?: string) {
     } else if (/^taro-live-player-core/i.test(tagName)) {
       console.error('暂时不支持通过 NodesRef.context 获取 LivePlayerContext')
     } else if (/^taro-editor-core/i.test(tagName)) {
-      console.error('暂时不支持通过 NodesRef.context 获取 EditorContext')
+      console.error(`taro-editor-core: dom=${dom}`)
+      const editor = dom.querySelector('div-editor')
+      try {
+        console.error(`taro-editor-core: dom=${dom}, editor=${editor}`)
+        // eslint no-new-func, see: https://eslint.org/docs/latest/rules/no-new-func
+        // let getContextFunc = new Function('return this.getContext()')
+        // let context = editor && getContextFunc.apply(editor)
+        // if (context) {
+        // return { context: context }
+        // }
+        //
+        // console.error('暂时不支持通过 NodesRef.context 获取 EditorContext')
+      } catch(e) {
+        console.error(`暂时不支持通过 NodesRef.context 获取 EditorContext, ${e}`)
+      }
     } else if (/^taro-map-core/i.test(tagName)) {
       console.error('暂时不支持通过 NodesRef.context 获取 MapContext')
     }

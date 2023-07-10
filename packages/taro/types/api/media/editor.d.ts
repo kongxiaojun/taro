@@ -137,13 +137,22 @@ declare module '../../index' {
       /** 接口调用成功的回调函数 */
       success?: (res: TaroGeneral.CallbackResult) => void
     }
-    interface GetContentsOption {
-      /** 接口调用结束的回调函数（调用成功、失败都会执行） */
-      complete?: (res: TaroGeneral.CallbackResult) => void
-      /** 接口调用失败的回调函数 */
-      fail?: (res: TaroGeneral.CallbackResult) => void
-      /** 接口调用成功的回调函数 */
-      success?: (res: TaroGeneral.CallbackResult) => void
+
+    namespace GetContents {
+      interface Option {
+        /** 接口调用结束的回调函数（调用成功、失败都会执行） */
+        complete?: (res: TaroGeneral.CallbackResult) => void
+        /** 接口调用失败的回调函数 */
+        fail?: (res: TaroGeneral.CallbackResult) => void
+        /** 接口调用成功的回调函数 */
+        success?: (res: SuccessCallbackResult) => void
+      }
+
+      interface SuccessCallbackResult extends TaroGeneral.CallbackResult {
+        html?: string;
+        text?: string;
+        delta?: any;
+      }
     }
     namespace getSelectionText {
       interface Option {
