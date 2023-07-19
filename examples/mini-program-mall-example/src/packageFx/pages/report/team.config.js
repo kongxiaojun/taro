@@ -1,0 +1,4 @@
+export default {
+  navigationBarTitleText: '团队月报表',
+  enablePullDownRefresh: true,
+}

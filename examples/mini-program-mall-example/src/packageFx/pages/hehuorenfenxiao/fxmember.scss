@@ -1,0 +1,35 @@
+/* pages/packageA/pages/vip/fxmember.wxss */
+page{
+  background-color: #F5F5F5;
+}
+.listItem{
+  width: 670px;
+background: #FFFFFF;
+border-radius: 8px;
+  margin-left:20px;
+  margin-top:10px;
+  padding: 20px;
+}
+
+.nickName{
+height: 80px;
+font-size: 26px;
+font-family: PingFangSC-Regular, PingFang SC;
+font-weight: 400;
+color: #333333;
+line-height: 80px;
+margin-left: 20px;
+}
+
+.t1{
+  height: 40px;
+  font-size: 26px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #666666;
+  line-height: 40px;  
+}
+
+.t2{
+  color:#333333;
+}

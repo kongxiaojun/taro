@@ -1,0 +1,127 @@
+page{
+    height: 100%;
+}
+.container{
+    background-color: #f5f5f9;
+    justify-content: initial;
+}
+.form-box{
+    width:100%;
+    background-color: #fff;
+    margin-top: 20px;
+}
+.row-wrap{
+    width: 720px;
+    height: 88px;
+    line-height: 88px;
+    margin-left: 30px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    font-size: 28px;
+    /*justify-content: space-between;*/
+}
+.row-wrap .label{
+    width: 160px;
+    color: #000
+}
+.row-wrap .label-right{
+    flex: 1;
+    height: 88px;
+    line-height: 88px;
+}
+.row-wrap .label-right input{
+    height: 100%;
+    font-size: 28px;
+    padding-right: 30px;
+}
+.row-wrap .right-box{
+    margin-right: 30px;
+}
+.arrow-right{
+    width: 15px;
+    height: 24px;
+}
+.save-btn,
+.cancel-btn{
+    width: 690px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    margin-top:30px;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+.save-btn{
+    background-color: #e64340;
+    color:#fff;
+}
+button[type="default"]{
+    background-color: #ffffff;
+    color:#000;
+}
+.addr-details{
+    height: auto;
+    padding: 30px 0;
+    margin-left:30px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    font-size: 28px;
+}
+.addr-details .label{
+    margin:auto 0 auto 0;
+    width: 160px;
+    color: #000
+}
+.addr-details textarea{
+    box-sizing: border-box;
+    width: 480px;
+    overflow: scroll;
+}
+picker {
+    min-width: 20px;
+    height: 100%;
+    margin-right: 20px;
+}
+.hui{
+    color: #777;
+}
+
+.charge-rule-wrap{
+  background: white;
+  margin-top:20px;
+  padding:10px;
+  padding-left:20px;
+  display: flex;
+  flex-direction:row;
+  flex-wrap:wrap;
+}
+.btn{
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 6px;
+    margin-left: 20px;
+}
+.charge-detail{
+  width:220px;
+  height:100px;
+  color:rgba(99, 190, 133, 1);
+  background-color:white;
+  border:3px solid rgba(99, 190, 133, 1);
+  display:table-cell;
+  line-height:30px;
+  font-weight:300;
+  font-size:30px;
+  margin:10px;
+  align-items:flex-start;
+}
+.charge-detail text{
+  vertical-align:middle;
+  font-size: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top:12px;
+}
+.button-hover{
+  background-color:grey;
+}

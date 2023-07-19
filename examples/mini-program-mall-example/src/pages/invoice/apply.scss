@@ -1,0 +1,61 @@
+page {
+  background-color: #f0f2f6;
+}
+.form {
+  width: 702px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  margin: 24px;
+  display: flex;
+  flex-direction: column;
+}
+.form .title {
+  margin-top: 32px;
+  margin-left: 24px;
+  margin-bottom: 24px;
+  font-family: PingFangSC-Medium;
+  font-size: 30px;
+  color: #333333;
+}
+.form .input {
+  width: 654px;
+  height: 90px;
+  position: relative;
+  margin-left: 24px;
+}
+.form .input view {
+  position: absolute;
+  left: 0;
+  top: 0;
+  line-height: 90px;
+  font-family: PingFangSC-Regular;
+  font-size: 26px;
+  color: #555555;
+}
+.form .input input {
+  border-bottom: 1px solid #E6E6E6;
+  padding-left: 200px;
+  height: 90px;
+}
+.placeholder {
+  font-family: PingFangSC-Regular;
+  font-size: 26px;
+  color: #999999;
+  letter-spacing: -0.82px;
+  line-height: 90px;
+}
+.save-btn {
+  margin: 164px 32px;
+}
+.hasRight {
+  display: flex;
+  justify-content: space-between;
+}
+.hasRight .import {
+  margin-right: 32px;
+  font-size:26px;
+  color: #e64340;
+}
+.go-list {
+  margin-top: 24px;
+}

@@ -1,0 +1,128 @@
+.container{
+    width: 100%;
+    background-color: #F2f2f2;
+}
+.status-box{
+    width:100%;
+    height: 88px;
+    line-height: 88px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+}
+.status-box .status-label{
+    width: 150px;
+    height: 100%;
+    text-align: center;
+    font-size:28px;
+    color:#353535;
+    box-sizing: border-box;
+    position: relative;
+}
+.status-box .status-label.active{
+    color:#e64340;
+    border-bottom: 6px solid #e64340;
+}
+.no-order{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    top: 88px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding-top: 203px;
+    background-color: #F2f2f2;
+}
+.no-order-img{
+    width: 81px;
+    height: 96px;
+    margin-bottom: 31px;
+}
+.no-order .text{
+    font-size:28px;
+    color:#999999;
+    text-align: center
+}
+.order-list{
+    width: 100%;
+}
+.order-list .a-order{
+    width: 100%;
+    background-color: #fff;
+    margin-top: 20px;
+}
+.a-order  .goods-info,
+.goods-img-container{
+    width: 720px;
+    margin-left: 30px;
+    border-top: 1px solid #eee;
+    padding: 30px 0;
+    display: flex;
+    align-items: center;
+}
+.goods-price {
+  font-size:26px;
+  width:720px;
+  text-align: right;
+  margin-bottom:30px;
+}
+.goods-price .p {
+  font-size:36px;
+  color:#e64340;
+}
+.goods-info .img-box{
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    margin-right: 30px;
+    background-color: #f7f7f7;
+}
+.goods-info .img-box .goods-img,
+.goods-img-container .img-box .goods-img{
+    width: 120px;
+    height: 120px;
+}
+.goods-info  .goods-des{
+    font-size:26px;
+    color:#000000;
+}
+.goods-img-container{
+    height: 180px;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+.goods-img-container .img-box{
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    margin-right: 20px;
+    background-color: #f7f7f7;
+    display: inline-block;
+}
+.price-box{
+    width: 720px;
+    display: flex;
+    flex-direction:row-reverse;
+    padding-bottom: 30px;
+}
+.price-box .btn{
+    width: 166px;
+    height: 60px;
+    box-sizing: border-box;
+    text-align: center;
+    line-height: 60px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-left: 20px;
+    font-size:26px;
+}
+.price-box .active{
+    border:2px solid #e64340;
+    color: #e64340;
+}
+.remark {
+  color:#e64340;
+  margin-bottom: 20px;
+}

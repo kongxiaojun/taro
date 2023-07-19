@@ -1,0 +1,15 @@
+.list {
+  display: flex;
+  align-items: center;
+  width: 100vw;
+  padding: 8px 32px;
+  box-sizing: border-box;
+}
+.list .l {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+.list .r {
+  flex: 1;
+}

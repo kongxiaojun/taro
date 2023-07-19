@@ -1,0 +1,41 @@
+.sku-container {
+  box-sizing: border-box;
+  width: 100vw;
+  padding: 32px 32px 0 32px;
+}
+.sku-container .sku {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 24px;
+  margin-bottom: 16px;
+}
+.sku-container .sku .t {
+  color: #333;
+}
+.sku-container .sku .items {
+  display: flex;
+  flex-wrap: wrap;
+}
+.sku-container .sku .items text {
+  padding: 8px 16px;
+  border: 1px solid #eee;
+  color: #666;
+  margin: 24px 24px 0 0;
+  font-size: 26px;
+  border-radius: 8px;
+}
+.sku-container .sku .items text.active {
+  border: 1px solid #e64340;
+  color: #e64340;
+}
+.sku-container .num {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.sku-container .num .t {
+  color: #333;
+}
+.btn {
+  padding: 32px;
+}

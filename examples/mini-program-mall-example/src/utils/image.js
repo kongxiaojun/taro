@@ -1,0 +1,24 @@
+import Taro from '@tarojs/taro'
+function imageUtil(originalWidth, originalHeight) {
+  let imageSize = {}
+  Taro.getSystemInfo({
+    success: function (res) {
+      const windowWidth = res.windowWidth
+      imageSize.x = 0
+      imageSize.y = 0
+      imageSize.windowWidth = windowWidth
+      imageSize.imageWidth = originalWidth
+      imageSize.imageHeight = originalHeight
+      if (originalWidth > windowWidth) {
+        imageSize.imageWidth = windowWidth
+        imageSize.imageHeight = (windowWidth * originalHeight) / originalWidth
+      } else {
+        imageSize.x = (windowWidth - originalWidth) / 2
+      }
+    },
+  })
+  return imageSize
+}
+export default {
+  imageUtil: imageUtil,
+}

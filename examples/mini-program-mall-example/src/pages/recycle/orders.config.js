@@ -1,0 +1,4 @@
+export default {
+  navigationBarTitleText: '回收订单',
+  enablePullDownRefresh: true,
+}

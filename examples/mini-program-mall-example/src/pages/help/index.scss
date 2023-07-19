@@ -1,0 +1,19 @@
+page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+.helpmain {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+.category {
+  width: 176px;
+  height: 100vh;
+  flex-shrink: 0;
+}
+.articles {
+  height: 100vh;
+  flex: 1;
+}

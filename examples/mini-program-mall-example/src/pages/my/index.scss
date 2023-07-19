@@ -1,0 +1,158 @@
+.header-box {
+  padding-right: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #333;
+}
+.header-box-left {
+  display: flex;
+  align-items: center;
+}
+.header-box .avatar {
+  width: 128px;
+  height: 128px;
+  margin: 20px;
+  border-radius: 50%;
+}
+.header-box .avatar-img {
+  width: 128px;
+  height: 128px;
+  margin-left: -30px;
+}
+.header-box .btn {
+  margin-left: 32px;
+}
+.header-box .r {
+  margin-left: 32px;
+  font-size: 28px;
+}
+.header-box .user-code {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.header-box .user-code .txt {
+  font-size: 24px;
+  color: #666;
+}
+
+page,view,image,input {
+  display: block;
+  box-sizing: border-box;
+}
+
+.container{
+  min-height: 100%;
+  overflow: hidden;
+  overflow-y: hidden;
+}
+
+.my-asset {
+  width: 100vw;
+  display: flex;
+  border-top: 2px solid #eee;
+  padding-top:20px;
+  padding-bottom:20px;
+}
+.my-asset .item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: 24px;
+  line-height: 40px;
+  color:#666;
+}
+.my-asset .item .amount {
+  color:#333;
+  font-size: 32px;
+  padding-bottom: 12px;
+}
+.my-asset .right {
+  border-left: 2px solid #eee;
+}
+
+.version {
+  width:100vw;
+	font-size: 24px;
+	text-align: center;
+  padding: 32px;
+}
+.to-authorize{
+  padding: 0px;
+  margin: 0px;
+  background: none;
+  border: none;
+  height: auto;
+  line-height: auto;
+}
+/* 绑定手机号 */
+.bind-phone-number{
+  margin: 20px;
+  width: 100%;
+}
+/* flex重新构建菜单 */
+.menu-item {
+  width: 100vw;
+  height: 104px;
+  padding: 0 32px;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.menu-item .l {
+  font-size:34px;
+  color:#333;
+  line-height:104px;
+}
+.menu-item .r {
+  font-size:32px;
+  color:#999;
+  line-height:104px;
+}
+.menu-item .next {
+  width: 40px;
+  height: 40px;
+}
+.menu-item button {
+  margin: 0;
+}
+.space {
+  width: 100vw;
+  height: 2px;
+  background: #F4F5F9;
+}
+.line {
+  width:1436px;
+  height:2px;
+  background:#EEEEEE;
+  margin-left: 32px;
+}
+
+
+.login-box .logo {
+  width: 200px;
+  margin: 64px 275px;
+}
+.login-box .line {
+  height: 2px;
+  width: 686px;
+  background-color: #ebedf0;
+  margin: 0 32px;
+}
+.login-box .title {
+  margin: 64px 0 0 32px;
+  color: #333;
+  font-size: 36px;
+}
+.login-box .profile {
+  margin: 32px 0 0 32px;
+  color: #999;
+  font-size: 28px;
+}
+.login-box .btn {
+  margin: 88px 32px;
+}

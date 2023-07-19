@@ -1,0 +1,22 @@
+@import '../common/index.scss';
+
+:host {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 100%
+}
+
+.van-tab__pane {
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.van-tab__pane--active {
+  height: 100%
+}
+
+.van-tab__pane--inactive {
+  height: 100%;
+  overflow: visible
+}

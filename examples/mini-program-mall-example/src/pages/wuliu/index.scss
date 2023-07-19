@@ -1,0 +1,90 @@
+page{
+  min-height: 100%;
+  background-color: #F2f2f2;
+}
+.top-sec{
+    background-color: #fff;
+    width: 100%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    padding: 24px 30px;
+}
+.top-sec .a-row{
+    display: flex;
+    font-size: 28px;
+    line-height: 54px;
+}
+.top-sec .a-row .label{
+    color: #999;
+    margin-right: 28px;
+}
+.sec-wrap{
+    width: 100%;
+    background-color: #fff;
+    margin-top: 20px;
+}
+.details-info{
+    position: relative;
+    width: 100%;
+    margin-top: 40px;
+    overflow: hidden;
+}
+.details-info .a-row{
+    margin-left: 40px;
+    display: flex;
+    margin-right: 30px;
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 4;
+}
+.details-info .a-row .info{
+    font-size: 28px;
+}
+.date-box {
+    font-size:26px;
+    color:#999;
+    margin-bottom: 20px;
+}
+.info .text{
+    color: #000;
+    line-height: 42px;
+}
+.dot{
+    width: 30px;
+    height: 30px;
+    margin-right: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+.default-dot{
+    background:#ddd;
+    width:14px;
+    height:14px;
+    border-radius:100%;
+}
+.active-dot{
+    border:2px solid #e64340;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+}
+.active-dot .yuan-red{
+    background:#e64340;
+    width:14px;
+    height:14px;
+    border-radius:50%;
+}
+.line-box{
+    position: absolute;
+    top:-120px;
+    left: 54px;
+    background:#dddddd;
+    width:2px;
+    height:100%;
+}
