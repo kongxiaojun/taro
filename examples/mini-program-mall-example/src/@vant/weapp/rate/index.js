@@ -3,7 +3,6 @@ import React from 'react'
 import Taro from '@tarojs/taro'
 import withWeapp from '@tarojs/with-weapp'
 import utils from '../wxs/utils.wxs.js'
-import style from '../wxs/style.wxs.js'
 import { getAllRect } from '../common/utils.js'
 import { VantComponent } from '../common/component.js'
 import { canIUseModel } from '../common/version.js'
@@ -126,10 +125,10 @@ class _C extends React.Component {
             <View
               className={utils.bem('rate__item')}
               key={item.index}
-              style={style({
+              style={{
                 paddingRight:
                   index !== count - 1 ? utils.addUnit(gutter) : null,
-              })}
+              }}
             >
               <VanIcon
                 name={index + 1 <= innerValue ? icon : voidIcon}
@@ -139,9 +138,9 @@ class _C extends React.Component {
                     full: index + 1 <= innerValue,
                   },
                 ])}
-                style={style({
+                style={{
                   fontSize: utils.addUnit(size),
-                })}
+                }}
                 customClass="icon-class"
                 data-score={index}
                 color={
@@ -163,9 +162,9 @@ class _C extends React.Component {
                       full: index + 0.5 <= innerValue,
                     },
                   ])}
-                  style={style({
+                  style={{
                     fontSize: utils.addUnit(size),
-                  })}
+                  }}
                   customClass="icon-class"
                   data-score={index - 0.5}
                   color={

@@ -241,8 +241,8 @@ function objectToString(style: object | string): string {
  * @returns {String}
  */
 function mergeStyle(
-  style1: object | string,
-  style2: object | string
+  style1: object,
+  style2: object
 ): object | string {
   if (
     style1 &&
@@ -250,9 +250,8 @@ function mergeStyle(
     style2 &&
     typeof style2 === 'object'
   ) {
-    return Object.assign({}, style1, style2)
+    return {...style1, ...style2}
   }
-  return objectToString(style1) + objectToString(style2)
 }
 
 export {

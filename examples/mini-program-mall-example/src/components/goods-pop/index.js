@@ -371,7 +371,7 @@ class _C extends React.Component {
         show={skuCurGoodsShow}
         position="bottom"
         round
-        customStyle="padding-top:32rpx;max-height: 80%;"
+        customStyle={{paddingTop:'32rpx',maxHeight: '80%'}}
         onClose={this.closeSku}
       >
         {skuCurGoods && <VanCard

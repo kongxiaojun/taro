@@ -1,14 +1,15 @@
 /* eslint-disable */
-var style = require('../wxs/style.wxs.js')
 function rootStyle(data) {
-  return style([
-    {
-      '-webkit-transition-duration': data.currentDuration + 'ms',
-      'transition-duration': data.currentDuration + 'ms',
-    },
-    data.display ? null : 'display: none',
-    data.customStyle,
-  ])
+  const style = {
+    'webkitTransitionDuration': data.currentDuration + 'ms',
+    'transitionDuration': data.currentDuration + 'ms',
+    ...data.customStyle
+  }
+  if (!data.display) {
+    style.display = 'none'
+  }
+
+  return style
 }
 module.exports = {
   rootStyle: rootStyle,

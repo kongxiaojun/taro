@@ -565,39 +565,35 @@ class _C extends React.Component {
             popnick,
         } = this.data
 
-        console.log("index app", APP)
+        console.log("index this.data", this.data)
 
         return (
             <Block>
                 <VanSticky>
                     <View className="search-container">
-                        <View
+                      {navHeight && <View
                             className="search"
-                            style={'height:' + navHeight + 'px;padding-top:' + navTop + 'px'}
+                            style={{height: navHeight + 'px', paddingTop: navTop + 'px'}}
                         >
                             <View
                                 className="search-title"
-                                style={
-                                    'height:' +
-                                    (navHeight - navTop - 5) +
-                                    'px;line-height:' +
-                                    (navHeight - navTop - 5) +
-                                    'px;width:' +
-                                    (132 / 52) * (navHeight - navTop - 5) +
-                                    'px;'
-                                }
+                                style={{
+                                  height: (navHeight - navTop - 5) + 'px',
+                                  lineHeight:(navHeight - navTop - 5) + 'px',
+                                  width: (132 / 52) * (navHeight - navTop - 5) + 'px'
+                                }}
                             >
                                 {mallName}
                             </View>
                             <Input
                                 placeholderClass="search-placeholder"
-                                style={
-                                    'width:' +
+                                style={{
+                                    width:
                                     (menuButtonObject.left -
                                         18 -
                                         (132 / 52) * (navHeight - navTop - 5)) +
                                     'px'
-                                }
+                                }}
                                 type="text"
                                 placeholder="输入关键词搜索"
                                 disabled
@@ -605,7 +601,7 @@ class _C extends React.Component {
                                 onInput={this.bindinput}
                                 onClick={this.goSearch}
                             ></Input>
-                        </View>
+                        </View>}
                     </View>
                 </VanSticky>
                 {shopInfo && (
@@ -897,19 +893,19 @@ class _C extends React.Component {
                                         {item.characteristic && (
                                             <View
                                                 className="characteristic van-multi-ellipsis--l2"
-                                                style="-webkit-line-clamp: 1;"
+                                                style={{webkitLineClamp: 1}}
                                             >
                                                 {item.characteristic}
                                             </View>
                                         )}
-                                        <View style="display:flex;">
+                                        <View style={{display:"flex"}}>
                                             <View className="goods-price">
                                                 {'¥ ' + item.minPrice}
                                             </View>
                                             {item.originalPrice && item.originalPrice > 0 ? (
                                                 <View
                                                     className="goods-price"
-                                                    style="color:#aaa;text-decoration:line-through"
+                                                    style={{color:"#aaa",textDecoration:"line-through"}}
                                                 >
                                                     {'¥ ' + item.originalPrice}
                                                 </View>
@@ -1064,7 +1060,7 @@ class _C extends React.Component {
                                     {item.characteristic && (
                                         <View
                                             className="characteristic van-multi-ellipsis--l2"
-                                            style="-webkit-line-clamp: 1;"
+                                            style={{webkitLineClamp: 1}}
                                         >
                                             {item.characteristic}
                                         </View>

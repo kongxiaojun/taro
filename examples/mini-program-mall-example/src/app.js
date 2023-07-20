@@ -79,20 +79,21 @@ const AUTH = require('./utils/auth.js');
     // ---------------检测navbar高度
     // let menuButtonObject = Taro.getMenuButtonBoundingClientRect();
     let menuButtonObject = {
-      width: 87, height: 32, left: 281, top: 48, right: 368, bottom: 80
+      width: 87, height: 32, left: 301, top: 8, right: 388, bottom: 40
     };
     console.log("小程序胶囊信息", menuButtonObject);
     Taro.getSystemInfo({
       success: res => {
-        let statusBarHeight = res.statusBarHeight,
+        console.log("getSystemInfo ", res);
+        let statusBarHeight = res.statusBarHeight ? res.statusBarHeight : 0,
           navTop = menuButtonObject.top,
           //胶囊按钮与顶部的距离
           navHeight = statusBarHeight + menuButtonObject.height + (menuButtonObject.top - statusBarHeight) * 2; //导航高度
-        this.globalData.navHeight = navHeight;
+        this.globalData.navHeight = navHeight ? navHeight : 16;
         this.globalData.navTop = navTop;
         this.globalData.windowHeight = res.windowHeight;
         this.globalData.menuButtonObject = menuButtonObject;
-        console.log("navHeight", navHeight);
+        console.log("navHeight", this.globalData.navHeight);
       },
       fail(err) {
         console.log(err);

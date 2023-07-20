@@ -142,7 +142,7 @@ class _C extends React.Component {
             withaction: showAction || useActionSlot,
           }) + ' custom-class'
         }
-        style={'background: ' + background}
+        style={{background: background}}
       >
         <View className={utils.bem('search__content', [shape])}>
           {label && <View className="van-search__label">{label}</View>}
@@ -166,7 +166,7 @@ class _C extends React.Component {
             inputClass="input-class"
             placeholder={placeholder}
             placeholderStyle={placeholderStyle}
-            customStyle="padding: 5px 10px 5px 0; background-color: transparent;"
+            customStyle={{padding: '5px 10px 5px 0', backgroundColor: 'transparent'}}
             onBlur={this.onBlur}
             onFocus={this.onFocus}
             onChange={this.onChange}

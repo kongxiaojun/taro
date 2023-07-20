@@ -1,19 +1,19 @@
 /* eslint-disable */
-var style = require('../wxs/style.wxs.js')
 function popupStyle(data) {
-  const compStyle = style([
-    {
-      'zIndex': data.zIndex,
-      '-webkit-transition-duration': data.currentDuration + 'ms',
-      'transition-duration': data.currentDuration + 'ms',
-    },
-    data.display ? null : 'display: none',
-    data.customStyle,
-  ])
+  console.log("popupStyle", data.customStyle)
 
-  console.log("popupStyle compStyle", compStyle)
-
-  return compStyle
+  const style = {
+    zIndex: data.zIndex,
+    ...data.customStyle
+  }
+  if (data.currentDuration) {
+    style.webkitTransitionDuration = data.currentDuration + 'ms';
+    style.transitionDuration = data.currentDuration + 'ms';
+  }
+  if (!data.display) {
+    style.display =  'none'
+  }
+  return style
 }
 module.exports = {
   popupStyle: popupStyle,

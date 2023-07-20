@@ -178,7 +178,7 @@ class _C extends React.Component {
         customClass={
           'van-dialog van-dialog--' + theme + className + ' custom-class'
         }
-        customStyle={'width: ' + utils.addUnit(width) + ';' + customStyle}
+        customStyle={{width: utils.addUnit(width), ...customStyle}}
         overlayStyle={overlayStyle}
         closeOnClickOverlay={closeOnClickOverlay}
         onClose={this.onClickOverlay}
@@ -217,7 +217,7 @@ class _C extends React.Component {
                 loading={loading.cancel}
                 className="van-dialog__button van-hairline--right"
                 customClass="van-dialog__cancel"
-                customStyle={'color: ' + cancelButtonColor}
+                customStyle={{color: cancelButtonColor}}
                 onClick={this.onCancel}
               >
                 {cancelButtonText}
@@ -229,7 +229,7 @@ class _C extends React.Component {
                 className="van-dialog__button"
                 loading={loading.confirm}
                 customClass="van-dialog__confirm"
-                customStyle={'color: ' + confirmButtonColor}
+                customStyle={{color: confirmButtonColor}}
                 openType={confirmButtonOpenType}
                 lang={lang}
                 businessId={businessId}
@@ -260,7 +260,7 @@ class _C extends React.Component {
                   loading={loading.cancel}
                   className="van-dialog__button van-hairline--right"
                   customClass="van-dialog__cancel"
-                  customStyle={'color: ' + cancelButtonColor}
+                  customStyle={{color: cancelButtonColor}}
                   onClick={this.onCancel}
                 >
                   {cancelButtonText}
@@ -272,7 +272,7 @@ class _C extends React.Component {
                   className="van-dialog__button"
                   loading={loading.confirm}
                   customClass="van-dialog__confirm"
-                  customStyle={'color: ' + confirmButtonColor}
+                  customStyle={{color: confirmButtonColor}}
                   openType={confirmButtonOpenType}
                   lang={lang}
                   businessId={businessId}

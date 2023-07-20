@@ -1,6 +1,5 @@
 /* eslint-disable */
 var utils = require('../wxs/utils.wxs.js')
-var style = require('../wxs/style.wxs.js')
 function tabClass(active, ellipsis) {
   var classes = ['tab-class']
   if (active) {
@@ -17,48 +16,48 @@ function tabStyle(data) {
 
   // card theme color
   if (data.type === 'card') {
-    return style({
-      'border-color': data.color,
-      'background-color': !data.disabled && data.active ? data.color : null,
+    return {
+      'borderColor': data.color,
+      'backgroundColor': !data.disabled && data.active ? data.color : null,
       color: titleColor || (!data.disabled && !data.active ? data.color : null),
-      'flex-basis': ellipsis ? 88 / data.swipeThreshold + '%' : null,
-    })
+      'flexBasis': ellipsis ? 88 / data.swipeThreshold + '%' : null,
+    }
   }
-  return style({
+  return {
     color: titleColor,
-    'flex-basis': ellipsis ? 88 / data.swipeThreshold + '%' : null,
-  })
+    'flexBasis': ellipsis ? 88 / data.swipeThreshold + '%' : null,
+  }
 }
 function navStyle(color, type) {
-  return style({
-    'border-color': type === 'card' && color ? color : null,
-  })
+  return {
+    'borderColor': type === 'card' && color ? color : null,
+  }
 }
 function trackStyle(data) {
   if (!data.animated) {
-    return ''
+    return {}
   }
-  return style({
+  return {
     left: -100 * data.currentIndex + '%',
-    'transition-duration': data.duration + 's',
-    '-webkit-transition-duration': data.duration + 's',
-  })
+    'transitionDuration': data.duration + 's',
+    'webkitTransitionDuration': data.duration + 's',
+  }
 }
 function lineStyle(data) {
-  return style({
+  return {
     width: utils.addUnit(data.lineWidth),
     opacity: data.inited ? 1 : 0,
     transform: 'translateX(' + data.lineOffsetLeft + 'px)',
-    '-webkit-transform': 'translateX(' + data.lineOffsetLeft + 'px)',
-    'background-color': data.color,
+    'webkitTransform': 'translateX(' + data.lineOffsetLeft + 'px)',
+    'backgroundColor': data.color,
     height: data.lineHeight !== -1 ? utils.addUnit(data.lineHeight) : null,
-    'border-radius':
+    'borderRadius':
       data.lineHeight !== -1 ? utils.addUnit(data.lineHeight) : null,
-    'transition-duration': !data.skipTransition ? data.duration + 's' : null,
-    '-webkit-transition-duration': !data.skipTransition
+    'transitionDuration': !data.skipTransition ? data.duration + 's' : null,
+    'webkitTransitionDuration': !data.skipTransition
       ? data.duration + 's'
       : null,
-  })
+  }
 }
 module.exports = {
   tabClass: tabClass,

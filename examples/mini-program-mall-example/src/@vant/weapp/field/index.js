@@ -244,7 +244,7 @@ class _C extends React.Component {
         required={required}
         clickable={clickable}
         titleWidth={titleWidth}
-        titleStyle="margin-right: 12px;"
+        titleStyle={{marginRight: '12px'}}
         customStyle={customStyle}
         arrowDirection={arrowDirection}
         customClass="van-field"

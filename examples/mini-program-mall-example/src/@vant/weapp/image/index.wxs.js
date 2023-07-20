@@ -1,15 +1,19 @@
 /* eslint-disable */
-var style = require('../wxs/style.wxs.js')
 var addUnit = require('../wxs/add-unit.wxs.js')
 function rootStyle(data) {
-  return style([
-    {
-      width: addUnit(data.width),
-      height: addUnit(data.height),
-      'border-radius': addUnit(data.radius),
-    },
-    data.radius ? 'overflow: hidden' : null,
-  ])
+
+  const style = {
+    width: addUnit(data.width),
+    height: addUnit(data.height),
+    'borderRadius': addUnit(data.radius),
+  }
+
+  if (data.radius) {
+    style.overflow = 'hidden'
+  }
+
+  return style;
+
 }
 var FIT_MODE_MAP = {
   none: 'center',

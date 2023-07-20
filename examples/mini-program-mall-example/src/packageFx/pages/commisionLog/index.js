@@ -152,7 +152,7 @@ class _C extends React.Component {
                     title={'订单号：' + item.orderNumber}
                     value={item.statusStr}
                     label={'购买用户:' + item.buyerUserNick}
-                    titleStyle="flex:3"
+                    titleStyle={{flex:3}}
                   ></VanCell>
                   {item.goodsList.map((g, index) => {
                     return (

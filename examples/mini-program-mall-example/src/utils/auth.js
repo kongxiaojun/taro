@@ -48,19 +48,23 @@ export async function checkHasLogined() {
   return false
 }
 export async function wxaCode() {
+  // return new Promise((resolve, reject) => {
+  //   Taro.login({
+  //     success(res) {
+  //       return resolve(res.code)
+  //     },
+  //     fail() {
+  //       Taro.showToast({
+  //         title: '获取code失败',
+  //         icon: 'none',
+  //       })
+  //       return resolve('获取code失败')
+  //     },
+  //   })
+  // })
+
   return new Promise((resolve, reject) => {
-    Taro.login({
-      success(res) {
-        return resolve(res.code)
-      },
-      fail() {
-        Taro.showToast({
-          title: '获取code失败',
-          icon: 'none',
-        })
-        return resolve('获取code失败')
-      },
-    })
+    return resolve('获取code失败')
   })
 }
 export async function login(page) {

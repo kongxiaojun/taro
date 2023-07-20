@@ -127,6 +127,9 @@ class _C extends React.Component {
       closeIcon,
       closeIconPosition,
     } = this.data
+
+    console.log("VanPopup render", customStyle)
+
     return (
       <Block>
         {overlay && (

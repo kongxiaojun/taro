@@ -1,5 +1,4 @@
 /* eslint-disable */
-var style = require('../wxs/style.wxs.js')
 function rootStyle(data) {
   if (!data.color) {
     return data.customStyle
@@ -13,9 +12,9 @@ function rootStyle(data) {
   if (data.color.indexOf('gradient') !== -1) {
     properties.border = 0
   } else {
-    properties['border-color'] = data.color
+    properties['borderColor'] = data.color
   }
-  return style([properties, data.customStyle])
+  return {...properties, ...data.customStyle}
 }
 function loadingColor(data) {
   if (data.plain) {

@@ -176,12 +176,12 @@ class _C extends React.Component {
                   url={'myusers-detail?id=' + item.uids}
                 ></VanCell>
                 <VanCell
-                  titleStyle="flex:2"
+                  titleStyle={{flex:2}}
                   title="成交额"
                   value={'¥' + (item.totalPayAmount ? item.totalPayAmount : 0)}
                 ></VanCell>
                 <VanCell
-                  titleStyle="flex:2"
+                  titleStyle={{flex:2}}
                   title="订单数"
                   label={
                     '最近下单:' +

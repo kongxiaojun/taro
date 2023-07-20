@@ -1,5 +1,4 @@
 /* eslint-disable */
-var style = require('../wxs/style.wxs.js')
 var addUnit = require('../wxs/add-unit.wxs.js')
 function isImage(name) {
   return name.indexOf('/') !== -1
@@ -20,13 +19,14 @@ function rootClass(data) {
   return classes.join(' ')
 }
 function rootStyle(data) {
-  return style([
-    {
-      color: data.color,
-      'font-size': addUnit(data.size),
-    },
-    data.customStyle,
-  ])
+  const style = {...data.customStyle}
+  if (data.color) {
+    style.color = data.color
+  }
+  if (data.fontSize) {
+    style.fontSize = data.fontSize
+  }
+  return style
 }
 module.exports = {
   isImage: isImage,

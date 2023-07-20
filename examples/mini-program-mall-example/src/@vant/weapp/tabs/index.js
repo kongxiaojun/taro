@@ -394,7 +394,7 @@ class _C extends React.Component {
               scrollWithAnimation={scrollWithAnimation}
               scrollLeft={scrollLeft}
               className={utils.bem('tabs__scroll', [type])}
-              style={color ? 'border-color: ' + color : ''}
+              style={ color ? {borderColor : color} : {}}
             >
               <View
                 className={

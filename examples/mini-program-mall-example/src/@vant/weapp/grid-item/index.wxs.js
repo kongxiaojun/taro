@@ -1,26 +1,25 @@
 /* eslint-disable */
-var style = require('../wxs/style.wxs.js')
 var addUnit = require('../wxs/add-unit.wxs.js')
 function wrapperStyle(data) {
   var width = 100 / data.columnNum + '%'
-  return style({
+  return {
     width: width,
-    'padding-top': data.square ? width : null,
-    'padding-right': addUnit(data.gutter),
-    'margin-top':
+    'paddingTop': data.square ? width : null,
+    'paddingRight': addUnit(data.gutter),
+    'marginTop':
       data.index >= data.columnNum && !data.square
         ? addUnit(data.gutter)
         : null,
-  })
+  }
 }
 function contentStyle(data) {
   return data.square
-    ? style({
-        right: addUnit(data.gutter),
-        bottom: addUnit(data.gutter),
-        height: 'auto',
-      })
-    : ''
+    ? {
+      right: addUnit(data.gutter),
+      bottom: addUnit(data.gutter),
+      height: 'auto',
+    }
+    : {}
 }
 module.exports = {
   wrapperStyle: wrapperStyle,

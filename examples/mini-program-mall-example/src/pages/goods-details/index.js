@@ -1303,7 +1303,7 @@ class _C extends React.Component {
                                             src={videoMp4Src}
                                             autoplay="true"
                                             loop="true"
-                                            style="width:100%;height:100%;"
+                                            style={{width:'100%',height:'100%'}}
                                         ></Video>
                                     </SwiperItem>
                                 )}
@@ -1334,7 +1334,7 @@ class _C extends React.Component {
                                     goodsDetail.basicInfo.originalPrice > 0 ? (
                                         <View
                                             className="goods-price"
-                                            style="color:#aaa;text-decoration:line-through;padding: 15rpx 0rpx 0rpx 15rpx;"
+                                            style={{ color: "#aaa",textDecoration: "line-through",padding: "15rpx 0rpx 0rpx 15rpx"}}
                                         >
                                             <Text>¥</Text>
                                             {selectSizeOPrice}
@@ -1414,7 +1414,7 @@ class _C extends React.Component {
                             <View className="curKanjiaprogress">
                                 <View className="name">
                                     帮
-                                    <Text style="color:red;font-weight:bold;">
+                                    <Text style={{ color: "red",fontWeight: "bold", }}>
                                         {curKanjiaprogress.joiner.nick}
                                     </Text>
                                     砍价吧！
@@ -1468,7 +1468,7 @@ class _C extends React.Component {
                                 <Button
                                     type="warn"
                                     onClick={this.joinKanjia}
-                                    style="width:700rpx;"
+                                    style={{ width: "700rpx", }}
                                 >
                                     我也要报名参与
                                 </Button>
@@ -1476,10 +1476,10 @@ class _C extends React.Component {
                             </Block>
                         )}
                         {pingtuanList && (
-                            <View className="goods-des-info" style="margin-top:35rpx;">
+                            <View className="goods-des-info" style={{ marginTop: "35rpx", }}>
                                 <View
                                     className="label-title"
-                                    style="border-bottom:1px solid #eee;"
+                                    style={{ borderBottom: "1px solid #eee", }}
                                 >
                                     {pingtuanList.length + '人在拼单，可直接参与'}
                                 </View>
@@ -1487,25 +1487,25 @@ class _C extends React.Component {
                                     return (
                                         <View
                                             className="goods-text"
-                                            style="margin-top:15rpx;border-bottom:1px solid #eee;overflow:hidden;"
+                                            style={{ marginTop: "15rpx",borderBottom: "1px solid #eee",overflow: "hidden", }}
                                             key={item.id}
                                         >
-                                            <View style="width:150rpx;float:left;">
+                                            <View style={{ width: "150rpx",float: "left", }}>
                                                 <Image
-                                                    style="width: 150rpx; height: 150rpx;"
+                                                    style={{ width: "150rpx", height: "150rpx", }}
                                                     src={item.apiExtUser.avatarUrl}
                                                 ></Image>
                                                 <View
-                                                    style="width:150rpx;text-align:center;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                                    style={{ width: "150rpx",textAlign: "center",overflow: "hidden",whiteSpace: "nowrap",textOverflow: "ellipsis", }}>
                                                     {item.apiExtUser.nick}
                                                 </View>
                                             </View>
-                                            <View style="width:500rpx;float:left;margin-left:35rpx;">
+                                            <View style={{ width: "500rpx",float: "left",marginLeft: "35rpx", }}>
                                                 <View>
-                                                    已有<Text style="color:red">{item.helpNumber}</Text>
+                                                    已有<Text style={{ color:red }}>{item.helpNumber}</Text>
                                                     人参与
                                                 </View>
-                                                <View style="color: #B0B0B0;font-size:24rpx;">
+                                                <View style={{ color: "#B0B0B0",fontSize: "24rpx", }}>
                                                     {'截止: ' + item.dateEnd}
                                                 </View>
                                                 <Button
@@ -1818,7 +1818,7 @@ class _C extends React.Component {
                     round
                     closeable
                     position="bottom"
-                    customStyle="padding-top:48rpx;max-height: 80%;"
+                    customStyle={{ paddingTop: "48rpx",maxHeight: "80%", }}
                     onClose={this.closePopupTap}
                 >
                     {goodsDetail.basicInfo && <VanCard

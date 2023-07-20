@@ -28,7 +28,7 @@ import './index.scss'
     useSlot: Boolean,
   },
   data: {
-    viewStyle: '',
+    viewStyle: {},
   },
   mounted() {
     this.updateStyle()
