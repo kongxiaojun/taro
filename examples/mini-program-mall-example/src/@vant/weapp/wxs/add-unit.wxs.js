@@ -1,5 +1,5 @@
 /* eslint-disable */
-var REGEXP = /^-?d+(.d+)?$/
+var REGEXP = /^-?\d+(\.\d+)?$/g
 function addUnit(value) {
   if (value == null) {
     return undefined
