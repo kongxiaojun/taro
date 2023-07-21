@@ -78,8 +78,8 @@ class PullDownRefresh extends React.Component<IProps, IState> {
 
   get scrollContainer () {
     return (
-      this.contentRef?.parentElement ||
-      this.contentRef?.closest('.taro_page_stationed') ||
+      this.containerRef?.parentElement ||
+      this.containerRef?.closest('.taro_page_stationed') ||
       document.querySelector('.taro_page_stationed') ||
       document.querySelector('.taro_page') ||
       document.querySelector('.taro_router') ||
@@ -212,7 +212,6 @@ class PullDownRefresh extends React.Component<IProps, IState> {
   onTouchMove = (ele: HTMLElement, e: TouchEvent) => {
     // 使用 pageY 对比有问题
     const _screenY = e.touches[0].screenY
-
     // 拖动方向不符合的不处理
     if (this._startScreenY > _screenY) {
       return
