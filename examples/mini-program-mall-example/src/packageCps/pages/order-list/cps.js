@@ -47,6 +47,7 @@ import GoodsPop from '../../../components/goods-pop/index'
 import Fuwuxieyi from '../../../components/fuwuxieyi/index'
 import './cps.scss'
 import WXAPI from '../../../apifm-wxapi'
+import AtTabs from '../../../at-tabs/AtTabs'
 @withWeapp({
   data: {
     tabIndex: 0,
@@ -56,15 +57,15 @@ import WXAPI from '../../../apifm-wxapi'
     this.cpsJdOrders()
   },
   onShow() {},
-  tabChange(e) {
+  tabChange(index) {
     this.setData({
       page: 1,
-      tabIndex: e.detail.index,
+      tabIndex: index,
     })
-    if (e.detail.index == 0) {
+    if (index == 0) {
       this.cpsJdOrders()
     }
-    if (e.detail.index == 1) {
+    if (index == 1) {
       this.cpsPddOrders()
     }
   },
@@ -124,10 +125,11 @@ class _C extends React.Component {
     return (
       <Block>
         <VanSticky>
-          <VanTabs active={tabIndex} onChange={this.tabChange}>
-            <VanTab title="京东"></VanTab>
-            <VanTab title="拼多多"></VanTab>
-          </VanTabs>
+          <AtTabs current={tabIndex} tabList={[
+            { title: '京东', },
+            { title: '拼多多', }
+          ]} onClick={this.tabChange}>
+          </AtTabs>
         </VanSticky>
         {!list && <VanEmpty description="暂无订单"></VanEmpty>}
         {tabIndex == 0 && (
