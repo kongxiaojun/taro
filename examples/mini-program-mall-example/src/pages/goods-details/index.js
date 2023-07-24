@@ -1294,7 +1294,7 @@ class _C extends React.Component {
                                 className="swiper_box"
                                 indicatorDots="true"
                                 indicatorActiveColor="#fff"
-                                // autoplay={!goodsDetail.basicInfo || !goodsDetail.basicInfo.videoId}
+                                autoplay={!goodsDetail.basicInfo || !goodsDetail.basicInfo.videoId}
                                 circular
                             >
                                 {goodsDetail.basicInfo && goodsDetail.basicInfo.videoId && (
