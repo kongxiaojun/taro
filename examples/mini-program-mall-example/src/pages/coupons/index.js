@@ -47,6 +47,7 @@ import GoodsPop from '../../components/goods-pop/index'
 import Fuwuxieyi from '../../components/fuwuxieyi/index'
 import './index.scss'
 import WXAPI from '../../apifm-wxapi'
+import AtTabs from '../../at-tabs/AtTabs'
 const AUTH = require('../../utils/auth.js')
 var sliderWidth = 96 // 需要设置slider的宽度，用于计算中间位置
 @withWeapp({
@@ -54,7 +55,7 @@ var sliderWidth = 96 // 需要设置slider的宽度，用于计算中间位置
    * 页面的初始数据
    */
   data: {
-    tabs: ['可领', '已领', '失效', '口令'],
+    tabs: [{title: '可领'}, {title: '已领'}, {title: '失效'}, {title: '口令'}],
     activeIndex: 0,
     showPwdPop: false,
   },
@@ -88,9 +89,9 @@ var sliderWidth = 96 // 需要设置slider的宽度，用于计算中间位置
     })
   },
   onReachBottom: function () {},
-  tabClick: function (e) {
+  tabClick: function (index) {
     this.setData({
-      activeIndex: e.detail.index,
+      activeIndex: index,
     })
     if (this.data.activeIndex == 0) {
       this.sysCoupons()
@@ -378,11 +379,8 @@ class _C extends React.Component {
     return (
       <Block>
         <VanSticky>
-          <VanTabs onChange={this.tabClick}>
-            {tabs && tabs.map((item, index) => {
-              return <VanTab key={item.index} title={item}></VanTab>
-            })}
-          </VanTabs>
+          <AtTabs current={this.data.activeIndex} tabList={tabs} onClick={this.tabClick}>
+          </AtTabs>
         </VanSticky>
         {activeIndex == 1 && coupons && coupons.length == 0 && (
           <VanCell
@@ -441,7 +439,7 @@ class _C extends React.Component {
         )}
         {activeIndex == 1 && (
           <Block>
-            {coupons.map((item, index) => {
+            {coupons && coupons.map((item, index) => {
               return (
                 <View className="coupons" key={item.id}>
                   <Image
@@ -482,7 +480,7 @@ class _C extends React.Component {
         )}
         {activeIndex == 2 && (
           <Block>
-            {coupons.map((item, index) => {
+            {coupons && coupons.map((item, index) => {
               return (
                 <View className="coupons" key={item.id}>
                   <Image
