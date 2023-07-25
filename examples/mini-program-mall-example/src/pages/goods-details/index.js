@@ -1295,7 +1295,6 @@ class _C extends React.Component {
                                 indicatorDots="true"
                                 indicatorActiveColor="#fff"
                                 autoplay={!goodsDetail.basicInfo || !goodsDetail.basicInfo.videoId}
-                                circular
                             >
                                 {goodsDetail.basicInfo && goodsDetail.basicInfo.videoId && (
                                     <SwiperItem>
@@ -1323,8 +1322,8 @@ class _C extends React.Component {
                                 })}
                             </Swiper>
                         </View>
-                        {goodsDetail.basicInfo && <View className="goods-info" id={"goods-info"}>
-                            <View className="goods-info-top-container">
+                        {goodsDetail.basicInfo && <View className="goods-detail-info" id={"goods-info"}>
+                            <View className="goods-detail-info-top-container">
                                 <View className="goods-profile">
                                     <View className="p">
                                         <Text>¥</Text>
@@ -1341,7 +1340,7 @@ class _C extends React.Component {
                                         </View>
                                     ) : ''}
                                 </View>
-                                <View className="goods-info-fx">
+                                <View className="goods-detail-info-fx">
                                     <View className="item left">
                                         <VanIcon name="share-o" size="24px"></VanIcon>
                                         <View className="icon-title">分享</View>

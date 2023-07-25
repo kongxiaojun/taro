@@ -68,19 +68,19 @@ swiper-item image {
   height: 748px;
 }
 
-.goods-info {
+.goods-detail-info {
   background-color: #fff;
   padding-top: 35px;
   width: 100%;
   position: relative;
 }
 
-.goods-info-top-container {
+.goods-detail-info-top-container {
   display: flex;
   justify-content: space-between;
 }
 
-.goods-info-fx {
+.goods-detail-info-fx {
   bottom: 60px;
   display: flex;
   align-items: center;
@@ -89,7 +89,7 @@ swiper-item image {
   position: relative;
 }
 
-.goods-info-fx .item {
+.goods-detail-info-fx .item {
   /* height: 50rpx; */
   right: 130px;
   top: 100px;
@@ -102,21 +102,21 @@ swiper-item image {
   z-index: 20;
 }
 
-.goods-info-fx .left {
+.goods-detail-info-fx .left {
   margin-right: 20px;
 }
 
-.goods-info-fx .icon-title {
+.goods-detail-info-fx .icon-title {
   padding-top: 10px;
   font-size: 22px;
 }
 
-.goods-info-fx .item image {
+.goods-detail-info-fx .item image {
   width: 50px;
   height: 50px;
 }
 
-.goods-info-fx .item button {
+.goods-detail-info-fx .item button {
   position: absolute;
   height: 100%;
   width: 100%;
@@ -124,7 +124,7 @@ swiper-item image {
   z-index: 99;
 }
 
-.goods-info .goods-title {
+.goods-detail-info .goods-title {
   box-sizing: border-box;
   padding: 0 30px;
   font-size: 32px;
@@ -133,7 +133,7 @@ swiper-item image {
   /* padding-bottom: 26rpx; */
 }
 
-.goods-info .goods-share {
+.goods-detail-info .goods-share {
   box-sizing: border-box;
   padding: 0 30px;
   font-size: 25px;
