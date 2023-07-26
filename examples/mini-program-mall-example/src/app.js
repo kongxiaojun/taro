@@ -66,12 +66,12 @@ const AUTH = require('./utils/auth.js');
       }
     });
     WXAPI.queryConfigBatch('mallName,WITHDRAW_MIN,ALLOW_SELF_COLLECTION,order_hx_uids,subscribe_ids,share_profile,adminUserIds,goodsDetailSkuShowType,shopMod,needIdCheck,balance_pay_pwd,shipping_address_gps,shipping_address_region_level,shopping_cart_vop_open,cps_open,recycle_open,categoryMod,hide_reputation,show_seller_number,show_goods_echarts,show_buy_dynamic,goods_search_show_type,show_3_seller,show_quan_exchange_score,show_score_exchange_growth,show_score_sign,fx_subscribe_ids,share_pic,orderPeriod_open,order_pay_user_balance,wxpay_api_url,sphpay_open,fx_type').then(res => {
-      if (res.code == 0) {
+      if (res.code === 0) {
         res.data.forEach(config => {
           Taro.setStorageSync(config.key, config.value);
         });
-        if (this.configLoadOK) {
-          this.configLoadOK();
+        if (Taro.getApp().configLoadOK) {
+          Taro.getApp().configLoadOK();
         }
         // wx.setStorageSync('shopMod', '1') // 测试用，不要取消注释
       }
