@@ -1,9 +1,10 @@
 /* eslint-disable */
-var REGEXP = /^-?\d+(\.\d+)?$/g
+
 function addUnit(value) {
+  const REGEXP = /^-?\d+(\.\d+)?$/g
   if (value == null) {
     return undefined
   }
-  return REGEXP.test('' + value) ? value + 'px' : value
+  return REGEXP.test(value.toString()) ? value + 'px' : value
 }
 module.exports = addUnit
