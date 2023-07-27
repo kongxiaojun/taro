@@ -26,13 +26,14 @@ import './index.scss'
       this.$emit('click')
     },
   },
+  className: String
 }))
 class _C extends React.Component {
   render() {
-    const { classPrefix, name, customStyle, color, size, dot, info } = this.data
+    const { classPrefix, name, customStyle, color, size, dot, info, className } = this.data
     return (
       <View
-        className={computed.rootClass({
+        className={className + ' ' + computed.rootClass({
           classPrefix,
           name,
         })}

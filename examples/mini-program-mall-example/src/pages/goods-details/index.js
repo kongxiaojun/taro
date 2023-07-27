@@ -1745,6 +1745,8 @@ class _C extends React.Component {
                                     <VanGoodsActionButton
                                         text="加入购物车"
                                         type="warning"
+                                        isFirst={true}
+                                        isLast={false}
                                         onClick={
                                             goodsDetailSkuShowType == 0 ? 'toAddShopCar' : 'addShopCar'
                                         }
@@ -1753,6 +1755,8 @@ class _C extends React.Component {
                                 {!goodsDetail.basicInfo.pingtuan && (
                                     <VanGoodsActionButton
                                         text="立即购买"
+                                        isFirst={false}
+                                        isLast={true}
                                         data-shopType={shopType}
                                         onClick={goodsDetailSkuShowType == 0 ? 'tobuy' : 'buyNow'}
                                     ></VanGoodsActionButton>
@@ -1761,12 +1765,16 @@ class _C extends React.Component {
                                     <VanGoodsActionButton
                                         text="单独购买"
                                         type="warning"
+                                        isFirst={true}
+                                        isLast={false}
                                         onClick={this.tobuy}
                                     ></VanGoodsActionButton>
                                 )}
                                 {goodsDetail.basicInfo.pingtuan && (
                                     <VanGoodsActionButton
                                         text="发起拼团"
+                                        isFirst={false}
+                                        isLast={true}
                                         onClick={this.toPingtuan}
                                     ></VanGoodsActionButton>
                                 )}

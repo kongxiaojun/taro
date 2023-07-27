@@ -55,6 +55,10 @@ if (canIUseFormFieldButton()) {
       value: '20px',
     },
     color: String,
+    className: {
+      type: String,
+      value: '',
+    }
   },
   methods: {
     onClick(event) {
@@ -74,7 +78,11 @@ if (canIUseFormFieldButton()) {
   },
 }))
 class _C extends React.Component {
+
   render() {
+
+    console.log("VanButton render", this.props)
+
     const {
       id,
       dataset,
@@ -106,13 +114,16 @@ class _C extends React.Component {
       loadingText,
       icon,
       classPrefix,
+      className,
+      customClass
     } = this.data
     return (
       <Button
         id={id}
         data-detail={dataset}
         className={
-          'custom-class ' +
+          className + ' ' +
+          customClass + ' ' +
           utils.bem('button', [
             type,
             size,
@@ -189,7 +200,7 @@ class _C extends React.Component {
                 customStyle="line-height: inherit;"
               ></VanIcon>
             )}
-            <View className="van-button__text">{this.props.children}</View>
+            {this.props.children}
           </Block>
         )}
       </Button>

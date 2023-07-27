@@ -58,8 +58,6 @@ class _C extends React.Component {
       loading,
       disabled,
       openType,
-      isFirst,
-      isLast,
       businessId,
       sessionFrom,
       appParameter,
@@ -69,6 +67,10 @@ class _C extends React.Component {
       sendMessageTitle,
       text,
     } = this.data
+
+    const {isFirst,
+      isLast} = this.props
+
     return (
       <VanButton
         id={id}
