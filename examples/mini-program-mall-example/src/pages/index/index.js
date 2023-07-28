@@ -620,7 +620,7 @@ class _C extends React.Component {
                         </View>
                     </Navigator>
                 )}
-                <View className="swiper-container1">
+                <View className="swiper-container1" style={{marginTop: navHeight + 'px'}}>
                     {banners && <Swiper
                         className="swiper1"
                         indicatorDots="true"
