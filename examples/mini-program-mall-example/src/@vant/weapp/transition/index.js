@@ -20,17 +20,17 @@ import './index.scss'
 }))
 class _C extends React.Component {
   render() {
-    const { classes, currentDuration, display, customStyle, inited } = this.data
+    const { classes, currentDuration, display, customStyle, inited, customClass } = this.data
     return (
       inited && (
         <View
-          // className={'van-transition custom-class ' + classes}
+          className={'van-transition ' + classes + ' ' + customClass}
           style={computed.rootStyle({
-            // currentDuration,
+            currentDuration,
             display,
             customStyle,
           })}
-          // onTransitionend={this.onTransitionEnd}
+          onTransitionend={this.onTransitionEnd}
         >
           {this.props.children}
         </View>

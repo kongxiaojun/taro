@@ -507,7 +507,7 @@ const APP = Taro.getApp()
             adPositionIndexPop: null,
         })
         // 关闭广告位，弹出编辑昵称头像框
-        // APP.initNickAvatarUrlPOP(this)
+        Taro.getApp().initNickAvatarUrlPOP(this)
     },
     clickAdPositionIndexPop() {
         const adPositionIndexPop = this.data.adPositionIndexPop
@@ -515,7 +515,7 @@ const APP = Taro.getApp()
             adPositionIndexPop: null,
         })
         // 点击广告位，弹出编辑昵称头像框
-        // APP.initNickAvatarUrlPOP(this)
+        Taro.getApp().initNickAvatarUrlPOP(this)
         if (!adPositionIndexPop || !adPositionIndexPop.url) {
             return
         }
@@ -1084,28 +1084,29 @@ class _C extends React.Component {
                 <View className="coupons-float" onClick={this.goCoupons}>
                     <Image src={require('../../images/gift.png')}></Image>
                 </View>
-                {/*<VanOverlay show={adPositionIndexPop}>*/}
-                {/*    <View className="adPositionIndexPop">*/}
-                {/*        <Image*/}
-                {/*            src={adPositionIndexPop.val}*/}
-                {/*            mode="widthFix"*/}
-                {/*            onClick={this.clickAdPositionIndexPop}*/}
-                {/*        ></Image>*/}
-                {/*        <VanIcon*/}
-                {/*            customClass="close"*/}
-                {/*            name="close"*/}
-                {/*            size="64rpx"*/}
-                {/*            color="#fff"*/}
-                {/*            onClick={this.closeAdPositionIndexPop}*/}
-                {/*        ></VanIcon>*/}
-                {/*    </View>*/}
-                {/*</VanOverlay>*/}
+              {adPositionIndexPop && <VanOverlay show={adPositionIndexPop} customStyle={{justifyContent: "center", alignItems: "center"}}>
+                    <View className="adPositionIndexPop" style={{display: "inline-flex"}}>
+                        <Image
+                            src={adPositionIndexPop.val}
+                            mode="widthFix"
+                            style={{width: '70vw', height: '50vh'}}
+                            onClick={this.clickAdPositionIndexPop}
+                        ></Image>
+                        <VanIcon
+                            customClass="close"
+                            name="close"
+                            size="64rpx"
+                            color="#fff"
+                            onClick={this.closeAdPositionIndexPop}
+                        ></VanIcon>
+                    </View>
+                </VanOverlay>}
                 {/*  弹出编辑昵称和头像的框  */}
-                {/*<Login*/}
-                {/*  show={nickPopShow}*/}
-                {/*  avatarUrl={popavatarUrl}*/}
-                {/*  name={popnick}*/}
-                {/*></Login>*/}
+                <Login
+                  show={nickPopShow}
+                  avatarUrl={popavatarUrl}
+                  name={popnick}
+                ></Login>
             </Block>
         )
     }
