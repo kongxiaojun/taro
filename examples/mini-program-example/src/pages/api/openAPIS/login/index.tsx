@@ -4,7 +4,7 @@ import { View, Button, Text } from '@tarojs/components'
 import './index.scss'
 
 /**
- * 界面-交互
+ * 开放接口-登录
  * @returns 
  */
 
@@ -12,37 +12,58 @@ export default class Index extends React.Component {
     state = {
         list: [
             {
-                id: 'showToast',
-                func: null,
+                id: 'login-code',
+                func: () => {
+                    Taro.login({
+                        // @ts-ignore
+                        appid:'1208731172335528704',
+                        success: function (res) {
+                            Taro.showModal({content:'Taro.login code success ' +  JSON.stringify(res)})
+                        },
+                        fail: (res) => {
+                            console.log('login fail ',res)
+                        },
+                        complete: (res) => {
+                            console.log('login complete ',res)
+                        }
+                    })
+                },
             }, 
             {
-                id: 'showModal',
-                func: null,
+                id: 'login-token',
+                func: () => {
+                    Taro.login({
+                        // @ts-ignore
+                        appid:'1208731172335528704',
+                        type:'token',
+                        success: function (res) {
+                            Taro.showModal({content:'Taro.login token success ' + JSON.stringify(res)})
+                        },
+                        fail: (res) => {
+                            console.log('login fail ',res)
+                        },
+                        complete: (res) => {
+                            console.log('login complete ',res)
+                        }
+                    })
+                },
             }, 
             {
-                id: 'showLoading',
-                func: null,
-            }, 
-            {
-                id: 'showActionSheet',
-                func: null,
-            }, 
-            {
-                id: 'hideToast',
-                func: null,
-            }, 
-            {
-                id: 'hideLoading',
-                func: null,
-            }, 
-            {
-                id: 'enableAlertBeforeUnload',
-                func: null,
-            }, 
-            {
-                id: 'disableAlertBeforeUnload',
-                func: null,
-            }, 
+                id: 'checkSession',
+                func: () => {
+                    Taro.checkSession({
+                        success: function (res) {
+                          console.log('checkSession success ',res)
+                        },
+                        fail: function (res) {
+                        console.log('checkSession fail ',res)
+                        },
+                        complete: (res) => {
+                            console.log('checkSession complete ',res)
+                        }
+                    })                    
+                },
+            },
         ], 
     }
     render () {
