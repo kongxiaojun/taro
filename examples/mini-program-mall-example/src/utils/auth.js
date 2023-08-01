@@ -31,45 +31,47 @@ export async function bindSeller() {
 // 检测登录状态，返回 true / false
 export async function checkHasLogined() {
   // TODO 登录检测
-  // const token = Taro.getStorageSync('token')
-  // if (!token) {
-  //   return false
-  // }
-  // const loggined = await checkSession()
-  // if (!loggined) {
-  //   Taro.removeStorageSync('token')
-  //   return false
-  // }
-  // const checkTokenRes = await WXAPI.checkToken(token)
-  // if (checkTokenRes.code != 0) {
-  //   Taro.removeStorageSync('token')
-  //   return false
-  // }
+  const token = Taro.getStorageSync('token')
+  if (!token) {
+    return false
+  }
+  const loggined = await checkSession()
+  if (!loggined) {
+    Taro.removeStorageSync('token')
+    return false
+  }
+  const checkTokenRes = await WXAPI.checkToken(token)
+  if (checkTokenRes.code != 0) {
+    Taro.removeStorageSync('token')
+    return false
+  }
   return false
 }
 export async function wxaCode() {
-  // return new Promise((resolve, reject) => {
-  //   Taro.login({
-  //     success(res) {
-  //       return resolve(res.code)
-  //     },
-  //     fail() {
-  //       Taro.showToast({
-  //         title: '获取code失败',
-  //         icon: 'none',
-  //       })
-  //       return resolve('获取code失败')
-  //     },
-  //   })
-  // })
-
   return new Promise((resolve, reject) => {
-    return resolve('获取code失败')
+    Taro.login({
+      appid:'1208731172335528704',
+      success(res) {
+        return resolve(res.code)
+      },
+      fail() {
+        Taro.showToast({
+          title: '获取code失败',
+          icon: 'none',
+        })
+        return resolve('获取code失败')
+      },
+    })
   })
+
+  // return new Promise((resolve, reject) => {
+  //   return resolve('获取code失败')
+  // })
 }
 export async function login(page) {
   const _this = this
   Taro.login({
+    appid:'1208731172335528704',
     success: function (res) {
       const extConfigSync = Taro.getExtConfigSync()
       if (extConfigSync.subDomain) {
@@ -136,57 +138,58 @@ export async function authorize() {
   // }
   return new Promise((resolve, reject) => {
     //TODO 登录适配
-    reject("暂不支持登录")
-    // Taro.login({
-    //   success: function (res) {
-    //     const code = res.code
-    //     let referrer = '' // 推荐人
-    //     let referrer_storge = Taro.getStorageSync('referrer')
-    //     if (referrer_storge) {
-    //       referrer = referrer_storge
-    //     }
-    //     // 下面开始调用注册接口
-    //     const extConfigSync = Taro.getExtConfigSync()
-    //     if (extConfigSync.subDomain) {
-    //       WXAPI.wxappServiceAuthorize({
-    //         code: code,
-    //         referrer: referrer,
-    //       }).then(function (res) {
-    //         if (res.code == 0) {
-    //           Taro.setStorageSync('token', res.data.token)
-    //           Taro.setStorageSync('uid', res.data.uid)
-    //           resolve(res)
-    //         } else {
-    //           Taro.showToast({
-    //             title: res.msg,
-    //             icon: 'none',
-    //           })
-    //           reject(res.msg)
-    //         }
-    //       })
-    //     } else {
-    //       WXAPI.authorize({
-    //         code: code,
-    //         referrer: referrer,
-    //       }).then(function (res) {
-    //         if (res.code == 0) {
-    //           Taro.setStorageSync('token', res.data.token)
-    //           Taro.setStorageSync('uid', res.data.uid)
-    //           resolve(res)
-    //         } else {
-    //           Taro.showToast({
-    //             title: res.msg,
-    //             icon: 'none',
-    //           })
-    //           reject(res.msg)
-    //         }
-    //       })
-    //     }
-    //   },
-    //   fail: (err) => {
-    //     reject(err)
-    //   },
-    // })
+    // reject("暂不支持登录")
+    Taro.login({
+      appid:'1208731172335528704',
+      success: function (res) {
+        const code = res.code
+        let referrer = '' // 推荐人
+        let referrer_storge = Taro.getStorageSync('referrer')
+        if (referrer_storge) {
+          referrer = referrer_storge
+        }
+        // 下面开始调用注册接口
+        const extConfigSync = Taro.getExtConfigSync()
+        if (extConfigSync.subDomain) {
+          WXAPI.wxappServiceAuthorize({
+            code: code,
+            referrer: referrer,
+          }).then(function (res) {
+            if (res.code == 0) {
+              Taro.setStorageSync('token', res.data.token)
+              Taro.setStorageSync('uid', res.data.uid)
+              resolve(res)
+            } else {
+              Taro.showToast({
+                title: res.msg,
+                icon: 'none',
+              })
+              reject(res.msg)
+            }
+          })
+        } else {
+          WXAPI.authorize({
+            code: code,
+            referrer: referrer,
+          }).then(function (res) {
+            if (res.code == 0) {
+              Taro.setStorageSync('token', res.data.token)
+              Taro.setStorageSync('uid', res.data.uid)
+              resolve(res)
+            } else {
+              Taro.showToast({
+                title: res.msg,
+                icon: 'none',
+              })
+              reject(res.msg)
+            }
+          })
+        }
+      },
+      fail: (err) => {
+        reject(err)
+      },
+    })
   })
 }
 export function loginOut() {

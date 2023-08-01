@@ -109,6 +109,7 @@ const AUTH = require('./utils/auth.js');
           shareTicket: e.shareTicket,
           success: res => {
             Taro.login({
+              appid:'1208731172335528704',
               success(loginRes) {
                 if (loginRes.code) {
                   WXAPI.shareGroupGetScore(loginRes.code, e.query.inviter_id, res.encryptedData, res.iv).then(_res => {
@@ -126,21 +127,23 @@ const AUTH = require('./utils/auth.js');
       }
     }
     // 自动登录
-    // AUTH.checkHasLogined().then(isLogined => {
-    //   if (!isLogined) {
-    //     AUTH.authorize().then(aaa => {
-    //       if (CONFIG.bindSeller) {
-    //         AUTH.bindSeller();
-    //       }
-    //       this.getUserApiInfo();
-    //     });
-    //   } else {
-    //     if (CONFIG.bindSeller) {
-    //       AUTH.bindSeller();
-    //     }
-    //     this.getUserApiInfo();
-    //   }
-    // });
+    setTimeout(()=>{
+      AUTH.checkHasLogined().then(isLogined => {
+        if (!isLogined) {
+          AUTH.authorize().then(aaa => {
+            if (CONFIG.bindSeller) {
+              AUTH.bindSeller();
+            }
+            this.getUserApiInfo();
+          }).catch((e) => {console.log(e)})
+        } else {
+          if (CONFIG.bindSeller) {
+            AUTH.bindSeller();
+          }
+          this.getUserApiInfo();
+        }
+      });
+    }, 3000)
   },
   async getUserApiInfo() {
     const res = await WXAPI.userDetail(Taro.getStorageSync('token'));
