@@ -508,6 +508,24 @@ const APP = Taro.getApp()
         })
         // 关闭广告位，弹出编辑昵称头像框
         Taro.getApp().initNickAvatarUrlPOP(this)
+      // 自动登录
+      setTimeout(()=>{
+        AUTH.checkHasLogined().then(isLogined => {
+          if (!isLogined) {
+            AUTH.authorize().then(aaa => {
+              if (CONFIG.bindSeller) {
+                AUTH.bindSeller();
+              }
+              this.getUserApiInfo();
+            }).catch((e) => {console.log(e)})
+          } else {
+            if (CONFIG.bindSeller) {
+              AUTH.bindSeller();
+            }
+            this.getUserApiInfo();
+          }
+        });
+      }, 500)
     },
     clickAdPositionIndexPop() {
         const adPositionIndexPop = this.data.adPositionIndexPop

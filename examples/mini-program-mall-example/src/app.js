@@ -126,24 +126,6 @@ const AUTH = require('./utils/auth.js');
         });
       }
     }
-    // 自动登录
-    setTimeout(()=>{
-      AUTH.checkHasLogined().then(isLogined => {
-        if (!isLogined) {
-          AUTH.authorize().then(aaa => {
-            if (CONFIG.bindSeller) {
-              AUTH.bindSeller();
-            }
-            this.getUserApiInfo();
-          }).catch((e) => {console.log(e)})
-        } else {
-          if (CONFIG.bindSeller) {
-            AUTH.bindSeller();
-          }
-          this.getUserApiInfo();
-        }
-      });
-    }, 3000)
   },
   async getUserApiInfo() {
     const res = await WXAPI.userDetail(Taro.getStorageSync('token'));

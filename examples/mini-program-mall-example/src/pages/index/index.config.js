@@ -1,1 +1,1 @@
-export default { enablePullDownRefresh: true, navigationStyle: 'custom' }
+export default { navigationBarTitleText: '某商城', enablePullDownRefresh: true, navigationStyle: 'custom' }
