@@ -30,7 +30,7 @@ import './index.scss'
 }))
 class _C extends React.Component {
   render() {
-    const { classPrefix, name, customStyle, color, size, dot, info, className } = this.data
+    const { classPrefix, name, customStyle, color, size, dot, info, className, onClick } = this.data
     return (
       <View
         className={className + ' ' + computed.rootClass({
@@ -42,7 +42,7 @@ class _C extends React.Component {
           color,
           size,
         })}
-        onClick={this.onClick}
+        onClick={onClick}
       >
         {(info || dot) && (
           <VanInfo

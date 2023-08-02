@@ -80,13 +80,10 @@ import './index.scss'
     this.observeClass()
   },
   methods: {
-    onClickCloseIcon() {
-      this.$emit('close')
-    },
     onClickOverlay() {
-      this.$emit('click-overlay')
+      // this.$emit('click-overlay')
       if (this.data.closeOnClickOverlay) {
-        this.$emit('close')
+        this.data.onClose()
       }
     },
     observeClass() {
@@ -177,7 +174,7 @@ class _C extends React.Component {
                     'close-icon-class van-popup__close-icon van-popup__close-icon--' +
                     closeIconPosition
                   }
-                  onTap={this.onClickCloseIcon}
+                  onClick={this.data.onClose}
                 ></VanIcon>
               )}
             </View>
@@ -214,7 +211,7 @@ class _C extends React.Component {
                     'close-icon-class van-popup__close-icon van-popup__close-icon--' +
                     closeIconPosition
                   }
-                  onTap={this.onClickCloseIcon}
+                  onClick={this.data.onClose}
                 ></VanIcon>
               )}
             </View>

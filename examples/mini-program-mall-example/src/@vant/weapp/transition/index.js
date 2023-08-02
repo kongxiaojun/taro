@@ -30,6 +30,7 @@ class _C extends React.Component {
             display,
             customStyle,
           })}
+          onClick={this.data.onClick}
           onTransitionend={this.onTransitionEnd}
         >
           {this.props.children}

@@ -16,9 +16,6 @@ import './index.scss'
     rootPortal: false,
   },
   methods: {
-    onClick() {
-      this.$emit('click')
-    },
     // for prevent touchmove
     noop() {},
   },
@@ -34,7 +31,7 @@ class _C extends React.Component {
           customClass={"van-overlay " + customClass}
           customStyle={{zIndex: + zIndex, ...customStyle}}
           duration={duration}
-          onTap={this.onClick}
+          onClick={this.data.onClick}
           onTouchmove={lockScroll ? 'noop' : ''}
         >
           {this.props.children}
@@ -46,7 +43,7 @@ class _C extends React.Component {
         classes={"van-overlay " + customClass}
         customStyle={{zIndex: + zIndex, ...customStyle}}
         duration={duration}
-        onTap={this.onClick}
+        onClick={this.data.onClick}
         onTouchmove={lockScroll ? 'noop' : ''}
       >
         {this.props.children}
