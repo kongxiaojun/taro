@@ -307,23 +307,25 @@ class PullDownRefresh extends React.Component<IProps, IState> {
       const cla = classNames(cls, !dragOnEdge && `${prefixCls}-transition`)
       const showIndicator = currSt === 'activate' || currSt === 'release'
       return (
-        <div className={`${prefixCls}-content-wrapper`}>
-          <div
-            className={cla}
-            ref={el => {
-              this.contentRef = el
-            }}
-          >
-            {showIndicator && (
-              <div className={`${prefixCls}-indicator`}>
-                <div />
-                <div />
-                <div />
-              </div>
-            )}
-            {children}
+        <taro-pull-to-refresh>
+          <div className={`${prefixCls}-content-wrapper`}>
+            <div
+              className={cla}
+              ref={el => {
+                this.contentRef = el
+              }}
+            >
+              {showIndicator && (
+                <div className={`${prefixCls}-indicator`}>
+                  <div />
+                  <div />
+                  <div />
+                </div>
+              )}
+              {children}
+            </div>
           </div>
-        </div>
+        </taro-pull-to-refresh>
       )
     }
 

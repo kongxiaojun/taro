@@ -37,10 +37,10 @@ export const openAppAuthorizeSetting: typeof Taro.openAppAuthorizeSetting = (opt
 
 /** 获取窗口信息 */
 // @ts-ignore
-export const getWindowInfo: typeof Taro.getWindowInfo = async () => {
+export const getWindowInfo: typeof Taro.getWindowInfo = () => {
 
   // @ts-ignore
-  const info = await native.getWindowInfo()
+  const info = native.getWindowInfo()
 
   return info
 }
@@ -72,18 +72,18 @@ export const getDeviceInfo: typeof Taro.getDeviceInfo = () => {
 
 /** 获取微信APP基础信息 */
 // @ts-ignore
-export const getAppBaseInfo: typeof Taro.getAppBaseInfo = async () => {
+export const getAppBaseInfo: typeof Taro.getAppBaseInfo = () => {
   // @ts-ignore
-  const info = await native.getAppBaseInfo()
+  const info = native.getAppBaseInfo()
 
   return info
 }
 
 /** 获取微信APP授权设置 */
 // @ts-ignore
-export const getAppAuthorizeSetting: typeof Taro.getAppAuthorizeSetting = async () => {
+export const getAppAuthorizeSetting: typeof Taro.getAppAuthorizeSetting = () => {
   // @ts-ignore
-  const info = await native.getAppAuthorizeSetting()
+  const info = native.getAppAuthorizeSetting()
 
   return info
 }
