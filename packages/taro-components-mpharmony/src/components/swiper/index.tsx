@@ -51,18 +51,18 @@ const Swiper: FC<SwiperProps> = ({
   circular = false,
   duration = 500,
   indicatorDots = false,
-  current= 0,
-  indicatorColor= 'rgba(0, 0, 0, .3)',
-  indicatorActiveColor= '#000000',
-  vertical= false,
+  current = 0,
+  indicatorColor = 'rgba(0, 0, 0, .3)',
+  indicatorActiveColor = '#000000',
+  vertical = false,
   previousMargin = '0px',
   displayMultipleItems = 1,
   onAnimationFinish
 }) => {
 
 
-  const [currentIndex,setCurrentIndex] = useState<number>(0)
-  const ref:any = useRef(null)
+  const [currentIndex, setCurrentIndex] = useState<number>(0)
+  const ref: any = useRef(null)
 
   useEffect(() => {
     if (current !== 0) {
@@ -70,7 +70,7 @@ const Swiper: FC<SwiperProps> = ({
         ref?.current?.slickGoTo(1)
       }, 200)
     }
-  },[])
+  }, [])
 
   const settings = {
     slidesToScroll: 1,
@@ -104,7 +104,8 @@ const Swiper: FC<SwiperProps> = ({
             current: index
           }
         })
-      } catch (err) {} // eslint-disable-line no-empty
+      } catch (err) {
+      } // eslint-disable-line no-empty
       onAnimationFinish(e)
     }
   }
@@ -121,13 +122,14 @@ const Swiper: FC<SwiperProps> = ({
     dotsClass={'swiper-dots'}
     autoplaySpeed={interval}
     vertical={vertical}
+    verticalSwiping={vertical}
     centerMode={previousMargin !== '0px'}
     centerPadding={previousMargin || '0px'}
     slidesToShow={displayMultipleItems}
     appendDots={dots => (
       <div
         style={{
-          backgroundColor: 'transparent',
+          backgroundColor: 'transparent'
         }}
       >
         <ul style={{ margin: '0px' }}> {dots} </ul>
@@ -139,7 +141,7 @@ const Swiper: FC<SwiperProps> = ({
           width: '6px',
           height: '6px',
           backgroundColor: i === currentIndex ? indicatorActiveColor : indicatorColor,
-          borderRadius: '50%',
+          borderRadius: '50%'
         }}
       >
       </div>
