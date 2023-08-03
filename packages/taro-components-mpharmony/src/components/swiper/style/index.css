@@ -1,15 +1,83 @@
-.swiper-container-wrapper {
-    height: 150px;
-}
+.swiper-dots
+{
+  position: absolute;
+  bottom: 10px;
 
-.swiper-container {
-    height: 100%;
-}
+  display: block;
 
-.swiper-pagination {
-    font-size: 0;
-}
+  width: 100%;
+  padding: 0;
+  margin: 0;
 
-.swiper-pagination-bullet {
-    opacity: 1
+  list-style: none;
+
+  text-align: center;
+}
+.swiper-dots li
+{
+  position: relative;
+
+  display: inline-block;
+
+  width: 10px;
+  height: 10px;
+  margin: 0 2px;
+  padding: 0;
+
+  cursor: pointer;
+}
+.swiper-dots li button
+{
+  font-size: 0;
+  line-height: 0;
+
+  display: block;
+
+  width: 10px;
+  height: 10px;
+  padding: 5px;
+
+  cursor: pointer;
+
+  color: transparent;
+  border: 0;
+  outline: none;
+  background: transparent;
+}
+.swiper-dots li button:hover,
+.swiper-dots li button:focus
+{
+  outline: none;
+}
+.swiper-dots li button:hover:before,
+.swiper-dots li button:focus:before
+{
+  opacity: 1;
+}
+.swiper-dots li button:before
+{
+  font-family: 'slick';
+  font-size: 6px;
+  line-height: 20px;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 20px;
+  height: 20px;
+
+  content: '•';
+  text-align: center;
+
+  opacity: .25;
+  color: black;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.swiper-dots li.slick-active button:before
+{
+  opacity: .75;
+  color: black;
 }

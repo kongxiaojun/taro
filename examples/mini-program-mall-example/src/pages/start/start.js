@@ -115,7 +115,7 @@ const AUTH = require('../../utils/auth.js')
     }
   },
   swiperchange: function (e) {
-    //console.log(e.detail.current)
+    console.log("kongxiaojun swiperchange", e.detail.current)
     this.setData({
       swiperCurrent: e.detail.current,
     })
@@ -184,7 +184,7 @@ class _C extends React.Component {
           className="swiper_box"
           style={{height: '100vh'}}
           onChange={this.swiperchange}
-          indicatorDots="true"
+          indicatorDots={true}
           indicatorActiveColor="#fff"
         >
           {banners.map((item, index) => {
@@ -193,7 +193,7 @@ class _C extends React.Component {
                 <Image
                   mode="aspectFill"
                   onClick={this.imgClick}
-                  style={{width: '100%', height: '100%'}}
+                  style={{width: '100vw', height: '100vh'}}
                   src={item.picUrl}
                 ></Image>
               </SwiperItem>

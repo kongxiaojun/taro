@@ -1295,6 +1295,7 @@ class _C extends React.Component {
                                 indicatorDots="true"
                                 indicatorActiveColor="#fff"
                                 autoplay={!goodsDetail.basicInfo || !goodsDetail.basicInfo.videoId}
+                                circular
                             >
                                 {goodsDetail.basicInfo && goodsDetail.basicInfo.videoId && (
                                     <SwiperItem>

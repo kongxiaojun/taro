@@ -183,6 +183,9 @@ class PullDownRefresh extends React.Component<IProps, IState> {
   }
 
   onTouchStart = (_, e: TouchEvent) => {
+    if (!e || !e.touches) {
+      return
+    }
     this._ScreenY = this._startScreenY = e.touches[0].screenY
     // 一开始 refreshing 为 true 时 this._lastScreenY 有值
     this._lastScreenY = this._lastScreenY || 0
@@ -210,6 +213,9 @@ class PullDownRefresh extends React.Component<IProps, IState> {
   }
 
   onTouchMove = (ele: HTMLElement, e: TouchEvent) => {
+    if (!e || !e.touches) {
+      return
+    }
     // 使用 pageY 对比有问题
     const _screenY = e.touches[0].screenY
     // 拖动方向不符合的不处理
@@ -307,31 +313,29 @@ class PullDownRefresh extends React.Component<IProps, IState> {
       const cla = classNames(cls, !dragOnEdge && `${prefixCls}-transition`)
       const showIndicator = currSt === 'activate' || currSt === 'release'
       return (
-        <taro-pull-to-refresh>
-          <div className={`${prefixCls}-content-wrapper`}>
-            <div
-              className={cla}
-              ref={el => {
-                this.contentRef = el
-              }}
-            >
-              {showIndicator && (
-                <div className={`${prefixCls}-indicator`}>
-                  <div />
-                  <div />
-                  <div />
-                </div>
-              )}
-              {children}
-            </div>
+        <div className={`${prefixCls}-content-wrapper`}>
+          <div
+            className={cla}
+            ref={el => {
+              this.contentRef = el
+            }}
+          >
+            {showIndicator && (
+              <div className={`${prefixCls}-indicator`}>
+                <div />
+                <div />
+                <div />
+              </div>
+            )}
+            {children}
           </div>
-        </taro-pull-to-refresh>
+        </div>
       )
     }
 
-    if (this.scrollContainer) {
-      return renderRefresh(`${prefixCls}-content ${prefixCls}-down`)
-    }
+    // if (this.scrollContainer) {
+    //   return renderRefresh(`${prefixCls}-content ${prefixCls}-down`)
+    // }
     return (
       <pull-down-refresh
         ref={el => {
