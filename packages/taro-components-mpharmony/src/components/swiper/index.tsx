@@ -119,7 +119,7 @@ const Swiper: FC<SwiperProps> = ({
     afterChange={onPageChange}
     infinite={circular}
     autoplay={autoplay}
-    dotsClass={'swiper-dots'}
+    dotsClass={vertical ? 'swiper-dots-vertical' : 'swiper-dots'}
     autoplaySpeed={interval}
     vertical={vertical}
     verticalSwiping={vertical}
@@ -132,7 +132,7 @@ const Swiper: FC<SwiperProps> = ({
           backgroundColor: 'transparent'
         }}
       >
-        <ul style={{ margin: '0px' }}> {dots} </ul>
+        <ul> {dots} </ul>
       </div>
     )}
     customPaging={i => (
