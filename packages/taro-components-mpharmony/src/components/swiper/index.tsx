@@ -68,14 +68,15 @@ const Swiper: FC<SwiperProps> = ({
     if (current !== 0) {
       setTimeout(() => {
         ref?.current?.slickGoTo(1)
-      }, 200)
+      }, 100)
     }
   }, [])
 
-  const settings = {
-    slidesToScroll: 1,
-    adaptiveHeight: true
-  }
+  useEffect(() => {
+    setTimeout(() => {
+      autoplay ? ref?.current?.slickPlay() : ref?.current?.slickPause()
+    }, 100)
+  }, [autoplay, interval, circular, duration])
 
   const beforeChange = (_oldIndex, newIndex) => {
     setCurrentIndex(newIndex)
@@ -110,15 +111,15 @@ const Swiper: FC<SwiperProps> = ({
     }
   }
 
-  return <Slider {...settings}
+  return <Slider
     ref={ref}
     dots={indicatorDots}
     speed={duration}
-    adaptiveHeight={true}
+    slidesToScroll={1}
+    adaptiveHeight={false}
     beforeChange={beforeChange}
     afterChange={onPageChange}
     infinite={circular}
-    autoplay={autoplay}
     dotsClass={vertical ? 'swiper-dots-vertical' : 'swiper-dots'}
     autoplaySpeed={interval}
     vertical={vertical}
