@@ -1,62 +1,67 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
+import ButtonList from '@/components/buttonList'
+import { TestConsole } from '@/util/util'
 import './index.scss'
 
 /**
  * 设备-电池
- * @returns 
+ * @returns
  */
 
 export default class Index extends React.Component {
-    state = {
-        list: [
-            {
-                id: 'getBatteryInfo',
-                func: () => {
-                    Taro.getBatteryInfo({
-                        success: (res) => {
-                            console.log('success-----', res);
-                        },
-                        fail: (res) => {
-                            console.log('fail-----', res);
-                        },
-                        complete: (res) => {
-                            console.log('complete-----', res);
-                        }
-                    })
-                },
-            }, 
-            {
-                id: 'getBatteryInfoSync',
-                func: null,
-            }, 
-        ], 
-        batteryInfo: {},
-    }
-    render () {
-        const { list, batteryInfo } = this.state;
-        return (
-            <View className='api-page'>
-                <View>是否正在充电：{batteryInfo.isCharging ? '是' : '否'}</View>
-                <View>设备电量：{batteryInfo.level}%</View>
-                {
-                    this.state.list.map((item) => {
-                        return (
-                            <Button
-                                className='api-page-btn'
-                                type='primary'
-                                onClick={item.func == null ? () => {} : item.func}
-                            >
-                                {item.id}
-                                {
-                                    item.func == null && (<Text className='navigator-state tag'>未创建Demo</Text>)
-                                }
-                            </Button>
-                        )
-                    })
-                }
-            </View>
-        )
-    }
+  state = {
+    list: [
+      {
+        id: 'getBatteryInfo',
+        func: () => {
+          TestConsole.consoleTest('getBatteryInfo')
+          Taro.getBatteryInfo({
+            success: (res) => {
+              TestConsole.consoleSuccess(res)
+              this.setState({ batteryInfo: { isCharging: res.isCharging, level: res.level, errMsg: res.errMsg } })
+              Taro.showModal({
+                content: `success:${res.errMsg}`,
+                showCancel: false,
+                confirmText: 'CLOSE',
+                confirmColor: '#00ff00',
+              })
+            },
+            fail: (res) => {
+              TestConsole.consoleFail(res)
+              Taro.showModal({
+                content: `fail: ${res.errMsg}`,
+                showCancel: false,
+                confirmText: 'CLOSE',
+                confirmColor: '#ff0000',
+              })
+            },
+            complete: (res) => {
+              TestConsole.consoleComplete(res)
+            },
+          }).then((res) => {
+            TestConsole.consoleReturn(res)
+          })
+        },
+      },
+      {
+        id: 'getBatteryInfoSync',
+        func: null,
+      },
+    ],
+    batteryInfo: {},
+  }
+  render() {
+    const { list, batteryInfo } = this.state
+    return (
+      <View className='api-page'>
+        <View style={{ display: 'inline-block' }}>
+          <View>是否正在充电：{batteryInfo.isCharging ? '是' : '否'}</View>
+          <View>设备电量：{batteryInfo.level}%</View>
+        </View>
+        <ButtonList buttonList={list} />
+      </View>
+    )
+  }
 }

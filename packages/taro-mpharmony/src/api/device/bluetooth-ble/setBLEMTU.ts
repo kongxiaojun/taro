@@ -25,7 +25,7 @@ export const setBLEMTU: typeof Taro.setBLEMTU = (options) => {
       mtu?: string
     }>({ name, success, fail, complete })
 
-    // options.object must be object
+    // options.deviceId must be string
     if (typeof deviceId !== 'string') {
       return handle.fail({
         errMsg: getParameterError({
@@ -46,22 +46,21 @@ export const setBLEMTU: typeof Taro.setBLEMTU = (options) => {
       }, { resolve, reject })
     }
 
-    if(mtu > 512 || mtu < 22){
+    if (mtu > 512 || mtu < 22) {
       console.error('invalid input')
       return handle.fail()
     }
 
     // @ts-ignore
-    const ret = native.setBLEMTU({
+    native.setBLEMTU({
       deviceId: deviceId,
       mtu: mtu,
       success: (res: any) => {
-        return handle.success(res)
+        handle.success(res, { resolve, reject })
       },
       fail: (err: any) => {
-        return handle.fail(err)
+        handle.fail(err, { resolve, reject })
       }
     })
-    return ret
   })
 }

@@ -1,106 +1,79 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
+import { View, Text, Button } from '@tarojs/components'
+import ButtonList from '@/components/buttonList'
+import { TestConsole } from '@/util/util'
 import './index.scss'
 
 /**
  * 界面-滚动
- * @returns 
+ * @returns
  */
 
 export default class Index extends React.Component {
-    state = {
-        list: [
-            {
-                id: 'pageScrollTo',
-                func: () => {
-                    console.log('pageScrollTo')
-                    Taro.pageScrollTo({
-                        duration: 300,
-                        selector: '#content',
-                        offsetTop: 0,
-                        success: (res) => {
-                            console.log('pageScrollTo success ', res)
-                        },
-                        fail: (res) => {
-                            console.log('pageScrollTo fail ', res)
-                        },
-                        complete: (res) => {
-                            console.log('pageScrollTo complete ', res)
-                        },
-                    })
-                },
+  state = {
+    list: [
+      {
+        id: 'pageScrollTo',
+        func: () => {
+          TestConsole.consoleTest('pageScrollTo')
+          Taro.pageScrollTo({
+            duration: 300,
+            selector: '#content',
+            offsetTop: 0,
+            success: (res) => {
+              TestConsole.consoleSuccess(res)
             },
-            {
-                id: 'ScrollViewContext',
-                func: null,
+            fail: (res) => {
+              TestConsole.consoleFail(res)
             },
-        ],
-        listTail: [
-            {
-                id: 'pageScrollTo: 滚到顶部',
-                func: () => {
-                    console.log('pageScrollTo')
-                    Taro.pageScrollTo({
-                        scrollTop: 0,
-                        success: (res) => {
-                            console.log('pageScrollTo success ', res)
-                        },
-                        fail: (res) => {
-                            console.log('pageScrollTo fail ', res)
-                        },
-                        complete: (res) => {
-                            console.log('pageScrollTo complete ', res)
-                        },
-                    })
-                },
+            complete: (res) => {
+              TestConsole.consoleComplete(res)
             },
-        ]
-    }
-    render () {
-        return (
-            <View className='api-page'>
-                {
-                    this.state.list.map((item) => {
-                        return (
-                            <Button
-                                key={item.id}
-                                className='api-page-btn'
-                                type='primary'
-                                onClick={item.func == null ? () => {} : item.func}
-                            >
-                                {item.id}
-                                {
-                                    item.func == null && (<Text className='navigator-state tag'>未创建Demo</Text>)
-                                }
-                            </Button>
-                        )
-                    })
-                }
-                {
-                    <Button
-                        id='content'
-                        style={{height: 1200, backgroundColor: '#FFFFFE'}}
-                    >空白视图，用于滚动测试</Button>
-                }
-                {
-                    this.state.listTail.map((item) => {
-                        return (
-                            <Button
-                                key={item.id}
-                                className='api-page-btn'
-                                type='primary'
-                                onClick={item.func == null ? () => {} : item.func}
-                            >
-                                {item.id}
-                                {
-                                    item.func == null && (<Text className='navigator-state tag'>未创建Demo</Text>)
-                                }
-                            </Button>
-                        )
-                    })
-                }
+          })
+        },
+      },
+      {
+        id: 'ScrollViewContext',
+        func: null,
+      },
+    ],
+    listTail: [
+      {
+        id: 'pageScrollTo: 滚到顶部',
+        func: () => {
+          TestConsole.consoleTest('pageScrollTo: 滚到顶部')
+          Taro.pageScrollTo({
+            scrollTop: 0,
+            success: (res) => {
+              TestConsole.consoleSuccess(res)
+            },
+            fail: (res) => {
+              TestConsole.consoleFail(res)
+            },
+            complete: (res) => {
+              TestConsole.consoleComplete(res)
+            },
+          })
+        },
+      },
+    ],
+  }
+  render() {
+    const { list, listTail } = this.state
+    return (
+      <View className='api-page'>
+        <ButtonList buttonList={list} />
+        {<View id='blank-content'>空白视图，用于滚动测试</View>}
+        {listTail.map((item) => {
+          return (
+            <View key={item.id} className='api-page-btn' onClick={item.func == null ? () => {} : item.func}>
+              {item.id}
+              {item.func == null && <Text className='navigator-state tag'>未创建Demo</Text>}
             </View>
-        )
-    }
+          )
+        })}
+      </View>
+    )
+  }
 }

@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
+import { parse as parseFile } from '@babel/parser'
 import traverse, { NodePath, Visitor } from '@babel/traverse'
 import * as t from '@babel/types'
 import {
   printLog,
   processTypeEnum
 } from '@tarojs/helper'
-import { parse as parseFile } from 'babylon'
 import { parse } from 'himalaya-wxml'
 import { camelCase, cloneDeep } from 'lodash'
 
@@ -92,6 +92,7 @@ export const WX_FOR_ITEM = 'wx:for-item'
 export const WX_FOR_INDEX = 'wx:for-index'
 export const WX_KEY = 'wx:key'
 export const WX_ELSE = 'wx:else'
+export const WX_SHOW = 'wx:show'
 
 export const wxTemplateCommand = [
   WX_IF,
@@ -163,7 +164,12 @@ export const createWxmlVistor = (
       if (nodeName === WX_KEY) {
         path.replaceWith(t.jSXIdentifier('key'))
       }
-      if (nodeName.startsWith('wx:') && !wxTemplateCommand.includes(nodeName)) {
+      if (nodeName === WX_SHOW) {
+        path.replaceWith(t.jSXIdentifier(WX_IF)) // wx:show转换后不支持，不频繁切换的话wx:if可替代
+        // eslint-disable-next-line no-console
+        console.log(`属性  ${nodeName}不能编译,会被替换为wx:if`)
+      }
+      else if (nodeName.startsWith('wx:') && !wxTemplateCommand.includes(nodeName)) {
         // eslint-disable-next-line no-console
         console.log(`未知 wx 作用域属性： ${nodeName}，该属性会被移除掉。`)
         path.parentPath.remove()
@@ -201,27 +207,31 @@ export const createWxmlVistor = (
         const slotAttr = attrs.find(a => t.isJSXAttribute(a.node) && a.node?.name.name === 'slot')
         if (slotAttr && t.isJSXAttribute(slotAttr.node)) {
           const slotValue = slotAttr.node.value
+          let slotName = ''
           if (slotValue && t.isStringLiteral(slotValue)) {
-            const slotName = slotValue.value
-            const parentComponent = path.findParent(p => p.isJSXElement() && t.isJSXIdentifier(p.node.openingElement.name) && !DEFAULT_Component_SET.has(p.node.openingElement.name.name))
-            if (parentComponent && parentComponent.isJSXElement()) {
-              slotAttr.remove()
-              path.traverse({
-                JSXAttribute: jsxAttrVisitor
-              })
-              const block = buildBlockElement()
-              block.children = [cloneDeep(path.node)]
-              parentComponent.node.openingElement.attributes.push(
-                t.jSXAttribute(
-                  t.jSXIdentifier(buildSlotName(slotName)),
-                  t.jSXExpressionContainer(block)
-                )
-              )
-              path.remove()
-            }
+            slotName = slotValue.value
           } else {
-            throw codeFrameError(slotValue, 'slot 的值必须是一个字符串')
+            slotName = 'taroslot'
           }
+          const parentComponent = path.findParent(p => p.isJSXElement() && t.isJSXIdentifier(p.node.openingElement.name) && !DEFAULT_Component_SET.has(p.node.openingElement.name.name))
+          if (parentComponent && parentComponent.isJSXElement()) {
+            slotAttr.remove()
+            path.traverse({
+              JSXAttribute: jsxAttrVisitor
+            })
+            const block = buildBlockElement()
+            block.children = [cloneDeep(path.node)]
+            parentComponent.node.openingElement.attributes.push(
+              t.jSXAttribute(
+                t.jSXIdentifier(buildSlotName(slotName)),
+                t.jSXExpressionContainer(block)
+              )
+            )
+            path.remove()
+          }
+          /* } else {
+            throw codeFrameError(slotValue, 'slot 的值必须是一个字符串')
+          } */
         }
         const tagName = jsxName.node.name
         if (tagName === 'Slot') {
@@ -425,8 +435,15 @@ function getWXS (attrs: t.JSXAttribute[], path: NodePath<t.JSXElement>, imports:
     const ast = parseCode(script.value)
     traverse(ast, {
       CallExpression (path) {
+        // wxs标签中getRegExp转换为new RegExp
         if (t.isIdentifier(path.node.callee, { name: 'getRegExp' })) {
-          console.warn(codeFrameError(path.node, '请使用 JavaScript 标准正则表达式把这个 getRegExp 函数重构。'))
+          const arg = path.node.arguments[0]
+          if (t.isStringLiteral(arg)) {
+            const regex = arg.extra?.raw as string
+            const regexWithoutQuotes = regex.replace(/^'(.*)'$/, '$1')
+            const newExpr = t.newExpression(t.identifier('RegExp'), [t.stringLiteral(regexWithoutQuotes), t.stringLiteral('g')])
+            path.replaceWith(newExpr)
+          }
         }
       }
     })
@@ -768,6 +785,7 @@ function parseText (node: Text, tagName?: string) {
   return t.jSXExpressionContainer(buildTemplate(content))
 }
 
+// 匹配{{content}}
 const handlebarsRE = /\{\{((?:.|\n)+?)\}\}/g
 
 function singleQuote (s: string) {

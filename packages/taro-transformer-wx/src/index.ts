@@ -8,12 +8,14 @@ import objectRestSpread from '@babel/plugin-proposal-object-rest-spread'
 import optionalChaining from '@babel/plugin-proposal-optional-chaining'
 import asyncGenerators from '@babel/plugin-syntax-async-generators'
 import dynamicImport from '@babel/plugin-syntax-dynamic-import'
-import asyncFunctions from '@babel/plugin-transform-async-to-generator'
 import exponentiationOperator from '@babel/plugin-transform-exponentiation-operator'
 import flowStrip from '@babel/plugin-transform-flow-strip-types'
 import jsxPlugin from '@babel/plugin-transform-react-jsx'
 import traverse, { Binding, NodePath } from '@babel/traverse'
 import * as t from '@babel/types'
+// import * as template from '@babel/template'
+// const template = require('babel-template')
+import babel_plugin_transform_commonjs from "babel-plugin-transform-commonjs"
 import { prettyPrint } from 'html'
 import { cloneDeep, get as safeGet, isArray,snakeCase } from 'lodash'
 // import { transform as parse } from '@babel/core'
@@ -57,6 +59,7 @@ import {
   isContainJSXElement,
   replaceJSXTextWithTextComponent,
   setting} from './utils'
+import { traverseWxsFile } from './wxs'
 
 const template = require('@babel/template')
 
@@ -230,13 +233,13 @@ function parseCode (code: string) {
       classProperties,
       jsxPlugin,
       flowStrip,
-      asyncFunctions,
       exponentiationOperator,
       asyncGenerators,
       objectRestSpread,
       [decorators, {legacy: true}],
       dynamicImport,
-      optionalChaining
+      optionalChaining,
+      babel_plugin_transform_commonjs
     ]
   }) as { ast: t.File }).ast
 }
@@ -314,6 +317,12 @@ export default function transform (options: TransformOptions): TransformResult {
         resetTSClassProperty(mainClassNode.body.body as any)
       }
     }
+
+    // 对wxs文件进行转换
+    if (options.sourcePath.endsWith('.wxs')) {
+      return traverseWxsFile(ast, defaultResult)
+    }
+
     const code = generate(ast.program as any).code
     return {
       ...defaultResult,

@@ -1,54 +1,80 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
+import { TestConsole } from '@/util/util'
+import ButtonList from '@/components/buttonList'
 import './index.scss'
 
 /**
- * 界面-窗口
- * @returns 
+ * 设备-罗盘
+ * @returns
  */
 
 export default class Index extends React.Component {
-    state = {
-        list: [
-            {
-                id: 'setWindowSize',
-                func: null,
-            }, 
-            {
-                id: 'onWindowResize',
-                func: null,
-            }, 
-            {
-                id: 'offWindowResize',
-                func: null,
-            }, 
-            {
-                id: 'checkIsPictureInPictureActive',
-                func: null,
+  state = {
+    list: [
+      {
+        id: 'stopCompass',
+        func: () => {
+          TestConsole.consoleTest('Taro.stopCompass')
+          Taro.stopCompass({
+            success (res) {
+              TestConsole.consoleSuccess(res)
             },
-        ], 
-    }
-    render () {
-        return (
-            <View className='api-page'>
-                {
-                    this.state.list.map((item) => {
-                        return (
-                            <Button
-                                className='api-page-btn'
-                                type='primary'
-                                onClick={item.func == null ? () => {} : item.func}
-                            >
-                                {item.id}
-                                {
-                                    item.func == null && (<Text className='navigator-state tag'>未创建Demo</Text>)
-                                }
-                            </Button>
-                        )
-                    })
-                }
-            </View>
-        )
-    }
+            fail (res) {
+              TestConsole.consoleFail(res)
+            }, complete (res) {
+              TestConsole.consoleComplete(res)
+            },
+          }).then(res => {
+            TestConsole.consoleReturn(res)
+          })
+        },
+      },
+      {
+        id: 'startCompass',
+        func: () => {
+          TestConsole.consoleTest('Taro.startCompass')
+          Taro.startCompass({
+            success (res) {
+              TestConsole.consoleSuccess(res)
+            },
+            fail (res) {
+              TestConsole.consoleFail(res)
+            }, complete (res) {
+              TestConsole.consoleComplete(res)
+            },
+          }).then(res => {
+            TestConsole.consoleReturn(res)
+          })
+        },
+      },
+      {
+        id: 'onCompassChange',
+        func: () => {
+          TestConsole.consoleTest('Taro.onCompassChange')
+          Taro.onCompassChange(this.callback)
+        },
+      },
+      {
+        id: 'offCompassChange',
+        func: () => {
+          TestConsole.consoleTest('Taro.offCompassChange')
+          Taro.offCompassChange(this.callback)
+        },
+      },
+    ],
+  }
+
+  callback = (res) => {
+    console.log(res)
+  }
+  render() {
+    const { list } = this.state
+    return (
+      <View className='api-page'>
+        <ButtonList buttonList={list} />
+      </View>
+    )
+  }
 }

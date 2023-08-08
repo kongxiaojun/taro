@@ -1,46 +1,33 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
+import ButtonList from '@/components/buttonList'
 import './index.scss'
 
 /**
- * 界面-下拉更新
- * @returns 
+ * 网络-上传
+ * @returns
  */
 
 export default class Index extends React.Component {
-    state = {
-        list: [
-            {
-                id: 'stopPullDownRefresh',
-                func: null,
-            }, 
-            {
-                id: 'startPullDownRefresh',
-                func: null,
-            }, 
-        ], 
-    }
-    render () {
-        return (
-            <View className='api-page'>
-                {
-                    this.state.list.map((item) => {
-                        return (
-                            <Button
-                                className='api-page-btn'
-                                type='primary'
-                                onClick={item.func == null ? () => {} : item.func}
-                            >
-                                {item.id}
-                                {
-                                    item.func == null && (<Text className='navigator-state tag'>未创建Demo</Text>)
-                                }
-                            </Button>
-                        )
-                    })
-                }
-            </View>
-        )
-    }
+  state = {
+    list: [
+      {
+        id: 'uploadFile',
+        func: null,
+      },
+      {
+        id: 'UploadTask',
+        func: null,
+      },
+    ],
+  }
+  render() {
+    const { list } = this.state
+    return (
+      <View className='api-page'>
+        <ButtonList buttonList={list} />
+      </View>
+    )
+  }
 }

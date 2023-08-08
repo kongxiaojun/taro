@@ -85,7 +85,6 @@ export default defineAppConfig({
     'pages/api/interface/interaction/index',
     'pages/api/interface/navigationBar/index',
     'pages/api/interface/background/index',
-    'pages/api/interface/tabBar/index',
     'pages/api/interface/font/index',
     'pages/api/interface/pullDownRefresh/index',
     'pages/api/interface/scroll/index',
@@ -136,7 +135,7 @@ export default defineAppConfig({
     'pages/api/openAPIS/wechatCustomerService/index',
     'pages/api/payment/index',
     'pages/api/qq/index',
-    'pages/api/redriection/index',
+    'pages/api/redirection/index',
     'pages/api/routing/index',
     'pages/api/swan/index',
     'pages/api/taro/expand/index',
@@ -175,6 +174,6 @@ export default defineAppConfig({
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#F7F7F7',
     navigationBarTitleText: 'Harmony',
-    navigationBarTextStyle: 'black'
-  }
+    navigationBarTextStyle: 'black',
+  },
 })

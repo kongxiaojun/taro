@@ -1,58 +1,99 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
+import { TestConsole } from '@/util/util'
 import './index.scss'
 
 /**
- * 界面-导航栏
- * @returns 
+ * 设备-网络
+ * @returns
  */
 
 export default class Index extends React.Component {
-    state = {
-        list: [
-            {
-                id: 'showNavigationBarLoading',
-                func: null,
-            }, 
-            {
-                id: 'setNavigationBarTitle',
-                func: null,
-            }, 
-            {
-                id: 'setNavigationBarColor',
-                func: null,
-            }, 
-            {
-                id: 'hideNavigationBarLoading',
-                func: null,
-            }, 
-            {
-                id: 'hideHomeButton',
-                func: null,
-            }, 
-        ], 
-    }
-    render () {
-        return (
-            <View className='api-page'>
-                {
-                    this.state.list.map((item) => {
-                        return (
-                            <Button
-                                className='api-page-btn'
-                                type='primary'
-                                onClick={item.func == null ? () => {} : item.func}
-                            >
-                                {item.id}
-                                {
-                                    item.func == null && (<Text className='navigator-state tag'>未创建Demo</Text>)
-                                }
-                            </Button>
-                        )
-                    })
-                }
+  state = {
+    list: [
+      {
+        id: 'onNetworkWeakChange',
+        func: null,
+      },
+      {
+        id: 'onNetworkStatusChange',
+        func: () => {
+          TestConsole.consoleTest('onNetworkStatusChange')
+          Taro.onNetworkStatusChange(this.callback)
+        },
+      },
+      {
+        id: 'offNetworkWeakChange',
+        func: null,
+      },
+      {
+        id: 'offNetworkStatusChange',
+        func: () => {
+          TestConsole.consoleTest('offNetworkStatusChange')
+          Taro.offNetworkStatusChange(this.callback)
+        },
+      },
+      {
+        id: 'getNetworkType',
+        func: () => {
+          TestConsole.consoleTest('getNetworkType')
+          Taro.getNetworkType({
+            success: (res) => {
+              TestConsole.consoleSuccess(res)
+              this.setState({
+                networkType: res.networkType
+              })
+            },
+            fail: (res) => {
+              TestConsole.consoleFail(res)
+              this.setState({
+                networkType: '获取失败'
+              })
+            },
+            complete: (res) => {
+              TestConsole.consoleComplete(res)
+            },
+          }).then((res) => {
+            TestConsole.consoleReturn(res)
+          })
+        },
+      },
+      {
+        id: 'getLocalIPAddress',
+        func: null,
+      },
+    ],
+    networkType: '未获取',
+    networkState: null
+  }
+
+  callback = (res: any) => {
+    TestConsole.consoleSuccess(res)
+    this.setState({
+      networkState: res.isConnected,
+      networkType: res.networkType
+    })
+  }
+
+  render() {
+    let { list, networkType, networkState } = this.state
+    return (
+      <View className='api-page'>
+        <View style={{display:'inline-block'}}>
+          <View>网络类型：{networkType}</View>
+          <View hidden={networkState == null ? false : true}>网络状态：未获取</View>
+          <View hidden={networkState == null ? true : false}>网络状态：{networkState ? '已连接' : '已断开'}</View>
+        </View>
+        {list.map((item) => {
+          return (
+            <View key={item.id} className='api-page-btn' onClick={item.func == null ? () => {} : item.func}>
+              {item.id}
+              {item.func == null && <Text className='navigator-state tag'>未创建Demo</Text>}
             </View>
-        )
-    }
+          )
+        })}
+      </View>
+    )
+  }
 }

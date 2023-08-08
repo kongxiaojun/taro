@@ -1,76 +1,72 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
+import ButtonList from '@/components/buttonList'
+import { TestConsole } from '@/util/util'
 import './index.scss'
 
 /**
  * 设备-剪切板
- * @returns 
+ * @returns
  */
 
 export default class Index extends React.Component {
-    state = {
-        list: [
-            {
-                id: 'setClipboardData',
-                func: () => {
-                    Taro.setClipboardData({
-                        data: this.state.value,
-                        success(res) {
-                          console.log('setClipboardData success ', res)
-                        },
-                        fail(res) {
-                            console.log('setClipboardData fail ', res)
-                        },
-                        complete(res) {
-                            console.log('setClipboardData complete ', res)
-                        },
-                      })
-                },
-            }, 
-            {
-                id: 'getClipboardData',
-                func: () => {
-                    Taro.getClipboardData({
-                        success(res) {
-                            console.log('getClipboardData success ', res)
-                        },
-                        fail(res) {
-                            console.log('getClipboardData fail ', res)
-                        },
-                        complete(res) {
-                            console.log('getClipboardData complete ', res)
-                        },
-                      })
-                },
-            }, 
-        ], 
-        value: '复制的内容',
-        pasted: '',
-    }
-    render () {
-        let { list, value, pasted } = this.state;
-        return (
-            <View className='api-page'>
-                <View>复制内容：{value}</View>
-                <View>粘贴内容：{pasted}</View>
-                {
-                    list.map((item) => {
-                        return (
-                            <Button
-                                className='api-page-btn'
-                                type='primary'
-                                onClick={item.func == null ? () => {} : item.func}
-                            >
-                                {item.id}
-                                {
-                                    item.func == null && (<Text className='navigator-state tag'>未创建Demo</Text>)
-                                }
-                            </Button>
-                        )
-                    })
-                }
-            </View>
-        )
-    }
+  state = {
+    list: [
+      {
+        id: 'setClipboardData',
+        func: () => {
+          TestConsole.consoleTest('setClipboardData')
+          Taro.setClipboardData({
+            data: this.state.value,
+            success: (res) => {
+              TestConsole.consoleSuccess(res)
+            },
+            fail: (res) => {
+              TestConsole.consoleFail(res)
+            },
+            complete: (res) => {
+              TestConsole.consoleComplete(res)
+            },
+          }).then((res) => {
+            TestConsole.consoleReturn(res)
+          })
+        },
+      },
+      {
+        id: 'getClipboardData',
+        func: () => {
+          TestConsole.consoleTest('getClipboardData')
+          Taro.getClipboardData({
+            success: (res) => {
+              TestConsole.consoleSuccess(res)
+              this.setState({ pasted: res.data })
+            },
+            fail: (res) => {
+              TestConsole.consoleFail(res)
+            },
+            complete: (res) => {
+              TestConsole.consoleComplete(res)
+            },
+          }).then((res) => {
+            TestConsole.consoleReturn(res)
+          })
+        },
+      },
+    ],
+    value: '我是复制的内容',
+    pasted: '',
+  }
+  render() {
+    let { list, value, pasted } = this.state
+    return (
+      <View className='api-page'>
+        <View style={{ display: 'inline-block' }}>
+          <View>复制内容：{value}</View>
+          <View>粘贴内容：{pasted}</View>
+        </View>
+        <ButtonList buttonList={list} />
+      </View>
+    )
+  }
 }

@@ -1,46 +1,33 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
+import ButtonList from '@/components/buttonList'
 import './index.scss'
 
 /**
- * 界面-滚动
- * @returns 
+ * 开放接口-音视频通话设备
+ * @returns
  */
 
 export default class Index extends React.Component {
-    state = {
-        list: [
-            {
-                id: 'pageScrollTo',
-                func: null,
-            }, 
-            {
-                id: 'ScrollViewContext',
-                func: null,
-            }, 
-        ], 
-    }
-    render () {
-        return (
-            <View className='api-page'>
-                {
-                    this.state.list.map((item) => {
-                        return (
-                            <Button
-                                className='api-page-btn'
-                                type='primary'
-                                onClick={item.func == null ? () => {} : item.func}
-                            >
-                                {item.id}
-                                {
-                                    item.func == null && (<Text className='navigator-state tag'>未创建Demo</Text>)
-                                }
-                            </Button>
-                        )
-                    })
-                }
-            </View>
-        )
-    }
+  state = {
+    list: [
+      {
+        id: 'requestDeviceVolP',
+        func: null,
+      },
+      {
+        id: 'getDeviceVolPList',
+        func: null,
+      },
+    ],
+  }
+  render() {
+    const { list } = this.state
+    return (
+      <View className='api-page'>
+        <ButtonList buttonList={list} />
+      </View>
+    )
+  }
 }
