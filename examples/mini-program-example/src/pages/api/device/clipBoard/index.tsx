@@ -15,46 +15,50 @@ export default class Index extends React.Component {
     list: [
       {
         id: 'setClipboardData',
-        func: () => {
+        inputData: {
+          data: '我是复制的内容',
+        },
+        func: (apiIndex, data) => {
           TestConsole.consoleTest('setClipboardData')
           Taro.setClipboardData({
-            data: this.state.value,
+            ...data,
             success: (res) => {
-              TestConsole.consoleSuccess(res)
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
             },
             fail: (res) => {
-              TestConsole.consoleFail(res)
+              TestConsole.consoleFail.call(this, res, apiIndex)
             },
             complete: (res) => {
-              TestConsole.consoleComplete(res)
+              TestConsole.consoleComplete.call(this, res, apiIndex)
             },
           }).then((res) => {
-            TestConsole.consoleReturn(res)
+            TestConsole.consoleReturn.call(this, res, apiIndex)
           })
         },
       },
       {
         id: 'getClipboardData',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('getClipboardData')
           Taro.getClipboardData({
             success: (res) => {
-              TestConsole.consoleSuccess(res)
-              this.setState({ pasted: res.data })
+              this.setState({
+                pasted: res.data,
+              })
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
             },
             fail: (res) => {
-              TestConsole.consoleFail(res)
+              TestConsole.consoleFail.call(this, res, apiIndex)
             },
             complete: (res) => {
-              TestConsole.consoleComplete(res)
+              TestConsole.consoleComplete.call(this, res, apiIndex)
             },
           }).then((res) => {
-            TestConsole.consoleReturn(res)
+            TestConsole.consoleReturn.call(this, res, apiIndex)
           })
         },
       },
     ],
-    value: '我是复制的内容',
     pasted: '',
   }
   render() {
@@ -62,7 +66,6 @@ export default class Index extends React.Component {
     return (
       <View className='api-page'>
         <View style={{ display: 'inline-block' }}>
-          <View>复制内容：{value}</View>
           <View>粘贴内容：{pasted}</View>
         </View>
         <ButtonList buttonList={list} />

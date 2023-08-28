@@ -1,7 +1,8 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import ButtonList from '@/components/buttonList'
+import { TestConsole } from '@/util/util'
 import './index.scss'
 
 /**
@@ -18,8 +19,8 @@ export default class Index extends React.Component {
       },
       {
         id: 'onWindowResize',
-        func: () => {
-          console.log('onWindowResize')
+        func: (apiIndex) => {
+          TestConsole.consoleTest('Taro.onWindowResize')
           if (!this.listenResize['registered']) {
             this.listenResize['registered'] = true
             Taro.onWindowResize(this.listenResize)
@@ -32,8 +33,8 @@ export default class Index extends React.Component {
       },
       {
         id: 'offWindowResize',
-        func: () => {
-          console.log('offWindowResize')
+        func: (apiIndex) => {
+          TestConsole.consoleTest('Taro.offWindowResize')
           Taro.offWindowResize(this.listenResize)
           this.listenResize['registered'] = false
           Taro.showToast({

@@ -1,6 +1,7 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
+import ButtonList from '@/components/buttonList'
 import { TestConsole } from '@/util/util'
 import './index.scss'
 
@@ -18,7 +19,7 @@ export default class Index extends React.Component {
       },
       {
         id: 'onNetworkStatusChange',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('onNetworkStatusChange')
           Taro.onNetworkStatusChange(this.callback)
         },
@@ -29,33 +30,33 @@ export default class Index extends React.Component {
       },
       {
         id: 'offNetworkStatusChange',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('offNetworkStatusChange')
           Taro.offNetworkStatusChange(this.callback)
         },
       },
       {
         id: 'getNetworkType',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('getNetworkType')
           Taro.getNetworkType({
             success: (res) => {
-              TestConsole.consoleSuccess(res)
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
               this.setState({
-                networkType: res.networkType
+                networkType: res.networkType,
               })
             },
             fail: (res) => {
-              TestConsole.consoleFail(res)
+              TestConsole.consoleFail.call(this, res, apiIndex)
               this.setState({
-                networkType: '获取失败'
+                networkType: '获取失败',
               })
             },
             complete: (res) => {
-              TestConsole.consoleComplete(res)
+              TestConsole.consoleComplete.call(this, res, apiIndex)
             },
           }).then((res) => {
-            TestConsole.consoleReturn(res)
+            TestConsole.consoleReturn.call(this, res, apiIndex)
           })
         },
       },
@@ -65,14 +66,14 @@ export default class Index extends React.Component {
       },
     ],
     networkType: '未获取',
-    networkState: null
+    networkState: null,
   }
 
   callback = (res: any) => {
     TestConsole.consoleSuccess(res)
     this.setState({
       networkState: res.isConnected,
-      networkType: res.networkType
+      networkType: res.networkType,
     })
   }
 
@@ -80,19 +81,12 @@ export default class Index extends React.Component {
     let { list, networkType, networkState } = this.state
     return (
       <View className='api-page'>
-        <View style={{display:'inline-block'}}>
+        <View style={{ display: 'inline-block' }}>
           <View>网络类型：{networkType}</View>
           <View hidden={networkState == null ? false : true}>网络状态：未获取</View>
           <View hidden={networkState == null ? true : false}>网络状态：{networkState ? '已连接' : '已断开'}</View>
         </View>
-        {list.map((item) => {
-          return (
-            <View key={item.id} className='api-page-btn' onClick={item.func == null ? () => {} : item.func}>
-              {item.id}
-              {item.func == null && <Text className='navigator-state tag'>未创建Demo</Text>}
-            </View>
-          )
-        })}
+        <ButtonList buttonList={list} />
       </View>
     )
   }

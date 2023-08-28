@@ -1,6 +1,7 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
+import ButtonList from '@/components/buttonList'
 import { TestConsole } from '@/util/util'
 import './index.scss'
 
@@ -14,7 +15,7 @@ export default class Index extends React.Component {
     list: [
       {
         id: 'stopAccelerometer',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('stopAccelerometer')
           Taro.stopAccelerometer().then((res) => {
             TestConsole.consoleReturn(res)
@@ -23,7 +24,7 @@ export default class Index extends React.Component {
       },
       {
         id: 'startAccelerometer',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('startAccelerometer')
           Taro.startAccelerometer().then((res) => {
             TestConsole.consoleReturn(res)
@@ -32,14 +33,14 @@ export default class Index extends React.Component {
       },
       {
         id: 'onAccelerometerChange',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('onAccelerometerChange')
           Taro.onAccelerometerChange(this.callback)
         },
       },
       {
         id: 'offAccelerometerChange',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('offAccelerometerChange')
           Taro.offAccelerometerChange()
         },
@@ -52,16 +53,10 @@ export default class Index extends React.Component {
   }
 
   render() {
+    const { list } = this.state
     return (
       <View className='api-page'>
-        {this.state.list.map((item) => {
-          return (
-            <View key={item.id} className='api-page-btn' onClick={item.func == null ? () => {} : item.func}>
-              {item.id}
-              {item.func == null && <Text className='navigator-state tag'>未创建Demo</Text>}
-            </View>
-          )
-        })}
+        <ButtonList buttonList={list} />
       </View>
     )
   }

@@ -15,7 +15,7 @@ import {
   REG_IMAGE,
   REG_TYPESCRIPT,
   REG_URL,
-  resolveScriptPath
+  resolveScriptPath,
 } from '@tarojs/helper'
 import * as taroize from '@tarojs/taroize'
 import wxTransformer from '@tarojs/transformer-wx'
@@ -24,7 +24,7 @@ import Processors from 'postcss'
 import * as unitTransform from 'postcss-taro-unit-transform'
 import * as prettier from 'prettier'
 
-import { analyzeImportUrl, getPkgVersion, incrementId, searchFile } from './util'
+import { analyzeImportUrl, copyFileToTaro, getPkgVersion, handleThirdPartyLib, incrementId } from './util'
 import { generateMinimalEscapeCode } from './util/astConvert'
 
 import type { ParserOptions } from '@babel/parser'
@@ -33,7 +33,7 @@ import type { AppConfig, TabBar } from '@tarojs/taro'
 const prettierJSConfig: prettier.Options = {
   semi: false,
   singleQuote: true,
-  parser: 'babel'
+  parser: 'babel',
 }
 
 const babylonConfig: ParserOptions = {
@@ -45,8 +45,8 @@ const babylonConfig: ParserOptions = {
     'asyncGenerators',
     'objectRestSpread',
     'decorators',
-    'dynamicImport'
-  ]
+    'dynamicImport',
+  ],
 }
 
 const OUTPUT_STYLE_EXTNAME = '.scss'
@@ -83,6 +83,12 @@ interface ITaroizeOptions {
   scriptPath?: string
 }
 
+// convert.config,json配置参数
+interface IConvertConfig {
+  external: string[] // 不做转换的目录
+  nodePath: string[] // 搜索三方库的目录
+}
+
 function processStyleImports (content: string, processFn: (a: string, b: string) => string) {
   const style: string[] = []
   const imports: string[] = []
@@ -104,7 +110,7 @@ function processStyleImports (content: string, processFn: (a: string, b: string)
   return {
     content,
     style,
-    imports
+    imports,
   }
 }
 
@@ -122,12 +128,14 @@ export default class Convertor {
   entryJSPath: string
   entryJSONPath: string
   entryStylePath: string
-  entryJSON: AppConfig & {usingComponents?: Record<string, string>}
+  entryJSON: AppConfig & { usingComponents?: Record<string, string> }
   entryStyle: string
   entryUsingComponents: Record<string, string>
   framework: 'react' | 'vue'
   isTsProject: boolean
   miniprogramRoot: string
+  convertConfig: IConvertConfig
+  external: string[]
 
   constructor (root, isTsProject) {
     this.root = root
@@ -142,7 +150,7 @@ export default class Convertor {
       TEMPL: '.wxml',
       STYLE: '.wxss',
       CONFIG: '.json',
-      SCRIPT: (isTsProject ? '.ts' : '.js')
+      SCRIPT: isTsProject ? '.ts' : '.js',
     }
     this.pages = new Set<string>()
     this.components = new Set<IComponent>()
@@ -155,6 +163,7 @@ export default class Convertor {
   init () {
     console.log(chalk.green('开始代码转换...'))
     this.initConvert()
+    this.getConvertConfig()
     this.getApp()
     this.getPages()
     this.getSitemapLocation()
@@ -171,14 +180,10 @@ export default class Convertor {
 
   wxsIncrementId = incrementId()
 
-  parseAst ({
-    ast,
-    sourceFilePath,
-    outputFilePath,
-    importStylePath,
-    depComponents,
-    imports = []
-  }: IParseAstOptions): { ast: t.File, scriptFiles: Set<string> } {
+  parseAst ({ ast, sourceFilePath, outputFilePath, importStylePath, depComponents, imports = [] }: IParseAstOptions): {
+    ast: t.File
+    scriptFiles: Set<string>
+  } {
     const scriptFiles = new Set<string>()
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this
@@ -198,10 +203,10 @@ export default class Convertor {
                       astPath.traverse({
                         JSXElement () {
                           isTaroComponent = true
-                        }
+                        },
                       })
                     }
-                  }
+                  },
                 })
                 if (isTaroComponent) {
                   componentClassName = node.id.name
@@ -219,10 +224,10 @@ export default class Convertor {
                       astPath.traverse({
                         JSXElement () {
                           isTaroComponent = true
-                        }
+                        },
                       })
                     }
-                  }
+                  },
                 })
                 if (isTaroComponent) {
                   if (node.id === null) {
@@ -249,10 +254,10 @@ export default class Convertor {
                         astPath.traverse({
                           JSXElement () {
                             isTaroComponent = true
-                          }
+                          },
                         })
                       }
-                    }
+                    },
                   })
                   if (isTaroComponent) {
                     componentClassName = declaration.id!.name
@@ -264,7 +269,17 @@ export default class Convertor {
               const node = astPath.node
               const source = node.source
               const value = source.value
-              analyzeImportUrl(self.root, sourceFilePath, scriptFiles, source, value, self.isTsProject)
+              analyzeImportUrl(
+                self.root,
+                sourceFilePath,
+                scriptFiles,
+                source,
+                value,
+                self.external,
+                self.miniprogramRoot,
+                self.convertDir,
+                self.isTsProject
+              )
             },
             CallExpression (astPath) {
               const node = astPath.node
@@ -274,7 +289,17 @@ export default class Convertor {
                 if (callee.name === 'require') {
                   const args = node.arguments as Array<t.StringLiteral>
                   const value = args[0].value
-                  analyzeImportUrl(self.root, sourceFilePath, scriptFiles, args[0], value)
+                  analyzeImportUrl(
+                    self.root,
+                    sourceFilePath,
+                    scriptFiles,
+                    args[0],
+                    value,
+                    self.external,
+                    self.miniprogramRoot,
+                    self.convertDir,
+                    self.isTsProject
+                  )
                 } else if (WX_GLOBAL_FN.has(callee.name)) {
                   calleePath.replaceWith(t.memberExpression(t.identifier('Taro'), callee as t.Identifier))
                   needInsertImportTaro = true
@@ -289,13 +314,13 @@ export default class Convertor {
                 node.object = t.identifier('Taro')
                 needInsertImportTaro = true
               }
-            }
+            },
           })
         },
         exit (astPath) {
           const bodyNode = astPath.get('body') as NodePath<t.Node>[]
-          const lastImport = bodyNode.filter(p => p.isImportDeclaration()).pop()
-          const hasTaroImport = bodyNode.some(p => p.isImportDeclaration() && p.node.source.value === '@tarojs/taro')
+          const lastImport = bodyNode.filter((p) => p.isImportDeclaration()).pop()
+          const hasTaroImport = bodyNode.some((p) => p.isImportDeclaration() && p.node.source.value === '@tarojs/taro')
           if (needInsertImportTaro && !hasTaroImport) {
             (astPath.node as t.Program).body.unshift(
               t.importDeclaration([t.importDefaultSpecifier(t.identifier('Taro'))], t.stringLiteral('@tarojs/taro'))
@@ -315,7 +340,7 @@ export default class Convertor {
                 const imageRelativePath = promoteRelativePath(path.relative(sourceFilePath, sourceImagePath))
                 const outputImagePath = self.getDistFilePath(sourceImagePath)
                 if (fs.existsSync(sourceImagePath)) {
-                  self.copyFileToTaro(sourceImagePath, outputImagePath)
+                  copyFileToTaro(sourceImagePath, outputImagePath)
                   printLog(processTypeEnum.COPY, '图片', self.generateShowPath(outputImagePath))
                 } else if (!t.isBinaryExpression(astPath.parent) || astPath.parent.operator !== '+') {
                   printLog(processTypeEnum.ERROR, '图片不存在', self.generateShowPath(sourceImagePath))
@@ -330,7 +355,7 @@ export default class Convertor {
                   )
                 }
               }
-            }
+            },
           })
           if (lastImport) {
             if (importStylePath) {
@@ -347,7 +372,10 @@ export default class Convertor {
                 if (componentClassName === importName) {
                   return
                 }
-                const importPath = path.join(self.importsDir, importName + (wxs ? self.wxsIncrementId() : '') + self.isTsProject ? '.ts' : '.js')
+                const importPath = path.join(
+                  self.importsDir,
+                  importName + (wxs ? self.wxsIncrementId() : '') + (self.isTsProject ? '.ts' : '.js')
+                )
                 if (!self.hadBeenBuiltImports.has(importPath)) {
                   self.hadBeenBuiltImports.add(importPath)
                   self.writeFileToTaro(importPath, prettier.format(generateMinimalEscapeCode(ast), prettierJSConfig))
@@ -361,41 +389,58 @@ export default class Convertor {
               })
             }
             if (depComponents && depComponents.size) {
-              depComponents.forEach(componentObj => {
+              depComponents.forEach((componentObj) => {
                 const name = pascalCase(componentObj.name)
-                const component = componentObj.path
+                let componentPath = componentObj.path
+                if (componentPath.indexOf(self.root) !== -1) {
+                  componentPath = path.relative(sourceFilePath, componentPath)
+                }
                 lastImport.insertAfter(
                   template(
-                    `import ${name} from '${promoteRelativePath(path.relative(sourceFilePath, component))}'`,
+                    `import ${name} from '${promoteRelativePath(componentPath)}'`,
                     babylonConfig
                   )() as t.Statement
                 )
               })
             }
           }
-        }
-      }
+        },
+      },
     })
 
     return {
       ast,
-      scriptFiles
+      scriptFiles,
     }
   }
 
-  // Fix: 在小程序三方件中找到入口 index
-  getModulePath (modulePath) {
-    const parts = modulePath.split('/')
-    let moduleIndex = path.join(this.root, 'node_modules') // node_modules文件夹
-    if (parts.at(-1) === 'index') {
-      parts.pop()
-    } 
-    parts.push('index.js')
-    parts.forEach(part => {
-      const moduleFile = moduleIndex
-      moduleIndex = searchFile(moduleFile, part)
-    })
-    return moduleIndex
+  getConvertConfig () {
+    // 处理convert.config.json,转为绝对路径后存到external里
+    let convertJsonPath: string
+    if (this.isTsProject) {
+      convertJsonPath = path.join(this.miniprogramRoot, `convert.config${this.fileTypes.CONFIG}`)
+    } else {
+      convertJsonPath = path.join(this.root, `convert.config${this.fileTypes.CONFIG}`)
+    }
+    if (fs.existsSync(convertJsonPath)) {
+      try {
+        const convertJson = JSON.parse(String(fs.readFileSync(convertJsonPath)))
+        this.convertConfig = { ...convertJson }
+        const externalJson = convertJson.external
+        if (typeof externalJson === 'undefined') {
+          return
+        }
+        const absolutePath: string[] = []
+        for (const iRpath of externalJson) {
+          // 相对路径转为绝对路径
+          absolutePath.push(path.resolve(convertJsonPath, '..', iRpath))
+        }
+        this.external = absolutePath
+      } catch (err) {
+        console.log(chalk.red(`convert.config${this.fileTypes.CONFIG} 读取失败，请检查！`))
+        process.exit(1)
+      }
+    }
   }
 
   getApp () {
@@ -417,11 +462,9 @@ export default class Convertor {
         for (const key in using) {
           if (using[key].startsWith('plugin://')) continue
           const componentPath = using[key]
-          using[key] = path.join(this.root, componentPath)
-          // Fix: 插件依赖目录为 miniprogram_npm，现将其目录改为npm_module
-          if (!fs.existsSync(using[key] + this.fileTypes.SCRIPT)) {
-            const realPath = this.getModulePath(componentPath)
-            using[key] = realPath.slice(0,-3)
+          // 非三方库的路径需要处理
+          if (!this.isThirdPartyLib(componentPath, this.root)) {
+            using[key] = path.join(this.root, componentPath)
           }
         }
         this.entryUsingComponents = using
@@ -455,10 +498,10 @@ export default class Convertor {
     if (!subPackages || !subPackages.length) {
       return
     }
-    subPackages.forEach(item => {
+    subPackages.forEach((item) => {
       if (item.pages && item.pages.length) {
         const root = item.root
-        item.pages.forEach(page => {
+        item.pages.forEach((page) => {
           let pagePath = `${root}/${page}`
           pagePath = pagePath.replace(/\/{2,}/g, '/')
           this.pages.add(pagePath)
@@ -474,7 +517,7 @@ export default class Convertor {
       const sitemapFilePath = path.join(this.root, sitemapLocation)
       if (fs.existsSync(sitemapFilePath)) {
         const outputFilePath = path.join(this.convertRoot, sitemapLocation)
-        this.copyFileToTaro(sitemapFilePath, outputFilePath)
+        copyFileToTaro(sitemapFilePath, outputFilePath)
       }
     }
   }
@@ -484,10 +527,17 @@ export default class Convertor {
       return
     }
     if (files.size) {
-      files.forEach(file => {
+      files.forEach((file) => {
+        // 处理三方库引用
+        if (!path.isAbsolute(file)) {
+          handleThirdPartyLib(file, this.convertConfig?.nodePath, this.root, this.convertRoot)
+          return
+        }
+
         if (!fs.existsSync(file) || this.hadBeenCopyedFiles.has(file)) {
           return
         }
+
         const code = fs.readFileSync(file).toString()
         let outputFilePath = file.replace(this.isTsProject ? this.miniprogramRoot : this.root, this.convertDir)
         const extname = path.extname(outputFilePath)
@@ -498,12 +548,12 @@ export default class Convertor {
           code,
           sourcePath: file,
           isNormal: true,
-          isTyped: REG_TYPESCRIPT.test(file)
+          isTyped: REG_TYPESCRIPT.test(file),
         })
         const { ast, scriptFiles } = this.parseAst({
           ast: transformResult.ast,
           outputFilePath,
-          sourceFilePath: file
+          sourceFilePath: file,
         })
         const jsCode = generateMinimalEscapeCode(ast)
         this.writeFileToTaro(outputFilePath, prettier.format(jsCode, prettierJSConfig))
@@ -519,26 +569,17 @@ export default class Convertor {
     fs.writeFileSync(dist, code)
   }
 
-  copyFileToTaro (from: string, to: string, options?: fs.CopyOptionsSync) {
-    const filename = path.basename(from)
-    if (fs.statSync(from).isFile() && !path.extname(to)) {
-      fs.ensureDir(to)
-      return fs.copySync(from, path.join(to, filename), options)
-    }
-    fs.ensureDir(path.dirname(to))
-    return fs.copySync(from, to, options)
-  }
-
+  // 自定义组件，如果组件文件命名为index，引入时可省略index这一层，解析时需加上
   getComponentPath (component: string, extname: string) {
-    if (fs.existsSync(component + extname))
-      return component + extname
-    else
-      return component + '/index' + extname
+    if (fs.existsSync(component + extname)) return component + extname
+    else return component + '/index' + extname
   }
 
   getDistFilePath (src: string, extname?: string): string {
     if (!extname) return src.replace(this.isTsProject ? this.miniprogramRoot : this.root, this.convertDir)
-    return src.replace(this.isTsProject ? this.miniprogramRoot : this.root, this.convertDir).replace(path.extname(src), extname)
+    return src
+      .replace(this.isTsProject ? this.miniprogramRoot : this.root, this.convertDir)
+      .replace(path.extname(src), extname)
   }
 
   getConfigFilePath (src: string) {
@@ -553,10 +594,7 @@ export default class Convertor {
   }
 
   generateShowPath (filePath: string): string {
-    return filePath
-      .replace(path.join(this.root, '/'), '')
-      .split(path.sep)
-      .join('/')
+    return filePath.replace(path.join(this.root, '/'), '').split(path.sep).join('/')
   }
 
   private formatFile (jsCode: string, template = '') {
@@ -588,7 +626,7 @@ ${code}
         path: this.root,
         rootPath: this.root,
         framework: this.framework,
-        isApp: true
+        isApp: true,
       })
       const { ast, scriptFiles } = this.parseAst({
         ast: taroizeResult.ast,
@@ -597,7 +635,7 @@ ${code}
         importStylePath: this.entryStyle
           ? this.entryStylePath.replace(path.extname(this.entryStylePath), OUTPUT_STYLE_EXTNAME)
           : null,
-        isApp: true
+        isApp: true,
       })
       const jsCode = generateMinimalEscapeCode(ast)
       this.writeFileToTaro(entryDistJSPath, jsCode)
@@ -620,16 +658,16 @@ ${code}
     const { list = [] } = tabBar
     const icons = new Set<string>()
     if (Array.isArray(list) && list.length) {
-      list.forEach(item => {
+      list.forEach((item) => {
         if (typeof item.iconPath === 'string') icons.add(item.iconPath)
         if (typeof item.selectedIconPath === 'string') icons.add(item.selectedIconPath)
       })
       if (icons.size > 0) {
         Array.from(icons)
-          .map(icon => path.join(this.root, icon))
-          .forEach(iconPath => {
+          .map((icon) => path.join(this.root, icon))
+          .forEach((iconPath) => {
             const iconDistPath = this.getDistFilePath(iconPath)
-            this.copyFileToTaro(iconPath, iconDistPath)
+            copyFileToTaro(iconPath, iconDistPath)
             printLog(processTypeEnum.COPY, 'TabBar 图标', this.generateShowPath(iconDistPath))
           })
       }
@@ -642,7 +680,7 @@ ${code}
     const customTabbarPath = path.join(this.root, 'custom-tab-bar')
     if (fs.existsSync(customTabbarPath)) {
       const customTabbarDistPath = this.getDistFilePath(customTabbarPath)
-      this.copyFileToTaro(customTabbarPath, customTabbarDistPath)
+      copyFileToTaro(customTabbarPath, customTabbarDistPath)
       printLog(processTypeEnum.COPY, '自定义 TabBar', this.generateShowPath(customTabbarDistPath))
     }
   }
@@ -655,8 +693,48 @@ ${code}
     return path.join(path.dirname(file), path.basename(file, path.extname(file)) + '.vue')
   }
 
+  // 判断是否是三方库
+  isThirdPartyLib (modulePath: string, curPageDir: string) {
+    // 相对路径和带根目录的路径都不是三方库
+    if (modulePath.indexOf('.') === 0 || modulePath.indexOf('/') === 0 || modulePath.indexOf(this.root) !== -1) {
+      return false
+    }
+
+    // 通过格式如component/component引用组件
+    // app.json中引用组件
+    if (curPageDir === this.root) {
+      if (fs.existsSync(resolveScriptPath(path.join(curPageDir, modulePath)))) {
+        return false
+      }
+    } else {
+      // 页面中引用组件
+      if (
+        fs.existsSync(resolveScriptPath(path.join(curPageDir, modulePath))) ||
+        fs.existsSync(resolveScriptPath(path.join(this.root, modulePath)))
+      ) {
+        return false
+      }
+    }
+
+    return true
+  }
+
+  // 判断三方库是否安装
+  isInNodeModule (modulePath: string) {
+    const nodeModules = path.resolve(this.root, 'node_modules')
+    if (!fs.existsSync(nodeModules)) {
+      return false
+    }
+    const modules = fs.readdirSync(nodeModules)
+    const parts = modulePath.split('/')
+    if (modules.indexOf(parts[0]) === -1) {
+      return false
+    }
+    return true
+  }
+
   traversePages () {
-    this.pages.forEach(page => {
+    this.pages.forEach((page) => {
       const pagePath = this.isTsProject ? path.join(this.miniprogramRoot, page) : path.join(this.root, page)
       const pageJSPath = pagePath + this.fileTypes.SCRIPT
       const pageDistJSPath = this.getDistFilePath(pageJSPath)
@@ -684,36 +762,34 @@ ${code}
           if (this.entryUsingComponents) {
             pageConfig.usingComponents = {
               ...pageConfig.usingComponents,
-              ...this.entryUsingComponents
+              ...this.entryUsingComponents,
             }
           }
           const pageUsingComponents = pageConfig.usingComponents
           if (pageUsingComponents) {
             // 页面依赖组件
             const usingComponents = {}
-            Object.keys(pageUsingComponents).forEach(component => {
+            Object.keys(pageUsingComponents).forEach((component) => {
               const unResolveComponentPath: string = pageUsingComponents[component]
               if (unResolveComponentPath.startsWith('plugin://')) {
                 usingComponents[component] = unResolveComponentPath
+              } else if (this.isThirdPartyLib(unResolveComponentPath, path.resolve(pagePath, '..'))) {
+                handleThirdPartyLib(unResolveComponentPath, this.convertConfig?.nodePath, this.root, this.convertRoot)
               } else {
                 let componentPath
                 if (unResolveComponentPath.startsWith(this.root)) {
                   componentPath = unResolveComponentPath
                 } else {
                   componentPath = path.resolve(pageConfigPath, '..', pageUsingComponents[component])
+                  // 支持将组件库放在工程根目录下
                   if (!fs.existsSync(resolveScriptPath(componentPath))) {
                     componentPath = path.join(this.root, pageUsingComponents[component])
-                    // Fix: 某些组件不是app.json导入，同样需要适配路径
-                    if (!fs.existsSync(componentPath + this.fileTypes.SCRIPT)) {
-                      const realPath = this.getModulePath(pageUsingComponents[component])
-                      componentPath = realPath.slice(0,-3)
-                    }
                   }
                 }
 
                 depComponents.add({
                   name: component,
-                  path: componentPath
+                  path: componentPath,
                 })
               }
             })
@@ -741,7 +817,7 @@ ${code}
         param.rootPath = this.root
         const taroizeResult = taroize({
           ...param,
-          framework: this.framework
+          framework: this.framework,
         })
         const { ast, scriptFiles } = this.parseAst({
           ast: taroizeResult.ast,
@@ -749,11 +825,9 @@ ${code}
           outputFilePath: pageDistJSPath,
           importStylePath: pageStyle ? pageStylePath.replace(path.extname(pageStylePath), OUTPUT_STYLE_EXTNAME) : null,
           depComponents,
-          imports: taroizeResult.imports
+          imports: taroizeResult.imports,
         })
-        printLog(processTypeEnum.GENERATE, '抽象语法树', this.generateShowPath(pageDistJSPath))
         const jsCode = generateMinimalEscapeCode(ast)
-        printLog(processTypeEnum.GENERATE, 'JSCode', this.generateShowPath(pageDistJSPath))
         this.writeFileToTaro(this.getComponentDest(pageDistJSPath), this.formatFile(jsCode, taroizeResult.template))
         printLog(processTypeEnum.GENERATE, 'writeFileToTaro', this.generateShowPath(pageDistJSPath))
         this.writeFileToConfig(pageDistJSPath, param.json)
@@ -762,7 +836,6 @@ ${code}
           this.traverseStyle(pageStylePath, pageStyle)
         }
         this.generateScriptFiles(scriptFiles)
-        printLog(processTypeEnum.GENERATE, 'generateScriptFiles')
         this.traverseComponents(depComponents)
       } catch (err) {
         printLog(processTypeEnum.ERROR, '页面转换', this.generateShowPath(pageJSPath))
@@ -775,22 +848,22 @@ ${code}
     if (!components || !components.size) {
       return
     }
-    components.forEach(componentObj => {
+    components.forEach((componentObj) => {
       const component = componentObj.path
       if (this.hadBeenBuiltComponents.has(component)) return
       this.hadBeenBuiltComponents.add(component)
 
-      const componentJSPath = component + this.fileTypes.SCRIPT
+      const componentJSPath = this.getComponentPath(component, this.fileTypes.SCRIPT)
       const componentDistJSPath = this.getDistFilePath(componentJSPath)
-      const componentConfigPath = component + this.fileTypes.CONFIG
-      const componentStylePath = component + this.fileTypes.STYLE
-      const componentTemplPath = component + this.fileTypes.TEMPL
+      const componentConfigPath = this.getComponentPath(component, this.fileTypes.CONFIG)
+      const componentStylePath = this.getComponentPath(component, this.fileTypes.STYLE)
+      const componentTemplPath = this.getComponentPath(component, this.fileTypes.TEMPL)
 
       try {
         const param: ITaroizeOptions = {}
         const depComponents = new Set<IComponent>()
         if (!fs.existsSync(componentJSPath)) {
-          throw new Error(`组件 ${component} 没有 JS 文件！`)
+          throw new Error(`自定义组件 ${component} 没有 JS 文件！`)
         }
         printLog(processTypeEnum.CONVERT, '组件文件', this.generateShowPath(componentJSPath))
         if (fs.existsSync(componentConfigPath)) {
@@ -800,22 +873,17 @@ ${code}
           const componentUsingComponnets = componentConfig.usingComponents
           if (componentUsingComponnets) {
             // 页面依赖组件
-            Object.keys(componentUsingComponnets).forEach(component => {
+            Object.keys(componentUsingComponnets).forEach((component) => {
               let componentPath = path.resolve(componentConfigPath, '..', componentUsingComponnets[component])
               if (!fs.existsSync(resolveScriptPath(componentPath))) {
                 componentPath = path.join(this.root, componentUsingComponnets[component])
-                // Fix
-                if (!fs.existsSync(componentPath + this.fileTypes.SCRIPT)) {
-                  const realPath = this.getModulePath(componentUsingComponnets[component])
-                  componentPath = realPath.slice(0, -3)
-                }
               }
               if (!fs.existsSync(componentPath + this.fileTypes.SCRIPT)) {
                 componentPath = path.join(componentPath, `/index`)
               }
               depComponents.add({
                 name: component,
-                path: componentPath
+                path: componentPath,
               })
             })
             delete componentConfig.usingComponents
@@ -836,7 +904,7 @@ ${code}
         param.rootPath = this.root
         const taroizeResult = taroize({
           ...param,
-          framework: this.framework
+          framework: this.framework,
         })
         const { ast, scriptFiles } = this.parseAst({
           ast: taroizeResult.ast,
@@ -846,10 +914,13 @@ ${code}
             ? componentStylePath.replace(path.extname(componentStylePath), OUTPUT_STYLE_EXTNAME)
             : null,
           depComponents,
-          imports: taroizeResult.imports
+          imports: taroizeResult.imports,
         })
         const jsCode = generateMinimalEscapeCode(ast)
-        this.writeFileToTaro(this.getComponentDest(componentDistJSPath), this.formatFile(jsCode, taroizeResult.template))
+        this.writeFileToTaro(
+          this.getComponentDest(componentDistJSPath),
+          this.formatFile(jsCode, taroizeResult.template)
+        )
         printLog(processTypeEnum.GENERATE, '组件文件', this.generateShowPath(componentDistJSPath))
         if (componentStyle) {
           this.traverseStyle(componentStylePath, componentStyle)
@@ -865,7 +936,7 @@ ${code}
 
   async styleUnitTransform (filePath: string, content: string) {
     const postcssResult = await Processors([unitTransform()]).process(content, {
-      from: filePath
+      from: filePath,
     })
     return postcssResult
   }
@@ -879,12 +950,7 @@ ${code}
     while (token?.length) {
       let url = token[1]
 
-      if (
-        url &&
-        url.indexOf('data:') !== 0 &&
-        url.indexOf('#') !== 0 &&
-        !(/^[a-z]+:\/\//.test(url))
-      ) {
+      if (url && url.indexOf('data:') !== 0 && url.indexOf('#') !== 0 && !/^[a-z]+:\/\//.test(url)) {
         url = url.trim()
         url.replace(/[/\\]/g, path.sep)
         url = url.split('?')[0]
@@ -921,7 +987,7 @@ ${code}
     this.writeFileToTaro(styleDist, css)
     printLog(processTypeEnum.GENERATE, '样式文件', this.generateShowPath(styleDist))
     if (imports && imports.length) {
-      imports.forEach(importItem => {
+      imports.forEach((importItem) => {
         const importPath = path.isAbsolute(importItem)
           ? path.join(this.root, importItem)
           : path.resolve(path.dirname(filePath), importItem)
@@ -951,48 +1017,48 @@ ${code}
       typescript: false,
       template: templateName,
       framework: this.framework,
-      compiler: 'webpack5'
+      compiler: 'webpack5',
     })
     creator.template(templateName, path.join('config', 'index.js'), path.join(configDir, 'index.js'), {
       date,
       projectName,
       framework: this.framework,
       compiler: 'webpack5',
-      typescript: false
+      typescript: false,
     })
     creator.template(templateName, path.join('config', 'dev.js'), path.join(configDir, 'dev.js'), {
       framework: this.framework,
       compiler: 'webpack5',
-      typescript: false
+      typescript: false,
     })
     creator.template(templateName, path.join('config', 'prod.js'), path.join(configDir, 'prod.js'), {
       framework: this.framework,
-      typescript: false
+      typescript: false,
     })
     creator.template(templateName, 'project.config.json', path.join(this.convertRoot, 'project.config.json'), {
       description,
       projectName,
-      framework: this.framework
+      framework: this.framework,
     })
     creator.template(templateName, '.gitignore', path.join(this.convertRoot, '.gitignore'))
     creator.template(templateName, '.editorconfig', path.join(this.convertRoot, '.editorconfig'))
     creator.template(templateName, '.eslintrc.js', path.join(this.convertRoot, '.eslintrc.js'), {
       typescript: false,
-      framework: this.framework
+      framework: this.framework,
     })
     creator.template(templateName, 'babel.config.js', path.join(this.convertRoot, 'babel.config.js'), {
       typescript: false,
-      framework: this.framework
+      framework: this.framework,
     })
-    creator.template(templateName, path.join('src', 'index.html'), path.join(this.convertDir, 'index.html'),{
-      projectName
+    creator.template(templateName, path.join('src', 'index.html'), path.join(this.convertDir, 'index.html'), {
+      projectName,
     })
     creator.fs.commit(() => {
       const pkgObj = JSON.parse(fs.readFileSync(pkgPath).toString())
       pkgObj.dependencies['@tarojs/with-weapp'] = `^${version}`
       fs.writeJSONSync(pkgPath, pkgObj, {
         spaces: 2,
-        EOL: '\n'
+        EOL: '\n',
       })
       printLog(processTypeEnum.GENERATE, '文件', this.generateShowPath(path.join(configDir, 'index.js')))
       printLog(processTypeEnum.GENERATE, '文件', this.generateShowPath(path.join(configDir, 'dev.js')))

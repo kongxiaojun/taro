@@ -1,6 +1,7 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
+import ButtonList from '@/components/buttonList'
 import { TestConsole } from '@/util/util'
 import './index.scss'
 
@@ -14,28 +15,28 @@ export default class Index extends React.Component {
     list: [
       {
         id: 'showToast',
-        func: () => {
+        func: (apiIndex) => {
           Taro.showToast({
             title: 'test showToast',
             icon: 'success',
             duration: 2000,
             mask: false,
             image: '',
-            success: function (res) {
-              TestConsole.consoleSuccess(res)
+            success: (res) => {
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
             },
-            fail: function (res) {
-              TestConsole.consoleFail(res)
+            fail: (res) => {
+              TestConsole.consoleFail.call(this, res, apiIndex)
             },
-            complete: function (res) {
-              TestConsole.consoleComplete(res)
+            complete: (res) => {
+              TestConsole.consoleComplete.call(this, res, apiIndex)
             },
           })
         },
       },
       {
         id: 'showModal',
-        func: () => {
+        func: (apiIndex) => {
           Taro.showModal({
             title: '提示',
             content: '这是一个模态弹窗',
@@ -44,43 +45,39 @@ export default class Index extends React.Component {
             confirmColor: '#00ff00', //green
             confirmText: '确认按钮',
             showCancel: true,
-            success: function (res) {
-              if (res.confirm) {
-                console.log('showModal success > 用户点击确定', res)
-              } else if (res.cancel) {
-                console.log('showModal success > 用户点击取消', res)
-              }
+            success: (res) => {
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
             },
-            fail: function (res) {
-              console.log('showModal fail ', res)
+            fail: (res) => {
+              TestConsole.consoleFail.call(this, res, apiIndex)
             },
-            complete: function (res) {
-              console.log('showModal complete ', res)
+            complete: (res) => {
+              TestConsole.consoleComplete.call(this, res, apiIndex)
             },
           })
         },
       },
       {
         id: 'showLoading',
-        func: () => {
+        func: (apiIndex) => {
           Taro.showLoading({
             title: '加载中',
             mask: true,
-            success: function (res) {
-              console.log('showLoading success ', res)
+            success: (res) => {
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
             },
-            fail: function (res) {
-              console.log('showLoading fail ', res)
+            fail: (res) => {
+              TestConsole.consoleFail.call(this, res, apiIndex)
             },
-            complete: function (res) {
-              console.log('showLoading complete ', res)
+            complete: (res) => {
+              TestConsole.consoleComplete.call(this, res, apiIndex)
             },
           })
         },
       },
       {
         id: 'showActionSheet',
-        func: () => {
+        func: (apiIndex) => {
           Taro.showActionSheet({
             alertText: '警示文案',
             itemList: ['A', 'B', 'C'],
@@ -90,51 +87,51 @@ export default class Index extends React.Component {
                 title: `选择项目：${res.tapIndex}`,
                 icon: 'success',
               })
-              TestConsole.consoleSuccess(res)
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
             },
             fail: (res) => {
               Taro.showToast({
                 title: `失败：${res.errMsg}`,
                 icon: 'error',
               })
-              TestConsole.consoleFail(res)
+              TestConsole.consoleFail.call(this, res, apiIndex)
             },
             complete: (res) => {
-              TestConsole.consoleComplete(res)
+              TestConsole.consoleComplete.call(this, res, apiIndex)
             },
           })
         },
       },
       {
         id: 'hideToast',
-        func: () => {
+        func: (apiIndex) => {
           Taro.showToast({
             title: 'test hideToast',
             icon: 'success',
             duration: 2000,
             mask: false,
             image: '',
-            success: function (res) {
-              console.log('showToast success ', res)
+            success: (res) => {
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
             },
-            fail: function (res) {
-              console.log('showToast fail ', res)
+            fail: (res) => {
+              TestConsole.consoleFail.call(this, res, apiIndex)
             },
-            complete: function (res) {
-              console.log('showToast complete ', res)
+            complete: (res) => {
+              TestConsole.consoleComplete.call(this, res, apiIndex)
             },
           })
           setTimeout(function () {
             Taro.hideToast({
               noConflict: false,
-              success: function (res) {
-                console.log('hideToast success ', res)
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
               },
-              fail: function (res) {
-                console.log('hideToast fail ', res)
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
               },
-              complete: function (res) {
-                console.log('hideToast complete ', res)
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
               },
             })
           }, 2000)
@@ -142,31 +139,22 @@ export default class Index extends React.Component {
       },
       {
         id: 'hideLoading',
-        func: () => {
+        func: (apiIndex) => {
           Taro.showLoading({
             title: '加载中',
             mask: true,
-            success: function (res) {
-              console.log('showLoading success ', res)
-            },
-            fail: function (res) {
-              console.log('showLoading fail ', res)
-            },
-            complete: function (res) {
-              console.log('showLoading complete ', res)
-            },
           })
           setTimeout(function () {
             Taro.hideLoading({
               noConflict: false,
-              success: function (res) {
-                console.log('hideLoading success ', res)
+              success: (res) => {
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
               },
-              fail: function (res) {
-                console.log('hideLoading fail ', res)
+              fail: (res) => {
+                TestConsole.consoleFail.call(this, res, apiIndex)
               },
-              complete: function (res) {
-                console.log('hideLoading complete ', res)
+              complete: (res) => {
+                TestConsole.consoleComplete.call(this, res, apiIndex)
               },
             })
           }, 2000)
@@ -183,16 +171,10 @@ export default class Index extends React.Component {
     ],
   }
   render() {
+    const { list } = this.state
     return (
       <View className='api-page'>
-        {this.state.list.map((item) => {
-          return (
-            <View key={item.id} className='api-page-btn' onClick={item.func == null ? () => {} : item.func}>
-              <Text>{item.id}</Text>
-              {item.func == null && <Text className='navigator-state tag'>未创建Demo</Text>}
-            </View>
-          )
-        })}
+        <ButtonList buttonList={list} />
       </View>
     )
   }

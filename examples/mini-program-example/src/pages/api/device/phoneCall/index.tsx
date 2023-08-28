@@ -1,6 +1,7 @@
 import React from 'react'
 import Taro from '@tarojs/taro'
-import { View, Button, Text, Input } from '@tarojs/components'
+import { View, Text, Input } from '@tarojs/components'
+import { TestConsole } from '@/util/util'
 import './index.scss'
 
 /**
@@ -13,17 +14,20 @@ export default class Index extends React.Component {
     api: {
       id: 'makePhoneCall',
       func: (inputValue) => {
+        TestConsole.consoleTest('makePhoneCall')
         Taro.makePhoneCall({
           phoneNumber: inputValue,
           success: (res) => {
-            console.log('success-----', res)
+            TestConsole.consoleSuccess(res)
           },
           fail: (res) => {
-            console.log('fail-----', res)
+            TestConsole.consoleFail(res)
           },
           complete: (res) => {
-            console.log('complete-----', res)
+            TestConsole.consoleComplete(res)
           },
+        }).then((res) => {
+          TestConsole.consoleReturn(res)
         })
       },
     },

@@ -1,15 +1,18 @@
 import {
+  chalk,
   fs,
   printLog,
   processTypeEnum,
   promoteRelativePath,
   REG_SCRIPT,
   REG_TYPESCRIPT,
-  resolveScriptPath
+  resolveScriptPath,
 } from '@tarojs/helper'
 import * as path from 'path'
 
 import type * as t from '@babel/types'
+
+const NODE_MODULES = 'node_modules'
 
 export function getRootPath (): string {
   return path.resolve(__dirname, '../../')
@@ -19,33 +22,7 @@ export function getPkgVersion (): string {
   return require(path.join(getRootPath(), 'package.json')).version
 }
 
-// Fix: 在小程序三方件中找到入口 index
-function getModulePath (rootPath, modulePath) {
-  const parts = modulePath.split('/')
-  let moduleIndex = path.join(rootPath, 'node_modules') // node_modules文件夹
-  if (parts.at(-1) === 'index') {
-    parts.pop()
-  } 
-  parts.push('index.js')
-  const npmIndex = path.join(rootPath, `miniprogram_npm/${modulePath}.js`) // 判断本身是否是一个完整的入口
-  if (fs.existsSync(npmIndex)) {
-    parts.pop()
-    const tempPart = parts.at(-1) + '.js'
-    parts.pop()
-    parts.push(tempPart)
-  }
-  parts.forEach(part => {
-    const moduleFile = moduleIndex
-    moduleIndex = searchFile(moduleFile, part)
-  })
-  return moduleIndex
-}
-
-function getRelativePath (
-  rootPath: string,
-  sourceFilePath: string,
-  oriPath: string
-) {
+function getRelativePath (rootPath: string, sourceFilePath: string, oriPath: string) {
   // 处理以/开头的绝对路径，比如 /a/b
   if (path.isAbsolute(oriPath)) {
     if (oriPath.indexOf('/') !== 0) {
@@ -66,28 +43,23 @@ function getRelativePath (
   if (oriPath.indexOf('.') !== 0) {
     const vpath = path.resolve(sourceFilePath, '..', oriPath)
     if (fs.existsSync(vpath)) {
-      return './' + oriPath
+      return `./${oriPath}`
+    } else if (fs.existsSync(`${vpath}.js`)) {
+      // 微信小程序中js文件的引用可不加后缀，需考虑
+      return `./${oriPath}.js`
     }
-    const testParts = oriPath.split('/')
-    const testindex = path.join(rootPath, `node_modules/${testParts[0]}`) // 判断三方件是否在node_modules中
-    if (!fs.existsSync(testindex)) {
-      if (oriPath.indexOf('/') !== -1 && oriPath.indexOf('@') === -1 && oriPath.lastIndexOf('.js') !== oriPath.length-3){
-        oriPath = oriPath + '.js'  // 不在这里返回    utils/auth -> utils/auth.js
-      }
-      if (fs.existsSync(oriPath)) {
-        oriPath =  './' + oriPath
-      }
-      return oriPath
-    }
-    const realPath = getModulePath(rootPath, oriPath)
-    // 转成相对路径
-    const relativePath = path.relative(path.dirname(sourceFilePath), realPath)
-    if (relativePath.indexOf('.') !== 0) {
-      return './' + relativePath
-    }
-    return relativePath
   }
   return oriPath
+}
+
+export function copyFileToTaro (from: string, to: string, options?: fs.CopyOptionsSync) {
+  const filename = path.basename(from)
+  if (fs.statSync(from).isFile() && !path.extname(to)) {
+    fs.ensureDir(to)
+    return fs.copySync(from, path.join(to, filename), options)
+  }
+  fs.ensureDir(path.dirname(to))
+  return fs.copySync(from, to, options)
 }
 
 export function analyzeImportUrl (
@@ -96,8 +68,27 @@ export function analyzeImportUrl (
   scriptFiles: Set<string>,
   source: t.StringLiteral,
   value: string,
+  external: string[],
+  miniprogramRoot: string,
+  convertDir: string,
   isTsProject?: boolean
 ) {
+  let valueAbs: string = path.resolve(sourceFilePath, '..', value)
+  // 正则匹配需要正斜杠,win32默认反斜杠，先转posix
+  valueAbs = valueAbs.split(path.sep).join(path.posix.sep)
+  if (external) {
+    for (let iExternal of external) {
+      iExternal = iExternal.split(path.sep).join(path.posix.sep)
+      const reg = new RegExp(iExternal)
+      if (reg.test(valueAbs)) {
+        // 分隔符改回win32 再操作路径
+        valueAbs = valueAbs.split(path.posix.sep).join(path.sep)
+        const outputFilePath = valueAbs.replace(isTsProject ? miniprogramRoot : rootPath, convertDir)
+        copyFileToTaro(valueAbs, outputFilePath)
+        return
+      }
+    }
+  }
   const valueExtname = path.extname(value)
   const rpath = getRelativePath(rootPath, sourceFilePath, value)
   if (!rpath) {
@@ -145,6 +136,11 @@ export function analyzeImportUrl (
         }
       }
     }
+  } else {
+    if (value.startsWith('/') || value.startsWith('@tarojs') || value.startsWith('react')) {
+      return
+    }
+    scriptFiles.add(value)
   }
 }
 
@@ -153,32 +149,38 @@ export const incrementId = () => {
   return () => (n++).toString()
 }
 
-export function searchFile (moduleFile, indexPart) { // Fix: 递归遍历查找
-  const filePath = path.join(moduleFile, indexPart)
-  if(fs.existsSync(filePath)) {
-    return filePath
+// 处理三方库引用
+export function handleThirdPartyLib (filePath: string, nodePath: string[], root: string, convertRoot: string) {
+  // 默认使用node_modules中的三方库
+  if (typeof nodePath === 'undefined') {
+    nodePath = [NODE_MODULES]
   }
-  const folders = fs.readdirSync(moduleFile) // 获取子目录
-  let resultFile
-  for (let i = 0; i < folders.length; i++) {
-    if (folders[i].indexOf('ali') !== -1) {
-      continue
+
+  let isThirdPartyLibExist = false
+  for (const modulePath of nodePath) {
+    const parts = filePath.split('/')
+    let npmModulePath = path.resolve(root, modulePath, parts[0])
+    if (fs.existsSync(npmModulePath)) {
+      isThirdPartyLibExist = true
+      // 转换后的三方库放在node_modules中
+      let moduleConvertPath = path.resolve(convertRoot, NODE_MODULES, parts[0])
+      if (!fs.existsSync(moduleConvertPath)) {
+        // 如果是pnpm下载的三方库，node_modules下的依赖包为快捷方式
+        while (fs.readdirSync(npmModulePath).length < 2) {
+          const folders = fs.readdirSync(npmModulePath)
+          npmModulePath = path.join(npmModulePath, folders[0])
+          moduleConvertPath = path.join(moduleConvertPath, folders[0])
+        }
+        if (fs.lstatSync(npmModulePath).isSymbolicLink()) {
+          npmModulePath = fs.readlinkSync(npmModulePath)
+        }
+        copyFileToTaro(npmModulePath, moduleConvertPath)
+      }
+      break
     }
-    if (folders[i].indexOf('baidu') !== -1) {
-      continue
-    }
-    if (folders[i].indexOf('qq') !== -1) {
-      continue
-    }
-    if (folders[i].indexOf('toutiao') !== -1) {
-      continue
-    }
-    const nextModule = path.join(moduleFile, folders[i])
-    if (fs.lstatSync(nextModule).isDirectory()) {
-      resultFile = searchFile(nextModule, indexPart)
-    }
-    if (resultFile && fs.existsSync(resultFile)) {
-      return resultFile
-    }
+  }
+
+  if (!isThirdPartyLibExist) {
+    console.log(chalk.red(`在[${nodePath.toString()}]中没有找到依赖的三方库${filePath}，请安装依赖后运行`))
   }
 }

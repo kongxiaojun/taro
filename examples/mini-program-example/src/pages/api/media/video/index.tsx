@@ -14,92 +14,149 @@ export default class Index extends React.Component {
   state = {
     list: [
       {
-        id: 'saveVideoToPhotosAlbum',
-        func: () => {
+        id: 'saveVideoToPhotosAlbum_album',
+        func: (apiIndex) => {
           TestConsole.consoleTest('saveVideoToPhotosAlbum')
           Taro.chooseVideo({
-            sourceType: ['album', 'camera'],
+            sourceType: ['album'],
             maxDuration: 60,
             camera: 'back',
-            success: function (res) {
+            compressed: false,
+            success: (res) => {
+              TestConsole.consoleNormal('chooseVideo success ', res)
               Taro.saveVideoToPhotosAlbum({
                 filePath: res.tempFilePath,
                 success: (res) => {
-                  TestConsole.consoleSuccess(res)
+                  TestConsole.consoleSuccess.call(this, res, apiIndex)
                 },
                 fail: (res) => {
-                  TestConsole.consoleFail(res)
+                  TestConsole.consoleFail.call(this, res, apiIndex)
                 },
                 complete: (res) => {
-                  TestConsole.consoleComplete(res)
+                  TestConsole.consoleComplete.call(this, res, apiIndex)
                 },
-              }).then((ret) => {
-                TestConsole.consoleReturn(ret)
+              }).then((res) => {
+                TestConsole.consoleReturn.call(this, res, apiIndex)
               })
             },
+            fail: (err) => {
+              TestConsole.consoleNormal('chooseVideo fail:', err)
+            },
+            complete: (com) => {
+              TestConsole.consoleNormal('chooseVideo complete', com)
+            },
+          }).then((ret) => {
+            TestConsole.consoleNormal('chooseVideo return', ret)
           })
         },
       },
       {
-        id: 'openVideoEditor',
-        func: () => {
+        id: 'saveVideoToPhotosAlbum_camera',
+        func: (apiIndex) => {
+          TestConsole.consoleTest('saveVideoToPhotosAlbum')
+          Taro.chooseVideo({
+            sourceType: ['camera'],
+            maxDuration: 60,
+            camera: 'back',
+            compressed: false,
+            success: (res) => {
+              TestConsole.consoleNormal('chooseVideo success ', res)
+              Taro.saveVideoToPhotosAlbum({
+                filePath: res.tempFilePath,
+                success: (res) => {
+                  TestConsole.consoleSuccess.call(this, res, apiIndex)
+                },
+                fail: (res) => {
+                  TestConsole.consoleFail.call(this, res, apiIndex)
+                },
+                complete: (res) => {
+                  TestConsole.consoleComplete.call(this, res, apiIndex)
+                },
+              }).then((res) => {
+                TestConsole.consoleReturn.call(this, res, apiIndex)
+              })
+            },
+            fail: (err) => {
+              TestConsole.consoleNormal('chooseVideo fail:', err)
+            },
+            complete: (com) => {
+              TestConsole.consoleNormal('chooseVideo complete', com)
+            },
+          }).then((ret) => {
+            TestConsole.consoleNormal('chooseVideo return', ret)
+          })
+        },
+      },
+      {
+        id: 'openVideoEditor_暂不支持',
+        func: (apiIndex) => {
           TestConsole.consoleTest('openVideoEditor')
           Taro.chooseVideo({
             sourceType: ['album', 'camera'],
             maxDuration: 60,
             camera: 'back',
-            success: function (res) {
+            success: (res) => {
               Taro.openVideoEditor({
                 filePath: res.tempFilePath,
                 success: (res) => {
-                  TestConsole.consoleSuccess(res)
+                  TestConsole.consoleSuccess.call(this, res, apiIndex)
                 },
                 fail: (res) => {
-                  TestConsole.consoleFail(res)
+                  TestConsole.consoleFail.call(this, res, apiIndex)
                 },
                 complete: (res) => {
-                  TestConsole.consoleComplete(res)
+                  TestConsole.consoleComplete.call(this, res, apiIndex)
                 },
-              }).then((ret) => {
-                TestConsole.consoleReturn(ret)
+              }).then((res) => {
+                TestConsole.consoleReturn.call(this, res, apiIndex)
               })
             },
+            fail: (err) => {
+              TestConsole.consoleNormal('chooseVideo fail:', err)
+            },
+            complete: (com) => {
+              TestConsole.consoleNormal('chooseVideo complete', com)
+            },
+          }).then((ret) => {
+            TestConsole.consoleNormal('chooseVideo return', ret)
           })
         },
       },
       {
         id: 'getVideoInfo',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('getVideoInfo')
           Taro.chooseVideo({
             sourceType: ['album', 'camera'],
             maxDuration: 60,
             camera: 'back',
-            success: function (res) {
+            compressed: false,
+            success: (res) => {
+              TestConsole.consoleNormal('chooseVideo success ', res)
               Taro.getVideoInfo({
                 src: res.tempFilePath,
                 success: (res) => {
-                  TestConsole.consoleSuccess(res)
+                  TestConsole.consoleSuccess.call(this, res, apiIndex)
                 },
                 fail: (res) => {
-                  TestConsole.consoleFail(res)
+                  TestConsole.consoleFail.call(this, res, apiIndex)
                 },
                 complete: (res) => {
-                  TestConsole.consoleComplete(res)
+                  TestConsole.consoleComplete.call(this, res, apiIndex)
                 },
-              }).then((ret) => {
-                TestConsole.consoleReturn(ret)
+              }).then((res) => {
+                TestConsole.consoleReturn.call(this, res, apiIndex)
               })
             },
+            fail: (err) => {
+              TestConsole.consoleNormal('chooseVideo fail:', err)
+            },
+            complete: (com) => {
+              TestConsole.consoleNormal('chooseVideo complete', com)
+            },
+          }).then((ret) => {
+            TestConsole.consoleNormal('chooseVideo return', ret)
           })
-        },
-      },
-      {
-        id: 'createVideoContext',
-        func: () => {
-          TestConsole.consoleTest('createVideoContext')
-          videoContext = Taro.createVideoContext('myVideo')
-          TestConsole.consoleNormal('createVideoContext ', videoContext)
         },
       },
       {
@@ -108,51 +165,51 @@ export default class Index extends React.Component {
       },
       {
         id: 'chooseVideo_album',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('chooseVideo_album')
           Taro.chooseVideo({
             sourceType: ['album'],
             maxDuration: 60,
             camera: 'back',
             success: (res) => {
-              TestConsole.consoleSuccess(res)
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
             },
             fail: (res) => {
-              TestConsole.consoleFail(res)
+              TestConsole.consoleFail.call(this, res, apiIndex)
             },
             complete: (res) => {
-              TestConsole.consoleComplete(res)
+              TestConsole.consoleComplete.call(this, res, apiIndex)
             },
-          }).then((ret) => {
-            TestConsole.consoleReturn(ret)
+          }).then((res) => {
+            TestConsole.consoleReturn.call(this, res, apiIndex)
           })
         },
       },
       {
         id: 'chooseVideo_camera',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('chooseVideo_camera')
           Taro.chooseVideo({
             sourceType: ['camera'],
             maxDuration: 60,
             camera: 'back',
             success: (res) => {
-              TestConsole.consoleSuccess(res)
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
             },
             fail: (res) => {
-              TestConsole.consoleFail(res)
+              TestConsole.consoleFail.call(this, res, apiIndex)
             },
             complete: (res) => {
-              TestConsole.consoleComplete(res)
+              TestConsole.consoleComplete.call(this, res, apiIndex)
             },
-          }).then((ret) => {
-            TestConsole.consoleReturn(ret)
+          }).then((res) => {
+            TestConsole.consoleReturn.call(this, res, apiIndex)
           })
         },
       },
       {
         id: 'chooseMedia_image',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('chooseMedia_image')
           Taro.chooseMedia({
             count: 9,
@@ -163,19 +220,27 @@ export default class Index extends React.Component {
             sizeType: ['original', 'compressed'],
             // mediaId: 'test mediaId field',//'mediaId' does not exist in type 'Option'
             success: (res) => {
-              TestConsole.consoleSuccess(res)
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
             },
             fail: (res) => {
-              TestConsole.consoleFail(res)
+              TestConsole.consoleFail.call(this, res, apiIndex)
             },
-          }).then((ret) => {
-            TestConsole.consoleReturn(ret)
+          }).then((res) => {
+            TestConsole.consoleReturn.call(this, res, apiIndex)
           })
         },
       },
       {
+        id: 'createVideoContext',
+        func: (apiIndex) => {
+          TestConsole.consoleTest('createVideoContext')
+          videoContext = Taro.createVideoContext('myVideo')
+          TestConsole.consoleNormal('createVideoContext ', videoContext)
+        },
+      },
+      {
         id: 'videoContext_exitBackgroundPlayback_暂不支持',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_exitBackgroundPlayback')
           videoContext.exitBackgroundPlayback()
           TestConsole.consoleNormal('exitBackgroundPlayback')
@@ -183,7 +248,7 @@ export default class Index extends React.Component {
       },
       {
         id: 'videoContext_exitFullScreen',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_exitFullScreen')
           videoContext.exitFullScreen()
           TestConsole.consoleNormal('exitFullScreen')
@@ -191,28 +256,28 @@ export default class Index extends React.Component {
       },
       {
         id: 'videoContext_exitPictureInPicture_暂不支持',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_exitPictureInPicture')
           videoContext
             .exitPictureInPicture({
               success: (res) => {
-                TestConsole.consoleSuccess(res)
+                TestConsole.consoleSuccess.call(this, res, apiIndex)
               },
               fail: (res) => {
-                TestConsole.consoleFail(res)
+                TestConsole.consoleFail.call(this, res, apiIndex)
               },
               complete: (res) => {
-                TestConsole.consoleComplete(res)
+                TestConsole.consoleComplete.call(this, res, apiIndex)
               },
             })
-            .then((ret) => {
-              TestConsole.consoleReturn(ret)
+            .then((res) => {
+              TestConsole.consoleReturn.call(this, res, apiIndex)
             })
         },
       },
       {
         id: 'videoContext_hideStatusBar_暂不支持',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_hideStatusBar')
           videoContext.hideStatusBar()
           TestConsole.consoleNormal('hideStatusBar')
@@ -220,7 +285,7 @@ export default class Index extends React.Component {
       },
       {
         id: 'videoContext_pause',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_pause')
           videoContext.pause()
           TestConsole.consoleNormal('pause')
@@ -228,7 +293,7 @@ export default class Index extends React.Component {
       },
       {
         id: 'videoContext_play',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_play')
           videoContext.play()
           TestConsole.consoleNormal('play')
@@ -236,7 +301,7 @@ export default class Index extends React.Component {
       },
       {
         id: 'videoContext_playbackRate_暂不支持',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_playbackRate')
           videoContext.playbackRate(1.5)
           TestConsole.consoleNormal('playbackRate')
@@ -244,7 +309,7 @@ export default class Index extends React.Component {
       },
       {
         id: 'videoContext_requestBackgroundPlayback_暂不支持',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_requestBackgroundPlayback')
           videoContext.requestBackgroundPlayback()
           TestConsole.consoleNormal('requestBackgroundPlayback')
@@ -252,17 +317,22 @@ export default class Index extends React.Component {
       },
       {
         id: 'videoContext_requestFullScreen',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_requestFullScreen')
           videoContext.requestFullScreen({
             direction: 0,
           })
+          setTimeout(() => {
+            videoContext.exitFullScreen()
+            TestConsole.consoleNormal('exitFullScreen')
+          }, 20000)
+
           TestConsole.consoleNormal('requestFullScreen')
         },
       },
       {
         id: 'videoContext_seek',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_seek')
           videoContext.seek(5)
           TestConsole.consoleNormal('seek')
@@ -270,7 +340,7 @@ export default class Index extends React.Component {
       },
       {
         id: 'videoContext_sendDanmu_暂不支持',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_sendDanmu')
           videoContext.sendDanmu({
             text: '测试弹幕',
@@ -281,7 +351,7 @@ export default class Index extends React.Component {
       },
       {
         id: 'videoContext_showStatusBar_暂不支持',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_showStatusBar')
           videoContext.showStatusBar()
           TestConsole.consoleNormal('showStatusBar')
@@ -289,7 +359,7 @@ export default class Index extends React.Component {
       },
       {
         id: 'videoContext_stop',
-        func: () => {
+        func: (apiIndex) => {
           TestConsole.consoleTest('videoContext_stop')
           videoContext.stop()
           TestConsole.consoleNormal('stop')
@@ -297,7 +367,7 @@ export default class Index extends React.Component {
       },
     ],
   }
-  render() {
+  render () {
     const { list } = this.state
     return (
       <View className='api-page'>

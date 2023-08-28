@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import ButtonList from '@/components/buttonList'
 import './index.scss'
+import { TestConsole } from '@/util/util'
 
 /**
  * 设备-陀螺仪
@@ -14,50 +15,56 @@ export default class Index extends React.Component {
     list: [
       {
         id: 'stopGyroscope',
-        func: () => {
+        func: (apiIndex) => {
+          TestConsole.consoleTest('stopGyroscope')
           Taro.stopGyroscope({
             success: (res) => {
-              console.log('success-----', res)
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
             },
             fail: (res) => {
-              console.log('fail-----', res)
+              TestConsole.consoleFail.call(this, res, apiIndex)
             },
             complete: (res) => {
-              console.log('complete-----', res)
+              TestConsole.consoleComplete.call(this, res, apiIndex)
             },
+          }).then((res) => {
+            TestConsole.consoleReturn.call(this, res, apiIndex)
           })
         },
       },
       {
         id: 'startGyroscope',
-        func: () => {
+        func: (apiIndex) => {
+          TestConsole.consoleTest('startGyroscope')
           Taro.startGyroscope({
+            interval: 'normal',
             success: (res) => {
-              console.log('success-----', res)
+              TestConsole.consoleSuccess.call(this, res, apiIndex)
             },
             fail: (res) => {
-              console.log('fail-----', res)
+              TestConsole.consoleFail.call(this, res, apiIndex)
             },
             complete: (res) => {
-              console.log('complete-----', res)
+              TestConsole.consoleComplete.call(this, res, apiIndex)
             },
-            interval: 'normal',
+          }).then((res) => {
+            TestConsole.consoleReturn.call(this, res, apiIndex)
           })
         },
       },
       {
         id: 'onGyroscopeChange',
-        func: () => {
+        func: (apiIndex) => {
           Taro.onGyroscopeChange((res) => {
-            console.log('on gyroscope change: ', res)
+            TestConsole.consoleOnCallback.call(this, res, 'onGyroscopeChange', apiIndex)
           })
         },
       },
       {
-        id: 'offGyroscopeChange',
-        func: () => {
+        id: 'offGyroscopeChange_暂不支持',
+        func: (apiIndex) => {
           Taro.offGyroscopeChange((res) => {
-            console.log('off gyroscope change: ', res)
+            TestConsole.consoleOnCallback.call(this, res, 'offGyroscopeChange', apiIndex)
           })
         },
       },
