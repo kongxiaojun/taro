@@ -115,7 +115,8 @@ export function temporarilyNotSupport (name = '') {
       console.warn(errMsg)
       return handle.success({ errMsg })
     } else {
-      return handle.fail({ errMsg })
+      // return handle.fail({ errMsg })
+      return handle.success({ errMsg })
     }
   }
 }
@@ -155,7 +156,8 @@ export function permanentlyNotSupport (name = '') {
       console.warn(errMsg)
       return handle.success({ errMsg })
     } else {
-      return handle.fail({ errMsg })
+      // return handle.fail({ errMsg })
+      return handle.success({ errMsg })
     }
   }
 }
