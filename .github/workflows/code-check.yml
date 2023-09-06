@@ -23,7 +23,7 @@ jobs:
       - name: setup pnpm
         run: |
           npm --version
-          npm install pnpm
+          npm install pnpm -g
           pnpm --version
                
       - name: lint
