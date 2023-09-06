@@ -25,6 +25,10 @@ jobs:
           npm --version
           npm install pnpm -g
           pnpm --version
+
+      - name: pnpm install
+        run: |
+          pnpm install
                
       - name: lint
         run: pnpm lint
