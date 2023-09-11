@@ -155,7 +155,7 @@
     "webpack": "5.78.0",
     "webpack-chain": "6.5.1",
     "webpack-dev-server": "4.11.1",
-    "webpack-sources": "^3.2.3"，
+    "webpack-sources": "^3.2.3",
     "expo-cli":  "^6.3.0"
   },
   "pnpm": {
