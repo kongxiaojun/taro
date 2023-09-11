@@ -1,13 +1,12 @@
-name: Node CI
+name: Node CI111
 
 on:
   push:
     branches:
-      - next
-      - feat/**
+      - release-3.6.8-app
   pull_request:
     branches:
-      - next
+      - release-3.6.8-app
 
 permissions:
   contents: read # to fetch code (actions/checkout)
