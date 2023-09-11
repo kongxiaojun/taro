@@ -34,7 +34,7 @@ jobs:
         run: pnpm lint
 
       - name: build for taro-components-mpharmony
-        working-directory: ./packages/taro-component
+        working-directory: ./packages/taro-components
         run: pnpm build
       
       - name: build
