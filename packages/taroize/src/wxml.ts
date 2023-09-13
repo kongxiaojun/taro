@@ -3,6 +3,7 @@ import { parse as parseFile } from '@babel/parser'
 import traverse, { NodePath, Visitor } from '@babel/traverse'
 import * as t from '@babel/types'
 import { printLog, processTypeEnum } from '@tarojs/helper'
+import { toCamelCase } from '@tarojs/shared'
 import { parse } from 'himalaya-wxml'
 import { camelCase, cloneDeep } from 'lodash'
 
@@ -99,10 +100,46 @@ export const wxTemplateCommand = [WX_IF, WX_ELSE_IF, WX_FOR, WX_FOR_ITEM, WX_FOR
 function buildElement (name: string, children: Node[] = [], attributes: Attribute[] = []): Element {
   return {
     tagName: name,
-    type: NodeType.Element,
+    type: NodeType.Element, 
     attributes,
     children,
   }
+}
+
+// 将 style 属性中属性名转小驼峰格式 并且将 {{}} 转为 ${}格式生成对应ast节点
+function convertStyleAttrs (styleAttrsMap: any[]) {
+  styleAttrsMap.forEach((attr) => {
+    attr.attrName = toCamelCase(attr.attrName.trim())
+    // 匹配 {{}} 内部以及左右两边值
+    const attrValueReg = /([^{}]*)\{\{([^{}]*)\}\}([^{}]*)/
+    const matchs = attrValueReg.exec(attr.value)
+    if (matchs !== null) {
+      const tempLeftValue = matchs[1]?.trim() || ''
+      const tempMidValue = matchs[2]?.trim() || ''
+      const tempRightValue = matchs[3]?.trim() || ''
+      attr.value = t.templateLiteral(
+        [
+          t.templateElement({ raw: tempLeftValue }),
+          t.templateElement({ raw: tempRightValue }, true)
+        ],
+        [t.identifier(tempMidValue)]
+      )
+    } else {
+      attr.value = t.stringLiteral(attr.value.trim())
+    }
+  })
+}
+
+// 对 style 属性值进行解析
+function parseStyleAttrs (styleAttrsMap: any[], path: NodePath<t.JSXAttribute>) {
+  const styleValue = path.node.value as any
+  const styleAttrs =  styleValue.value.split(';')
+  styleAttrs.forEach((attr) => {
+    const [attrName, value] = attr.split(':')
+    if (attrName) {
+      styleAttrsMap.push({ attrName, value })
+    }
+  })
 }
 
 export const createWxmlVistor = (
@@ -124,6 +161,28 @@ export const createWxmlVistor = (
         path.set('value', t.jSXExpressionContainer(exclamation))
         path.set('name', t.jSXIdentifier(WX_IF))
       }
+    }
+
+    // 当设置图片mode="",则改为默认值(且taro不支持mode空值)
+    if (name.name === 'mode' && path.node.value === null) {
+      path.set('value', t.stringLiteral('scaleToFill'))
+    }
+
+    // 当设置 style 属性但未赋值则删除该属性
+    if (name.name === 'style' && !path.node.value) {
+      path.remove()
+      return
+    }
+
+    // 把 style 中 {{}} 转为 ${} 格式
+    if (name.name === 'style' && t.isStringLiteral(path.node.value)) {
+      const styleAttrsMap: any[] = []
+      parseStyleAttrs(styleAttrsMap, path)
+      convertStyleAttrs(styleAttrsMap)
+      const objectLiteral = t.objectExpression(
+        styleAttrsMap.map((attr) => t.objectProperty(t.identifier(attr.attrName), attr.value))
+      )
+      path.node.value = t.jsxExpressionContainer(objectLiteral)
     }
 
     const valueCopy = cloneDeep(path.get('value').node)
@@ -258,18 +317,16 @@ export const createWxmlVistor = (
             const taroComponentsImport = buildImportStatement('@tarojs/components', [...usedComponents])
             const taroImport = buildImportStatement('@tarojs/taro', [], 'Taro')
             const reactImport = buildImportStatement('react', [], 'React')
-            // const withWeappImport = buildImportStatement(
-            //   '@tarojs/with-weapp',
-            //   [],
-            //   'withWeapp'
-            // )
+            // 引入 @tarojs/with-weapp
+            const withWeappImport = buildImportStatement('@tarojs/with-weapp',[],'withWeapp')
             const ast = t.file(t.program([]))
             ast.program.body.unshift(
               taroComponentsImport,
               reactImport,
               taroImport,
-              // withWeappImport,
-              t.exportDefaultDeclaration(classDecl)
+              withWeappImport,
+              classDecl,
+              t.exportDefaultDeclaration(t.identifier(name))
             )
             const usedTemplate = new Set<string>()
 
@@ -816,6 +873,11 @@ function parseAttribute (attr: Attribute) {
       // eslint-disable-next-line no-console
       console.log(codeFrameError(attr, 'Taro/React 不支持 class 传入数组，此写法可能无法得到正确的 class'))
     }
+
+    if (key === 'style' && value) {
+      return t.jSXAttribute(t.jSXIdentifier(key), t.stringLiteral(value))
+    }
+
     const { type, content } = parseContent(value)
 
     if (type === 'raw') {
@@ -833,7 +895,7 @@ function parseAttribute (attr: Attribute) {
           } else {
             throw new Error(err)
           }
-        } else if (content.includes(':') || (content.includes('...') && content.includes(','))) {
+        } else if (content.includes(':') || (content.includes('...'))) {
           const file = parseFile(`var a = ${attr.value!.slice(1, attr.value!.length - 1)}`, {
             plugins: ['objectRestSpread'],
           })
@@ -863,15 +925,7 @@ function parseAttribute (attr: Attribute) {
       jsxValue = t.jSXExpressionContainer(t.memberExpression(t.thisExpression(), t.identifier('privateStopNoop')))
       globals.hasCatchTrue = true
     } else if (t.isStringLiteral(jsxValue)) {
-      jsxValue = t.jSXExpressionContainer(
-        t.callExpression(
-          t.memberExpression(
-            t.memberExpression(t.thisExpression(), t.identifier('privateStopNoop')),
-            t.identifier('bind')
-          ),
-          [t.thisExpression(), t.memberExpression(t.thisExpression(), t.identifier(jsxValue.value))]
-        )
-      )
+      jsxValue = t.jSXExpressionContainer(t.memberExpression(t.thisExpression(), t.identifier(jsxValue.value)))
     }
   }
   return t.jSXAttribute(t.jSXIdentifier(jsxKey), jsxValue)
