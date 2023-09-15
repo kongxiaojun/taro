@@ -100,7 +100,7 @@ export const wxTemplateCommand = [WX_IF, WX_ELSE_IF, WX_FOR, WX_FOR_ITEM, WX_FOR
 function buildElement (name: string, children: Node[] = [], attributes: Attribute[] = []): Element {
   return {
     tagName: name,
-    type: NodeType.Element, 
+    type: NodeType.Element,
     attributes,
     children,
   }
@@ -117,12 +117,11 @@ function convertStyleAttrs (styleAttrsMap: any[]) {
       const tempLeftValue = matchs[1]?.trim() || ''
       const tempMidValue = matchs[2]?.trim() || ''
       const tempRightValue = matchs[3]?.trim() || ''
+      // 将模版中的内容转换为 ast 节点
+      const tempMidValueAst = parseFile(tempMidValue).program.body[0] as any
       attr.value = t.templateLiteral(
-        [
-          t.templateElement({ raw: tempLeftValue }),
-          t.templateElement({ raw: tempRightValue }, true)
-        ],
-        [t.identifier(tempMidValue)]
+        [t.templateElement({ raw: tempLeftValue }), t.templateElement({ raw: tempRightValue }, true)],
+        [tempMidValueAst.expression]
       )
     } else {
       attr.value = t.stringLiteral(attr.value.trim())
@@ -133,13 +132,46 @@ function convertStyleAttrs (styleAttrsMap: any[]) {
 // 对 style 属性值进行解析
 function parseStyleAttrs (styleAttrsMap: any[], path: NodePath<t.JSXAttribute>) {
   const styleValue = path.node.value as any
-  const styleAttrs =  styleValue.value.split(';')
+  const styleAttrs = styleValue.value.split(';')
   styleAttrs.forEach((attr) => {
-    const [attrName, value] = attr.split(':')
-    if (attrName) {
-      styleAttrsMap.push({ attrName, value })
+    if (attr) {
+      // 对含三元运算符的写法 style="width:{{ xx ? xx : xx }}" 匹配第一个 : 避免匹配三元表达式中的 : 运算符
+      const reg = /([^:]+):\s*([^;]+)/
+      const matchs = attr.match(reg)
+      const attrName = matchs[1]
+      const value = matchs[2]
+      if (attrName) {
+        styleAttrsMap.push({ attrName, value })
+      }
     }
   })
+}
+
+function convertStyleUnit (path: NodePath<t.JSXAttribute>) {
+  // 尺寸单位转换 都转为rem : 1rpx 转为 1/40rem,,1px 转为 1/20rem
+  if (t.isStringLiteral(path.node.value)) {
+    let tempValue = path.node.value.value
+    if (tempValue.indexOf('px') !== -1) {
+      // 把 xxx="...[数字]rpx/px" 的尺寸单位都转为 rem, 转换方法类似postcss-taro-unit-transform
+      tempValue = tempValue
+        .replace(/([0-9.]+)px/gi, function (match) {
+          // <1的值转十进制会被转为0, 这种情况直接把值认为是1
+          return parseInt(match, 10) > 0 ? parseInt(match, 10) / 20 + 'rem' : '1rem'
+        })
+        .replace(/([0-9.]+)rpx/gi, function (match) {
+          return parseInt(match, 10) > 0 ? parseInt(match, 10) / 40 + 'rem' : '1rem'
+        })
+      // 把 xx="...{{参数}}rpx/px"的尺寸单位都转为rem,比如"{{参数}}rpx" -> "{{参数/40}}rem"
+      tempValue = tempValue
+        .replace(/\{\{([^{}]*)\}\}(px)/gi, function (match, size, unit) {
+          return match.replace(size, size + '/20').replace(unit, 'rem')
+        })
+        .replace(/\{\{([^{}]*)\}\}(rpx)/gi, function (match, size, unit) {
+          return match.replace(size, size + '/40').replace(unit, 'rem')
+        })
+      path.node.value.value = tempValue
+    }
+  }
 }
 
 export const createWxmlVistor = (
@@ -173,6 +205,9 @@ export const createWxmlVistor = (
       path.remove()
       return
     }
+
+    // 把wxml中的 xx = "...rpx" / xx = "...px" 的单位都转为rem
+    convertStyleUnit(path)
 
     // 把 style 中 {{}} 转为 ${} 格式
     if (name.name === 'style' && t.isStringLiteral(path.node.value)) {
@@ -274,7 +309,7 @@ export const createWxmlVistor = (
             }
           } else {
             // 当元素设置slot标签且值为空串时，移除slot属性
-            slotAttr.remove() 
+            slotAttr.remove()
           }
         }
         const tagName = jsxName.node.name
@@ -318,7 +353,7 @@ export const createWxmlVistor = (
             const taroImport = buildImportStatement('@tarojs/taro', [], 'Taro')
             const reactImport = buildImportStatement('react', [], 'React')
             // 引入 @tarojs/with-weapp
-            const withWeappImport = buildImportStatement('@tarojs/with-weapp',[],'withWeapp')
+            const withWeappImport = buildImportStatement('@tarojs/with-weapp', [], 'withWeapp')
             const ast = t.file(t.program([]))
             ast.program.body.unshift(
               taroComponentsImport,
@@ -483,15 +518,30 @@ function getWXS (attrs: t.JSXAttribute[], path: NodePath<t.JSXElement>, imports:
       CallExpression (path) {
         // wxs标签中getRegExp转换为new RegExp
         if (t.isIdentifier(path.node.callee, { name: 'getRegExp' })) {
-          const arg = path.node.arguments[0]
-          if (t.isStringLiteral(arg)) {
-            const regex = arg.extra?.raw as string
-            const regexWithoutQuotes = regex.replace(/^'(.*)'$/, '$1')
-            const newExpr = t.newExpression(t.identifier('RegExp'), [
-              t.stringLiteral(regexWithoutQuotes),
-              t.stringLiteral('g'),
-            ])
-            path.replaceWith(newExpr)
+          // 根据正则表达式是否定义了正则匹配修饰符，有则不变，没有就用默认
+          if (path.node.arguments.length > 1) {
+            const regex = path.node.arguments[0]
+            const modifier = path.node.arguments[1]
+            if (t.isStringLiteral(regex)) {
+              const regexStr = regex.extra?.raw as string
+              const regexModifier = modifier.extra?.rawValue as string
+              const regexWithoutQuotes = regexStr.replace(/^['"](.*)['"]$/, '$1')
+              const newExpr = t.newExpression(t.identifier('RegExp'), [
+                t.stringLiteral(regexWithoutQuotes),
+                t.stringLiteral(regexModifier),
+              ])
+              path.replaceWith(newExpr)
+            }
+          } else {
+            const regex = path.node.arguments[0]
+            if (t.isStringLiteral(regex)) {
+              const regexStr = regex.extra?.raw as string
+              const regexWithoutQuotes = regexStr.replace(/^['"](.*)['"]$/, '$1')
+              const newExpr = t.newExpression(t.identifier('RegExp'), [ 
+                t.stringLiteral(regexWithoutQuotes)
+              ])
+              path.replaceWith(newExpr)
+            }
           }
         }
       },
@@ -895,7 +945,7 @@ function parseAttribute (attr: Attribute) {
           } else {
             throw new Error(err)
           }
-        } else if (content.includes(':') || (content.includes('...'))) {
+        } else if (content.includes(':') || content.includes('...')) {
           const file = parseFile(`var a = ${attr.value!.slice(1, attr.value!.length - 1)}`, {
             plugins: ['objectRestSpread'],
           })

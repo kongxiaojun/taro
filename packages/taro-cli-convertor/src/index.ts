@@ -27,6 +27,7 @@ import * as prettier from 'prettier'
 import {
   analyzeImportUrl,
   copyFileToTaro,
+  DEFAULT_Component_SET,
   getMatchUnconvertDir,
   getPkgVersion,
   getWxssImports,
@@ -191,6 +192,30 @@ export default class Convertor {
 
   wxsIncrementId = incrementId()
 
+  // 创建 cacheOptions 文件
+  generateCacheOptionFile (): void {
+    const cacheOptionsTemplate = `
+  export const cacheOptions = {
+    cacheOptions: {},
+    setOptionsToCache: function (options) {
+      if (Object.keys(options).length !== 0) {
+        this.cacheOptions = options;
+      }
+    },
+    getOptionsFromCache: function () {
+      return this.cacheOptions;
+    }
+  }      
+   `
+    const utilsPath = path.join(this.root, 'taroConvert/src/utils/')
+    const cacheOptionsPath = path.join(utilsPath, '_cacheOptions.js')
+
+    if (!fs.existsSync(cacheOptionsPath)) {
+      fs.mkdirSync(utilsPath, { recursive: true })
+      fs.writeFileSync(cacheOptionsPath, cacheOptionsTemplate)
+    }
+  }
+
   parseAst ({ ast, sourceFilePath, outputFilePath, importStylePath, depComponents, imports = [] }: IParseAstOptions): {
     ast: t.File
     scriptFiles: Set<string>
@@ -198,9 +223,12 @@ export default class Convertor {
     const scriptFiles = new Set<string>()
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this
+    // 转换后js页面的所有自定义标签
+    const scriptComponents: string[] = []
     let componentClassName: string
     let needInsertImportTaro = false
     const setDataInfo = new Map()
+    let hasCacheOptionsRequired = false
     traverse(ast, {
       Program: {
         enter (astPath) {
@@ -295,6 +323,35 @@ export default class Convertor {
                 } else if (WX_GLOBAL_FN.has(callee.name)) {
                   calleePath.replaceWith(t.memberExpression(t.identifier('Taro'), callee as t.Identifier))
                   needInsertImportTaro = true
+                } else if (callee.name === 'Page' || callee.name === 'Component' || callee.name === 'App') {
+                  // 将 App() Page() Component() 改为 cacheOptions.setOptionsToCache() 的形式去初始化页面数据
+                  const arg = astPath.get('arguments')[0]
+                  const cacheOptionsAstNode = t.callExpression(
+                    t.memberExpression(t.identifier('cacheOptions'), t.identifier('setOptionsToCache')),
+                    [arg.node]
+                  )
+                  astPath.replaceWith(cacheOptionsAstNode)
+
+                  // 创建导入 cacheOptions 对象的 ast 节点
+                  const currentFilePath = sourceFilePath
+                  const cacheOptionsPath = path.resolve(self.root, 'utils', '_cacheOptions.js')
+                  const importOptionsUrl = promoteRelativePath(path.relative(currentFilePath, cacheOptionsPath))
+                  const requireCacheOptionsAst = t.variableDeclaration('const', [
+                    t.variableDeclarator(
+                      t.objectPattern([
+                        t.objectProperty(t.identifier('cacheOptions'), t.identifier('cacheOptions'), false, true),
+                      ]),
+                      t.callExpression(t.identifier('require'), [t.stringLiteral(importOptionsUrl)])
+                    ),
+                  ])
+
+                  // 若已经引入过 cacheOptions 则不在引入，防止重复引入问题
+                  if (!hasCacheOptionsRequired) {
+                    ast.program.body.unshift(requireCacheOptionsAst)
+                    hasCacheOptionsRequired = true
+                  }
+
+                  self.generateCacheOptionFile()
                 }
               } else if (callee.type === 'MemberExpression') {
                 // find this.setData({}) ,includes this & _this
@@ -320,6 +377,18 @@ export default class Convertor {
                 needInsertImportTaro = true
               }
             },
+
+            // 获取js界面所有用到的自定义标签，不重复
+            JSXElement (astPath) {
+              const openingElement = astPath.get('openingElement')
+              const jsxName = openingElement.get('name')
+              if (jsxName.isJSXIdentifier()) {
+                const componentName = jsxName.node.name
+                if (!DEFAULT_Component_SET.has(componentName) && scriptComponents.indexOf(componentName) === -1) {
+                  scriptComponents.push(componentName)
+                }
+              }
+            }
           })
         },
         exit (astPath) {
@@ -455,6 +524,13 @@ export default class Convertor {
             if (depComponents && depComponents.size) {
               depComponents.forEach((componentObj) => {
                 const name = pascalCase(componentObj.name.toLowerCase())
+                // 如果不是js页面用到的组件，无需导入
+                if (scriptComponents.indexOf(name) === -1) {
+                  return
+                }
+                // 如果用到了，从scriptComponents中移除
+                const index = scriptComponents.indexOf(name)
+                scriptComponents.splice(index,1)
                 let componentPath = componentObj.path
                 if (componentPath.indexOf(self.root) !== -1) {
                   componentPath = path.relative(sourceFilePath, componentPath)
@@ -610,7 +686,7 @@ export default class Convertor {
         // 处理不转换的目录，可在convert.config.json中external字段配置
         const matchUnconvertDir: string | null = getMatchUnconvertDir(file, this.convertConfig?.external)
         if (matchUnconvertDir !== null) {
-          handleUnconvertDir(matchUnconvertDir, this.root, this.convertRoot)
+          handleUnconvertDir(matchUnconvertDir, this.root, this.convertDir)
           return
         }
 
@@ -816,7 +892,7 @@ ${code}
       // 处理不转换的页面，可在convert.config.json中external字段配置
       const matchUnconvertDir: string | null = getMatchUnconvertDir(pagePath, this.convertConfig?.external)
       if (matchUnconvertDir !== null) {
-        handleUnconvertDir(matchUnconvertDir, this.root, this.convertRoot)
+        handleUnconvertDir(matchUnconvertDir, this.root, this.convertDir)
         return
       }
 
@@ -1000,6 +1076,7 @@ ${code}
           depComponents,
           imports: taroizeResult.imports,
         })
+
         const jsCode = generateMinimalEscapeCode(ast)
         this.writeFileToTaro(
           this.getComponentDest(componentDistJSPath),
