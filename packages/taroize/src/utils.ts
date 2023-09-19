@@ -4,7 +4,6 @@ import { parse } from '@babel/parser'
 import classProperties from '@babel/plugin-proposal-class-properties'
 import decorators from '@babel/plugin-proposal-decorators'
 import objectRestSpread from '@babel/plugin-proposal-object-rest-spread'
-import optionalChaining from '@babel/plugin-proposal-optional-chaining'
 import asyncGenerators from '@babel/plugin-syntax-async-generators'
 import dynamicImport from '@babel/plugin-syntax-dynamic-import'
 import exponentiationOperator from '@babel/plugin-transform-exponentiation-operator'
@@ -14,7 +13,6 @@ import presetTypescript from '@babel/preset-typescript'
 import { default as template } from '@babel/template'
 import { NodePath } from '@babel/traverse'
 import * as t from '@babel/types'
-import babel_plugin_transform_commonjs from 'babel-plugin-transform-commonjs'
 import { camelCase, capitalize } from 'lodash'
 
 export function isAliasThis (p: NodePath<t.Node>, name: string) {
@@ -62,8 +60,6 @@ export function parseCode (code: string, scriptPath?: string) {
           objectRestSpread,
           [decorators, { legacy: true }],
           dynamicImport,
-          optionalChaining,
-          babel_plugin_transform_commonjs,
         ],
       }) as { ast: t.File }
     ).ast
@@ -82,8 +78,6 @@ export function parseCode (code: string, scriptPath?: string) {
         objectRestSpread,
         [decorators, { legacy: true }],
         dynamicImport,
-        optionalChaining,
-        babel_plugin_transform_commonjs,
       ],
     }) as { ast: t.File }
   ).ast
