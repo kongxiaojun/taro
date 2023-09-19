@@ -45,7 +45,7 @@ jobs:
         run: pnpm build
         
       - name: test
-        run: pnpm test9
+        run: pnpm test
         env:
           CI: true
           NODE_OPTIONS: --openssl-legacy-provider
