@@ -418,7 +418,8 @@ declare namespace TaroGeneral {
     WEB = 'WEB',
     RN = 'RN',
     HARMONY = 'HARMONY',
-    QUICKAPP = 'QUICKAPP'
+    QUICKAPP = 'QUICKAPP',
+    MPHARMONY = 'MPHARMONY'
   }
 
   type TDeviceRatio = Record<string, number>
