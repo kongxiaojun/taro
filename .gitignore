@@ -75,4 +75,4 @@ common/autoinstallers/*/.npmrc
 .heft
 
 # wuba
-wuba_platform_weapp/
+wechat-app/
