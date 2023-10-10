@@ -405,7 +405,7 @@ export const createWxmlVistor = (
           // path.traverse({
           //   JSXAttribute: jsxAttrVisitor
           // })
-          const template = parseTemplate(path, dirPath)
+          const template = parseTemplate(path, dirPath, refIds)
           if (template) {
             const funcs: string[] = []
             const { ast: classDecl, name } = template
@@ -758,6 +758,25 @@ function transformLoop (name: string, attr: NodePath<t.JSXAttribute>, jsx: NodeP
         }
       })
 
+    jsx
+      .get('openingElement')
+      .get('attributes')
+      .forEach((p) => {
+        const node = p.node as t.JSXAttribute
+        if (node.name.name === WX_IF) {
+          // 如果同时使用了 wx:if，分离
+          const ifBlock = buildBlockElement()
+          ifBlock.children = [cloneDeep(jsx.node)]
+          try {
+            jsx.replaceWith(ifBlock)
+          } catch (error) {
+            // jsx外层是wx:if的转换，替换（replaceWith）时会抛出异常
+            // catch异常后，正常替换
+          }
+          p.remove()
+        }
+      })
+
     if (t.isJSXEmptyExpression(value.expression)) {
       printLog(processTypeEnum.WARNING, 'value.expression', 'wxml.ts -> t.isJSXEmptyExpression(value.expression)')
       return
@@ -791,6 +810,10 @@ function transformIf (name: string, attr: NodePath<t.JSXAttribute>, jsx: NodePat
     return
   }
   if (jsx.node.openingElement.attributes.some((a) => t.isJSXAttribute(a) && a.name.name === 'slot')) {
+    return
+  }
+  // 考虑到wx:if和wx:for的优先级，如果同时使用，先解析wx:for
+  if (jsx.node.openingElement.attributes.some((a) => t.isJSXAttribute(a) && (a.name.name === 'wx:for' || a.name.name === 'wx:for-items'))) {
     return
   }
   const conditions: Condition[] = []

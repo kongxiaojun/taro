@@ -28,6 +28,7 @@ import {
   analyzeImportUrl,
   copyFileToTaro,
   DEFAULT_Component_SET,
+  generateReportFile,
   getMatchUnconvertDir,
   getPkgVersion,
   getWxssImports,
@@ -36,7 +37,7 @@ import {
   incrementId,
   transRelToAbsPath,
 } from './util'
-import { generateMinimalEscapeCode, hasTaroImport, isCommonjsModule } from './util/astConvert'
+import { generateMinimalEscapeCode, hasTaroImport, isCommonjsImport, isCommonjsModule } from './util/astConvert'
 
 import type { ParserOptions } from '@babel/parser'
 import type { AppConfig, TabBar } from '@tarojs/taro'
@@ -102,6 +103,14 @@ interface IConvertConfig {
   nodePath: string[] // 搜索三方库的目录
 }
 
+interface IReportMsg {
+  filePath: string  // 报告信息所在文件路径
+  message: string   // 报告信息
+  type?: string     // 报告信息类型
+  childReportMsg?: IReportMsg[]
+}
+
+
 function processStyleImports (content: string, processFn: (a: string, b: string) => string) {
   // 获取css中的引用样式文件路径集合
   const imports: string[] = getWxssImports(content)
@@ -149,6 +158,7 @@ export default class Convertor {
   miniprogramRoot: string
   convertConfig: IConvertConfig
   external: string[]
+  reportErroMsg: IReportMsg[]
 
   constructor (root, isTsProject) {
     this.root = root
@@ -170,6 +180,7 @@ export default class Convertor {
     this.hadBeenCopyedFiles = new Set<string>()
     this.hadBeenBuiltComponents = new Set<string>()
     this.hadBeenBuiltImports = new Set<string>()
+    this.reportErroMsg = []
     this.init()
   }
 
@@ -376,13 +387,11 @@ export default class Convertor {
                   scriptComponents.push(componentName)
                 }
                 if (/^\S(\S)*Tmpl$/.test(componentName)) {
-                  const templateImport = imports.find(tmplImport => 
-                    tmplImport.name === `${componentName}`
-                  )
+                  const templateImport = imports.find((tmplImport) => tmplImport.name === `${componentName}`)
                   const templateFuncs = templateImport?.funcs
                   if (templateFuncs && templateFuncs.length > 0) {
                     const attributes: any[] = openingElement.node.attributes
-                    templateFuncs.forEach(templateFunc => {
+                    templateFuncs.forEach((templateFunc) => {
                       const memberExpression = t.memberExpression(t.thisExpression(), t.identifier(templateFunc))
                       const value = t.jsxExpressionContainer(memberExpression)
                       const name = t.jsxIdentifier(templateFunc)
@@ -420,7 +429,7 @@ export default class Convertor {
         },
         exit (astPath) {
           const bodyNode = astPath.get('body') as NodePath<t.Node>[]
-          const lastImport = bodyNode.filter((p) => p.isImportDeclaration()).pop()
+          const lastImport = bodyNode.filter((p) => p.isImportDeclaration() || isCommonjsImport(p)).pop()
           if (needInsertImportTaro && !hasTaroImport(bodyNode)) {
             // 根据模块类型（commonjs/es6) 确定导入taro模块的类型
             if (isCommonjsModule(bodyNode)) {
@@ -471,12 +480,20 @@ export default class Convertor {
           })
           if (lastImport) {
             if (importStylePath) {
-              lastImport.insertAfter(
-                t.importDeclaration(
-                  [],
-                  t.stringLiteral(promoteRelativePath(path.relative(sourceFilePath, importStylePath)))
+              if (isCommonjsModule(bodyNode)) {
+                lastImport.insertAfter(
+                  t.callExpression(t.identifier('require'), [
+                    t.stringLiteral(promoteRelativePath(path.relative(sourceFilePath, importStylePath))),
+                  ])
                 )
-              )
+              } else {
+                lastImport.insertAfter(
+                  t.importDeclaration(
+                    [],
+                    t.stringLiteral(promoteRelativePath(path.relative(sourceFilePath, importStylePath)))
+                  )
+                )
+              }
             }
             if (imports && imports.length) {
               imports.forEach(({ name, ast, wxs }) => {
@@ -1223,6 +1240,18 @@ ${code}
     })
   }
 
+  /**
+   * generateReport: 为转换后的 taroConvert 工程添加转换报告
+   */
+  generateReport (){
+    const reportDir = path.join(this.convertRoot, 'report')
+    const reportBundleFilePath = path.resolve(__dirname, '../', 'report/bundle.js')
+    const reportIndexFilePath = path.resolve(__dirname, '../', 'report/report.html')
+
+    generateReportFile(reportBundleFilePath, reportDir, 'bundle.js', this.reportErroMsg)
+    generateReportFile(reportIndexFilePath, reportDir, 'report.html')
+  }
+
   showLog () {
     console.log()
     console.log(
@@ -1230,6 +1259,7 @@ ${code}
         'taroConvert'
       )} 目录下使用 npm 或者 yarn 安装项目依赖后再运行！`
     )
+    console.log(`转换报告已生成，请在浏览器中打开 ${path.join(this.convertRoot, 'report', 'report.html')} 查看转换报告`)
   }
 
   run () {
@@ -1237,5 +1267,6 @@ ${code}
     this.generateEntry()
     this.traversePages()
     this.generateConfigFiles()
+    this.generateReport()
   }
 }
