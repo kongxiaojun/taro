@@ -204,6 +204,93 @@ export default class Convertor {
 
   wxsIncrementId = incrementId()
 
+  /**
+  * 创建转换时用到的工具函数文件
+  */
+  generateConvertToolsFile (): void {
+    const convertToolsTemplate = `
+  import Taro from '@tarojs/taro'
+
+  function toCamelCase (s) {
+    let camel = ''
+    let nextCap = false
+    for (let i = 0; i < s.length; i++) {
+      if (s[i] !== '-') {
+        camel += nextCap ? s[i].toUpperCase() : s[i]
+        nextCap = false
+      } else {
+        nextCap = true
+      }
+    }
+    return camel
+  }
+
+  export const cacheOptions = {
+    cacheOptions: {},
+    setOptionsToCache: function (options) {
+      if (Object.keys(options).length !== 0) {
+        this.cacheOptions = options;
+      }
+    },
+    getOptionsFromCache: function () {
+      return this.cacheOptions;
+    }
+  }
+  export const getDataset = (target) => {
+    if (Taro.getEnv() === Taro.ENV_TYPE.MPHARMONY || Taro.getEnv() === Taro.ENV_TYPE.WEB) {
+      if (target['fullDataset']) {
+        return { dataset: target['fullDataset'] }
+      }
+      const fullDataset = {}
+      // 获取元素的所有属性
+      const targetAttrKeys = Object.keys(target)
+      // 遍历所有属性
+      for (let i = 0; i < targetAttrKeys.length; i++) {
+        if (targetAttrKeys[i].startsWith("data-")) {
+          fullDataset[toCamelCase(targetAttrKeys[i].replace(/^data-/, '').toLowerCase())] = target[targetAttrKeys[i]]
+        }
+      }
+      target['fullDataset'] = fullDataset
+      return { dataset: fullDataset }
+    }
+    return target
+  }
+   `
+    const utilsPath = path.join(this.root, 'taroConvert/src/utils/')
+    const cacheOptionsPath = path.join(utilsPath, '_cacheOptions.js')
+
+    if (!fs.existsSync(cacheOptionsPath)) {
+      fs.mkdirSync(utilsPath, { recursive: true })
+      fs.writeFileSync(cacheOptionsPath, convertToolsTemplate)
+    }
+  }
+
+  /**
+   * 创建导入工具函数的 ast 节点
+   *
+   * @param self convert 实例对象
+   * @param sourceFilePath 解析的文件路径
+   * @returns
+   */
+  createConvertToolsRequireAst (self: any, sourceFilePath: string) {
+    // 创建导入工具函数的 ast 节点
+    const currentFilePath = sourceFilePath
+    const cacheOptionsPath = path.resolve(self.root, 'utils', '_cacheOptions.js')
+    const importOptionsUrl = promoteRelativePath(path.relative(currentFilePath, cacheOptionsPath))
+    const requireCacheOptionsAst = t.variableDeclaration('const', [
+      t.variableDeclarator(
+        t.objectPattern([
+          t.objectProperty(t.identifier('cacheOptions'), t.identifier('cacheOptions'), false, true),
+        ]),
+        t.callExpression(t.identifier('require'), [t.stringLiteral(importOptionsUrl)])
+      ),
+    ])
+
+    return requireCacheOptionsAst
+  }
+
+
+
   parseAst ({ ast, sourceFilePath, outputFilePath, importStylePath, depComponents, imports = [] }: IParseAstOptions): {
     ast: t.File
     scriptFiles: Set<string>
@@ -639,8 +726,8 @@ export default class Convertor {
           declarations.forEach((declaration) => {
             const { id, init } = declaration
             if (
-              t.isObjectPattern(id) 
-              && t.isCallExpression(init) 
+              t.isObjectPattern(id)
+              && t.isCallExpression(init)
               && t.isIdentifier(init.callee)
               && t.isStringLiteral(init.arguments[0])
             ) {
