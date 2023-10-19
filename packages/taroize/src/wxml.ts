@@ -79,6 +79,7 @@ export interface Imports {
   wxs?: boolean
   // 模板处理事件的function
   funcs?: string[]
+  tmplName?: string
 }
 
 export interface Wxml {
@@ -133,9 +134,9 @@ function convertStyleAttrs (styleAttrsMap: any[]) {
 
 /**
  * 对 style 中单个属性值进行解析
- * 
+ *
  * @param { any[] } styleAttrsMap 元素为单个属性值的数组
- * @param { any[] } attrKeyValueMap 属性解析为 {attrName: attrValue} 形式的数组 
+ * @param { any[] } attrKeyValueMap 属性解析为 {attrName: attrValue} 形式的数组
  */
 function parseStyleAttrs (styleAttrsMap: any[], attrKeyValueMap: any[]) {
   styleAttrsMap.forEach((attr) => {
@@ -152,7 +153,7 @@ function parseStyleAttrs (styleAttrsMap: any[], attrKeyValueMap: any[]) {
   })
 }
 
-function convertStyleUnit (value: string) {
+export function convertStyleUnit (value: string) {
   let tempValue = value
   // 尺寸单位转换 都转为rem : 1rpx 转为 1/40rem,,1px 转为 1/20rem
   if (tempValue.indexOf('px') !== -1) {
@@ -358,7 +359,7 @@ export const createWxmlVistor = (
           const template = parseTemplate(path, dirPath, refIds)
           if (template) {
             const funcs: string[] = []
-            const { ast: classDecl, name } = template
+            const { ast: classDecl, name, tmplName } = template
             const taroComponentsImport = buildImportStatement('@tarojs/components', [...usedComponents])
             const taroImport = buildImportStatement('@tarojs/taro', [], 'Taro')
             const reactImport = buildImportStatement('react', [], 'React')
@@ -443,6 +444,7 @@ export const createWxmlVistor = (
                     body.splice(0, 0, declaration)
                   }
                 }
+                path.stop()
               },
             })
             usedTemplate.forEach((componentName) => {
@@ -454,6 +456,7 @@ export const createWxmlVistor = (
               ast,
               name,
               funcs,
+              tmplName,
             })
           }
         }
@@ -498,6 +501,7 @@ export function parseWXML (dirPath: string, wxml?: string, parseImport?: boolean
   if (parseResult) {
     return parseResult
   }
+
   try {
     wxml = prettyPrint(wxml, {
       max_char: 0,
@@ -507,6 +511,7 @@ export function parseWXML (dirPath: string, wxml?: string, parseImport?: boolean
   } catch (error) {
     //
   }
+
   if (!parseImport) {
     errors.length = 0
     usedComponents.clear()
@@ -973,6 +978,7 @@ function parseText (node: Text, tagName?: string) {
     const text = content.replace(/([{}]+)/g, "{'$1'}")
     return t.jSXText(text)
   }
+
   return t.jSXExpressionContainer(buildTemplate(content))
 }
 
@@ -1020,8 +1026,8 @@ export function parseContent (content: string, single = false): { type: 'raw' | 
 
 /**
  * 判断 style 中的属性是否都是 attrName: attrValue 格式
- * 
- * @param styleAttrsMap 
+ *
+ * @param styleAttrsMap
  */
 function isAllKeyValueFormat (styleAttrsMap: any[]): boolean {
   // 匹配 attrName: attrValue 格式
@@ -1033,12 +1039,12 @@ function isAllKeyValueFormat (styleAttrsMap: any[]): boolean {
 
 /**
  * 解析内联style属性
- * 
+ *
  * @param key 内联属性的类型
  * @param value 内联属性的值
- * @returns 
+ * @returns
  */
-function parseStyle (key: string, value: string) {
+export function parseStyle (key: string, value: string) {
   const styleAttrs = value.trim().split(';')
   // 针对attrName: attrValue 格式做转换处理, 其他类型采用'+'连接符
   if (isAllKeyValueFormat(styleAttrs)) {
@@ -1065,7 +1071,7 @@ function parseAttribute (attr: Attribute) {
       // eslint-disable-next-line no-console
       console.log(codeFrameError(attr, 'Taro/React 不支持 class 传入数组，此写法可能无法得到正确的 class'))
     }
-    
+
     value = convertStyleUnit(value)
     // 判断属性是否为style属性
     if (key === 'style' && value) {
@@ -1123,7 +1129,7 @@ function parseAttribute (attr: Attribute) {
     }
   }
 
-  const jsxKey = handleAttrKey(key)
+  let jsxKey = handleAttrKey(key)
   if (/^on[A-Z]/.test(jsxKey) && !/^catch/.test(key) && jsxValue && t.isStringLiteral(jsxValue)) {
     jsxValue = t.jSXExpressionContainer(t.memberExpression(t.thisExpression(), t.identifier(jsxValue.value)))
   }
@@ -1134,6 +1140,13 @@ function parseAttribute (attr: Attribute) {
       globals.hasCatchTrue = true
     } else if (t.isStringLiteral(jsxValue)) {
       jsxValue = t.jSXExpressionContainer(t.memberExpression(t.thisExpression(), t.identifier(jsxValue.value)))
+    }
+  }
+  // 如果data-xxx自定义属性名xxx不是以-分隔的写法就要转成全小写属性名
+  if (value && jsxKey.startsWith('data-')) {
+    const realKey = jsxKey.replace(/^data-/, '')
+    if (realKey.indexOf('-') === -1) {
+      jsxKey = `data-${realKey.toLowerCase()}`
     }
   }
   return t.jSXAttribute(t.jSXIdentifier(jsxKey), jsxValue)
