@@ -483,6 +483,139 @@ importers:
         specifier: 5.78.0
         version: registry.npmjs.org/webpack@5.78.0
 
+  examples/wechat-app:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.21.5
+        version: registry.npmjs.org/@babel/runtime@7.21.5
+      '@tarojs/components':
+        specifier: workspace:*
+        version: link:../../packages/taro-components
+      '@tarojs/helper':
+        specifier: workspace:*
+        version: link:../../packages/taro-helper
+      '@tarojs/plugin-framework-react':
+        specifier: workspace:*
+        version: link:../../packages/taro-plugin-react
+      '@tarojs/plugin-platform-alipay':
+        specifier: workspace:*
+        version: link:../../packages/taro-alipay
+      '@tarojs/plugin-platform-h5':
+        specifier: workspace:*
+        version: link:../../packages/taro-platform-h5
+      '@tarojs/plugin-platform-jd':
+        specifier: workspace:*
+        version: link:../../packages/taro-jd
+      '@tarojs/plugin-platform-mpandroid':
+        specifier: workspace:*
+        version: link:../../packages/taro-platform-mpandroid
+      '@tarojs/plugin-platform-mpharmony':
+        specifier: workspace:*
+        version: link:../../packages/taro-platform-mpharmony
+      '@tarojs/plugin-platform-qq':
+        specifier: workspace:*
+        version: link:../../packages/taro-qq
+      '@tarojs/plugin-platform-swan':
+        specifier: workspace:*
+        version: link:../../packages/taro-swan
+      '@tarojs/plugin-platform-tt':
+        specifier: workspace:*
+        version: link:../../packages/taro-tt
+      '@tarojs/plugin-platform-weapp':
+        specifier: workspace:*
+        version: link:../../packages/taro-weapp
+      '@tarojs/react':
+        specifier: workspace:*
+        version: link:../../packages/taro-react
+      '@tarojs/runtime':
+        specifier: workspace:*
+        version: link:../../packages/taro-runtime
+      '@tarojs/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@tarojs/taro':
+        specifier: workspace:*
+        version: link:../../packages/taro
+      '@tarojs/with-weapp':
+        specifier: workspace:*
+        version: link:../../packages/taro-with-weapp
+      react:
+        specifier: ^18.0.0
+        version: registry.npmjs.org/react@18.2.0
+      react-dom:
+        specifier: ^18.0.0
+        version: registry.npmjs.org/react-dom@18.2.0(react@18.2.0)
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.8.0
+        version: registry.npmjs.org/@babel/core@7.21.8
+      '@pmmmwh/react-refresh-webpack-plugin':
+        specifier: ^0.5.5
+        version: registry.npmjs.org/@pmmmwh/react-refresh-webpack-plugin@0.5.5(@types/webpack@4.41.33)(react-refresh@0.11.0)(webpack-dev-server@4.11.1)(webpack@5.78.0)
+      '@tarojs/cli':
+        specifier: workspace:*
+        version: link:../../packages/taro-cli
+      '@tarojs/taro-loader':
+        specifier: workspace:*
+        version: link:../../packages/taro-loader
+      '@tarojs/test-utils-react':
+        specifier: ^0.1.1
+        version: registry.npmjs.org/@tarojs/test-utils-react@0.1.1(@babel/core@7.21.8)(@tarojs/components@packages+taro-components)(@tarojs/helper@packages+taro-helper)(@tarojs/plugin-framework-react@packages+taro-plugin-react)(@tarojs/plugin-platform-h5@packages+taro-platform-h5)(@tarojs/react@packages+taro-react)(@tarojs/runtime@packages+taro-runtime)(@tarojs/shared@packages+shared)(react-dom@18.2.0)(react@18.2.0)
+      '@tarojs/webpack5-runner':
+        specifier: workspace:*
+        version: link:../../packages/taro-webpack5-runner
+      '@types/jest':
+        specifier: ^29.3.1
+        version: registry.npmjs.org/@types/jest@29.5.1
+      '@types/node':
+        specifier: ^18.15.11
+        version: registry.npmjs.org/@types/node@18.15.11
+      '@types/react':
+        specifier: ^18.0.0
+        version: registry.npmjs.org/@types/react@18.2.6
+      '@types/webpack-env':
+        specifier: ^1.13.6
+        version: registry.npmjs.org/@types/webpack-env@1.13.6
+      babel-preset-taro:
+        specifier: workspace:*
+        version: link:../../packages/babel-preset-taro
+      eslint:
+        specifier: ^8.12.0
+        version: registry.npmjs.org/eslint@8.40.0
+      eslint-config-taro:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-taro
+      eslint-plugin-import:
+        specifier: ^2.12.0
+        version: registry.npmjs.org/eslint-plugin-import@2.27.5(@typescript-eslint/parser@5.59.2)(eslint@8.40.0)
+      eslint-plugin-react:
+        specifier: ^7.8.2
+        version: registry.npmjs.org/eslint-plugin-react@7.10.0(eslint@8.40.0)
+      eslint-plugin-react-hooks:
+        specifier: ^4.2.0
+        version: registry.npmjs.org/eslint-plugin-react-hooks@4.6.0(eslint@8.40.0)
+      jest:
+        specifier: ^29.3.1
+        version: registry.npmjs.org/jest@29.5.0(@types/node@18.15.11)(ts-node@10.9.1)
+      jest-environment-jsdom:
+        specifier: ^29.5.0
+        version: registry.npmjs.org/jest-environment-jsdom@29.5.0
+      postcss:
+        specifier: ^8.4.18
+        version: registry.npmjs.org/postcss@8.4.23
+      react-refresh:
+        specifier: ^0.11.0
+        version: registry.npmjs.org/react-refresh@0.11.0
+      stylelint:
+        specifier: ^14.4.0
+        version: registry.npmjs.org/stylelint@14.16.1
+      ts-node:
+        specifier: ^10.9.1
+        version: registry.npmjs.org/ts-node@10.9.1(@types/node@18.15.11)(typescript@4.9.5)
+      webpack:
+        specifier: 5.78.0
+        version: registry.npmjs.org/webpack@5.78.0
+
   packages/babel-plugin-transform-react-jsx-to-rn-stylesheet:
     dependencies:
       camelize:
@@ -1708,6 +1841,8 @@ importers:
       react-test-renderer:
         specifier: 18.1.0
         version: registry.npmjs.org/react-test-renderer@18.1.0(react@18.1.0)
+
+  packages/taro-components/loader: {}
 
   packages/taro-extend:
     devDependencies:
@@ -5101,7 +5236,7 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
-      '@babel/types': registry.npmjs.org/@babel/types@7.21.5
+      '@babel/types': registry.npmjs.org/@babel/types@7.22.11
 
   registry.npmjs.org/@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression@7.18.6(@babel/core@7.21.8):
     resolution: {integrity: sha512-Dgxsyg54Fx1d4Nge8UnvTrED63vrwOdPmyvPzlNN/boaliRP54pm3pGzZD1SJUwrBA+Cs/xdG8kXX6Mn/RfISQ==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression/-/plugin-bugfix-safari-id-destructuring-collision-in-function-expression-7.18.6.tgz}
@@ -8206,7 +8341,7 @@ packages:
       getenv: registry.npmjs.org/getenv@1.0.0
       glob: registry.npmjs.org/glob@7.1.6
       resolve-from: registry.npmjs.org/resolve-from@5.0.0
-      semver: registry.npmjs.org/semver@7.5.2
+      semver: registry.npmjs.org/semver@7.5.4
       slash: registry.npmjs.org/slash@3.0.0
       xcode: registry.npmjs.org/xcode@3.0.1
       xml2js: registry.npmjs.org/xml2js@0.4.23
@@ -8718,8 +8853,9 @@ packages:
       - ts-node
     dev: true
 
-  registry.npmjs.org/@jest/core@29.7.0:
+  registry.npmjs.org/@jest/core@29.7.0(ts-node@10.9.1):
     resolution: {integrity: sha512-n7aeXWKMnGtDA48y8TLWJPJmLmmZ642Ceo78cYWEpiD7FzDgmNDV/GCVRorPABdXLJZ/9wzzgZAlHjXjxDHGsg==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@jest/core/-/core-29.7.0.tgz}
+    id: registry.npmjs.org/@jest/core/29.7.0
     name: '@jest/core'
     version: 29.7.0
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -8741,7 +8877,7 @@ packages:
       exit: registry.npmjs.org/exit@0.1.2
       graceful-fs: registry.npmjs.org/graceful-fs@4.2.11
       jest-changed-files: registry.npmjs.org/jest-changed-files@29.7.0
-      jest-config: registry.npmjs.org/jest-config@29.7.0(@types/node@18.15.11)
+      jest-config: registry.npmjs.org/jest-config@29.7.0(@types/node@18.15.11)(ts-node@10.9.1)
       jest-haste-map: registry.npmjs.org/jest-haste-map@29.7.0
       jest-message-util: registry.npmjs.org/jest-message-util@29.7.0
       jest-regex-util: registry.npmjs.org/jest-regex-util@29.6.3
@@ -8851,7 +8987,7 @@ packages:
     version: 29.5.0
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      expect: registry.npmjs.org/expect@29.5.0
+      expect: registry.npmjs.org/expect@29.7.0
       jest-snapshot: registry.npmjs.org/jest-snapshot@29.5.0
     transitivePeerDependencies:
       - supports-color
@@ -8953,10 +9089,10 @@ packages:
     version: 29.5.0
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@jest/environment': registry.npmjs.org/@jest/environment@29.5.0
+      '@jest/environment': registry.npmjs.org/@jest/environment@29.7.0
       '@jest/expect': registry.npmjs.org/@jest/expect@29.5.0
       '@jest/types': registry.npmjs.org/@jest/types@29.6.3
-      jest-mock: registry.npmjs.org/jest-mock@29.5.0
+      jest-mock: registry.npmjs.org/jest-mock@29.7.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -10526,7 +10662,7 @@ packages:
     version: 1.1.1
     dependencies:
       '@gar/promisify': registry.npmjs.org/@gar/promisify@1.1.3
-      semver: registry.npmjs.org/semver@7.5.2
+      semver: registry.npmjs.org/semver@7.5.4
 
   registry.npmjs.org/@npmcli/move-file@1.1.2:
     resolution: {integrity: sha512-1SUf/Cg2GzGDyaf15aR9St9TWlb+XvbZXWpDx8YKs7MLzMH/BCeopv+y9vzrzgkfykCGuWOlSu3mZhj2+FQcrg==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@npmcli/move-file/-/move-file-1.1.2.tgz}
@@ -12800,6 +12936,69 @@ packages:
       '@types/webpack-dev-server': registry.npmjs.org/@types/webpack-dev-server@3.11.6
       vue: registry.npmjs.org/vue@2.7.14
 
+  registry.npmjs.org/@tarojs/test-utils-dom@0.1.1(@babel/core@7.21.8):
+    resolution: {integrity: sha512-IbX/fhfxYZT1sZjFi3i9pGLypUa86I1/HW134BLsn2ByEID3MON1Zay9uT7qAFPQsfGuek/VbjjbyFfrGajULA==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@tarojs/test-utils-dom/-/test-utils-dom-0.1.1.tgz}
+    id: registry.npmjs.org/@tarojs/test-utils-dom/0.1.1
+    name: '@tarojs/test-utils-dom'
+    version: 0.1.1
+    dependencies:
+      '@babel/runtime': registry.npmjs.org/@babel/runtime@7.21.5
+      babel-jest: registry.npmjs.org/babel-jest@29.7.0(@babel/core@7.21.8)
+      pretty-format: registry.npmjs.org/pretty-format@29.7.0
+    transitivePeerDependencies:
+      - '@babel/core'
+      - supports-color
+    dev: true
+
+  registry.npmjs.org/@tarojs/test-utils-react@0.1.1(@babel/core@7.21.8)(@tarojs/components@packages+taro-components)(@tarojs/helper@packages+taro-helper)(@tarojs/plugin-framework-react@packages+taro-plugin-react)(@tarojs/plugin-platform-h5@packages+taro-platform-h5)(@tarojs/react@packages+taro-react)(@tarojs/runtime@packages+taro-runtime)(@tarojs/shared@packages+shared)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-8F+jqQCe3P37FqWl/Fmy5elH/1LsfSQsZMLWp5II27EdjBUfmXr95EjZ4DJjPJkbfuM4Z9LefjXVk3nghRRdqg==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@tarojs/test-utils-react/-/test-utils-react-0.1.1.tgz}
+    id: registry.npmjs.org/@tarojs/test-utils-react/0.1.1
+    name: '@tarojs/test-utils-react'
+    version: 0.1.1
+    peerDependencies:
+      '@tarojs/components': ^3.6.0
+      '@tarojs/helper': ^3.6.0
+      '@tarojs/plugin-framework-react': ^3.6.0
+      '@tarojs/plugin-platform-h5': ^3.6.0
+      '@tarojs/react': ^3.6.0
+      '@tarojs/runtime': ^3.6.0
+      '@tarojs/shared': ^3.6.0
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      '@babel/runtime': registry.npmjs.org/@babel/runtime@7.21.5
+      '@tarojs/components': link:packages/taro-components
+      '@tarojs/helper': link:packages/taro-helper
+      '@tarojs/plugin-framework-react': link:packages/taro-plugin-react
+      '@tarojs/plugin-platform-h5': link:packages/taro-platform-h5
+      '@tarojs/react': link:packages/taro-react
+      '@tarojs/runtime': link:packages/taro-runtime
+      '@tarojs/shared': link:packages/shared
+      '@tarojs/test-utils-dom': registry.npmjs.org/@tarojs/test-utils-dom@0.1.1(@babel/core@7.21.8)
+      '@tarojs/test-utils-shared': registry.npmjs.org/@tarojs/test-utils-shared@0.1.1(@babel/core@7.21.8)
+      babel-jest: registry.npmjs.org/babel-jest@29.7.0(@babel/core@7.21.8)
+      pretty-format: registry.npmjs.org/pretty-format@29.7.0
+      react: registry.npmjs.org/react@18.2.0
+      react-dom: registry.npmjs.org/react-dom@18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - '@babel/core'
+      - supports-color
+    dev: true
+
+  registry.npmjs.org/@tarojs/test-utils-shared@0.1.1(@babel/core@7.21.8):
+    resolution: {integrity: sha512-DnBFzVFrunaR8B80amqwfIAcYVp6kLEXlwC6nY2vfN3JeuMvUI6IOcKq1NqjapuNulI6hwfUKI4Drsz7GZS+cw==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@tarojs/test-utils-shared/-/test-utils-shared-0.1.1.tgz}
+    id: registry.npmjs.org/@tarojs/test-utils-shared/0.1.1
+    name: '@tarojs/test-utils-shared'
+    version: 0.1.1
+    dependencies:
+      '@babel/runtime': registry.npmjs.org/@babel/runtime@7.21.5
+      babel-jest: registry.npmjs.org/babel-jest@29.7.0(@babel/core@7.21.8)
+      pretty-format: registry.npmjs.org/pretty-format@29.7.0
+    transitivePeerDependencies:
+      - '@babel/core'
+      - supports-color
+    dev: true
+
   registry.npmjs.org/@tarojs/utils@2.2.19:
     resolution: {integrity: sha512-KA22Hu/YJ5Hd9L+DOS8kGM66Aqf3VREA3lzAKMTCaOnW8fV0ZDGn706jr+/ZLAjhqU4i9MbeTQHfBI614jVuXg==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/@tarojs/utils/-/utils-2.2.19.tgz}
     name: '@tarojs/utils'
@@ -13314,8 +13513,8 @@ packages:
     name: '@types/jest'
     version: 29.5.1
     dependencies:
-      expect: registry.npmjs.org/expect@29.5.0
-      pretty-format: registry.npmjs.org/pretty-format@29.5.0
+      expect: registry.npmjs.org/expect@29.7.0
+      pretty-format: registry.npmjs.org/pretty-format@29.7.0
     dev: true
 
   registry.npmjs.org/@types/jsdom@20.0.1:
@@ -18779,7 +18978,7 @@ packages:
       make-dir: registry.npmjs.org/make-dir@3.1.0
       onetime: registry.npmjs.org/onetime@5.1.2
       pkg-up: registry.npmjs.org/pkg-up@3.1.0
-      semver: registry.npmjs.org/semver@7.5.2
+      semver: registry.npmjs.org/semver@7.5.4
     dev: false
 
   registry.npmjs.org/config-chain@1.1.13:
@@ -19547,7 +19746,7 @@ packages:
       safe-buffer: registry.npmjs.org/safe-buffer@5.2.1
       sha.js: registry.npmjs.org/sha.js@2.4.11
 
-  registry.npmjs.org/create-jest@29.7.0(@types/node@14.18.45):
+  registry.npmjs.org/create-jest@29.7.0(@types/node@14.18.45)(ts-node@10.9.1):
     resolution: {integrity: sha512-Adz2bdH0Vq3F53KEMJOoftQFutWCukm6J24wbPWRO4k1kMY7gS7ds/uoJkNuV8wDCtWWnuwGcJwpWcih+zEW1Q==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/create-jest/-/create-jest-29.7.0.tgz}
     id: registry.npmjs.org/create-jest/29.7.0
     name: create-jest
@@ -19559,7 +19758,51 @@ packages:
       chalk: registry.npmjs.org/chalk@4.1.2
       exit: registry.npmjs.org/exit@0.1.2
       graceful-fs: registry.npmjs.org/graceful-fs@4.2.11
-      jest-config: registry.npmjs.org/jest-config@29.7.0(@types/node@14.18.45)
+      jest-config: registry.npmjs.org/jest-config@29.7.0(@types/node@14.18.45)(ts-node@10.9.1)
+      jest-util: registry.npmjs.org/jest-util@29.7.0
+      prompts: registry.npmjs.org/prompts@2.4.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+    dev: true
+
+  registry.npmjs.org/create-jest@29.7.0(@types/node@18.15.11)(ts-node@10.9.1):
+    resolution: {integrity: sha512-Adz2bdH0Vq3F53KEMJOoftQFutWCukm6J24wbPWRO4k1kMY7gS7ds/uoJkNuV8wDCtWWnuwGcJwpWcih+zEW1Q==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/create-jest/-/create-jest-29.7.0.tgz}
+    id: registry.npmjs.org/create-jest/29.7.0
+    name: create-jest
+    version: 29.7.0
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    dependencies:
+      '@jest/types': registry.npmjs.org/@jest/types@29.6.3
+      chalk: registry.npmjs.org/chalk@4.1.2
+      exit: registry.npmjs.org/exit@0.1.2
+      graceful-fs: registry.npmjs.org/graceful-fs@4.2.11
+      jest-config: registry.npmjs.org/jest-config@29.7.0(@types/node@18.15.11)(ts-node@10.9.1)
+      jest-util: registry.npmjs.org/jest-util@29.7.0
+      prompts: registry.npmjs.org/prompts@2.4.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+    dev: true
+
+  registry.npmjs.org/create-jest@29.7.0(@types/node@9.6.2)(ts-node@10.9.1):
+    resolution: {integrity: sha512-Adz2bdH0Vq3F53KEMJOoftQFutWCukm6J24wbPWRO4k1kMY7gS7ds/uoJkNuV8wDCtWWnuwGcJwpWcih+zEW1Q==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/create-jest/-/create-jest-29.7.0.tgz}
+    id: registry.npmjs.org/create-jest/29.7.0
+    name: create-jest
+    version: 29.7.0
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    dependencies:
+      '@jest/types': registry.npmjs.org/@jest/types@29.6.3
+      chalk: registry.npmjs.org/chalk@4.1.2
+      exit: registry.npmjs.org/exit@0.1.2
+      graceful-fs: registry.npmjs.org/graceful-fs@4.2.11
+      jest-config: registry.npmjs.org/jest-config@29.7.0(@types/node@9.6.2)(ts-node@10.9.1)
       jest-util: registry.npmjs.org/jest-util@29.7.0
       prompts: registry.npmjs.org/prompts@2.4.2
     transitivePeerDependencies:
@@ -22775,8 +23018,8 @@ packages:
       '@jest/expect-utils': registry.npmjs.org/@jest/expect-utils@29.5.0
       jest-get-type: registry.npmjs.org/jest-get-type@29.4.3
       jest-matcher-utils: registry.npmjs.org/jest-matcher-utils@29.5.0
-      jest-message-util: registry.npmjs.org/jest-message-util@29.5.0
-      jest-util: registry.npmjs.org/jest-util@29.5.0
+      jest-message-util: registry.npmjs.org/jest-message-util@29.7.0
+      jest-util: registry.npmjs.org/jest-util@29.7.0
     dev: true
 
   registry.npmjs.org/expect@29.7.0:
@@ -24353,7 +24596,7 @@ packages:
       es6-error: registry.npmjs.org/es6-error@4.1.1
       matcher: registry.npmjs.org/matcher@3.0.0
       roarr: registry.npmjs.org/roarr@2.15.4
-      semver: registry.npmjs.org/semver@7.5.2
+      semver: registry.npmjs.org/semver@7.5.4
       serialize-error: registry.npmjs.org/serialize-error@7.0.1
     dev: false
     optional: true
@@ -26761,7 +27004,7 @@ packages:
       jest-snapshot: registry.npmjs.org/jest-snapshot@29.5.0
       jest-util: registry.npmjs.org/jest-util@29.5.0
       p-limit: registry.npmjs.org/p-limit@3.1.0
-      pretty-format: registry.npmjs.org/pretty-format@29.5.0
+      pretty-format: registry.npmjs.org/pretty-format@29.7.0
       pure-rand: registry.npmjs.org/pure-rand@6.0.2
       slash: registry.npmjs.org/slash@3.0.0
       stack-utils: registry.npmjs.org/stack-utils@2.0.6
@@ -26922,7 +27165,7 @@ packages:
       - ts-node
     dev: true
 
-  registry.npmjs.org/jest-cli@29.7.0(@types/node@14.18.45):
+  registry.npmjs.org/jest-cli@29.7.0(@types/node@14.18.45)(ts-node@10.9.1):
     resolution: {integrity: sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmJASUdZUzy83sLNNQ2gZslg==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/jest-cli/-/jest-cli-29.7.0.tgz}
     id: registry.npmjs.org/jest-cli/29.7.0
     name: jest-cli
@@ -26935,14 +27178,76 @@ packages:
       node-notifier:
         optional: true
     dependencies:
-      '@jest/core': registry.npmjs.org/@jest/core@29.7.0
+      '@jest/core': registry.npmjs.org/@jest/core@29.7.0(ts-node@10.9.1)
       '@jest/test-result': registry.npmjs.org/@jest/test-result@29.7.0
       '@jest/types': registry.npmjs.org/@jest/types@29.6.3
       chalk: registry.npmjs.org/chalk@4.1.2
-      create-jest: registry.npmjs.org/create-jest@29.7.0(@types/node@14.18.45)
+      create-jest: registry.npmjs.org/create-jest@29.7.0(@types/node@14.18.45)(ts-node@10.9.1)
       exit: registry.npmjs.org/exit@0.1.2
       import-local: registry.npmjs.org/import-local@3.1.0
-      jest-config: registry.npmjs.org/jest-config@29.7.0(@types/node@14.18.45)
+      jest-config: registry.npmjs.org/jest-config@29.7.0(@types/node@14.18.45)(ts-node@10.9.1)
+      jest-util: registry.npmjs.org/jest-util@29.7.0
+      jest-validate: registry.npmjs.org/jest-validate@29.7.0
+      yargs: registry.npmjs.org/yargs@17.7.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+    dev: true
+
+  registry.npmjs.org/jest-cli@29.7.0(@types/node@18.15.11)(ts-node@10.9.1):
+    resolution: {integrity: sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmJASUdZUzy83sLNNQ2gZslg==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/jest-cli/-/jest-cli-29.7.0.tgz}
+    id: registry.npmjs.org/jest-cli/29.7.0
+    name: jest-cli
+    version: 29.7.0
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/core': registry.npmjs.org/@jest/core@29.7.0(ts-node@10.9.1)
+      '@jest/test-result': registry.npmjs.org/@jest/test-result@29.7.0
+      '@jest/types': registry.npmjs.org/@jest/types@29.6.3
+      chalk: registry.npmjs.org/chalk@4.1.2
+      create-jest: registry.npmjs.org/create-jest@29.7.0(@types/node@18.15.11)(ts-node@10.9.1)
+      exit: registry.npmjs.org/exit@0.1.2
+      import-local: registry.npmjs.org/import-local@3.1.0
+      jest-config: registry.npmjs.org/jest-config@29.7.0(@types/node@18.15.11)(ts-node@10.9.1)
+      jest-util: registry.npmjs.org/jest-util@29.7.0
+      jest-validate: registry.npmjs.org/jest-validate@29.7.0
+      yargs: registry.npmjs.org/yargs@17.7.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+    dev: true
+
+  registry.npmjs.org/jest-cli@29.7.0(@types/node@9.6.2)(ts-node@10.9.1):
+    resolution: {integrity: sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmJASUdZUzy83sLNNQ2gZslg==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/jest-cli/-/jest-cli-29.7.0.tgz}
+    id: registry.npmjs.org/jest-cli/29.7.0
+    name: jest-cli
+    version: 29.7.0
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/core': registry.npmjs.org/@jest/core@29.7.0(ts-node@10.9.1)
+      '@jest/test-result': registry.npmjs.org/@jest/test-result@29.7.0
+      '@jest/types': registry.npmjs.org/@jest/types@29.6.3
+      chalk: registry.npmjs.org/chalk@4.1.2
+      create-jest: registry.npmjs.org/create-jest@29.7.0(@types/node@9.6.2)(ts-node@10.9.1)
+      exit: registry.npmjs.org/exit@0.1.2
+      import-local: registry.npmjs.org/import-local@3.1.0
+      jest-config: registry.npmjs.org/jest-config@29.7.0(@types/node@9.6.2)(ts-node@10.9.1)
       jest-util: registry.npmjs.org/jest-util@29.7.0
       jest-validate: registry.npmjs.org/jest-validate@29.7.0
       yargs: registry.npmjs.org/yargs@17.7.2
@@ -27160,7 +27465,7 @@ packages:
       - supports-color
     dev: true
 
-  registry.npmjs.org/jest-config@29.7.0(@types/node@14.18.45):
+  registry.npmjs.org/jest-config@29.7.0(@types/node@14.18.45)(ts-node@10.9.1):
     resolution: {integrity: sha512-uXbpfeQ7R6TZBqI3/TxCU4q4ttk3u0PJeC+E0zbfSoSjq6bJ7buBPxzQPL0ifrkY4DNu4JUdk0ImlBUYi840eQ==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/jest-config/-/jest-config-29.7.0.tgz}
     id: registry.npmjs.org/jest-config/29.7.0
     name: jest-config
@@ -27198,12 +27503,13 @@ packages:
       pretty-format: registry.npmjs.org/pretty-format@29.7.0
       slash: registry.npmjs.org/slash@3.0.0
       strip-json-comments: registry.npmjs.org/strip-json-comments@3.1.1
+      ts-node: registry.npmjs.org/ts-node@10.9.1(@types/node@14.18.45)(typescript@4.9.5)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
     dev: true
 
-  registry.npmjs.org/jest-config@29.7.0(@types/node@18.15.11):
+  registry.npmjs.org/jest-config@29.7.0(@types/node@18.15.11)(ts-node@10.9.1):
     resolution: {integrity: sha512-uXbpfeQ7R6TZBqI3/TxCU4q4ttk3u0PJeC+E0zbfSoSjq6bJ7buBPxzQPL0ifrkY4DNu4JUdk0ImlBUYi840eQ==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/jest-config/-/jest-config-29.7.0.tgz}
     id: registry.npmjs.org/jest-config/29.7.0
     name: jest-config
@@ -27241,6 +27547,51 @@ packages:
       pretty-format: registry.npmjs.org/pretty-format@29.7.0
       slash: registry.npmjs.org/slash@3.0.0
       strip-json-comments: registry.npmjs.org/strip-json-comments@3.1.1
+      ts-node: registry.npmjs.org/ts-node@10.9.1(@types/node@9.6.2)(typescript@4.9.5)
+    transitivePeerDependencies:
+      - babel-plugin-macros
+      - supports-color
+    dev: true
+
+  registry.npmjs.org/jest-config@29.7.0(@types/node@9.6.2)(ts-node@10.9.1):
+    resolution: {integrity: sha512-uXbpfeQ7R6TZBqI3/TxCU4q4ttk3u0PJeC+E0zbfSoSjq6bJ7buBPxzQPL0ifrkY4DNu4JUdk0ImlBUYi840eQ==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/jest-config/-/jest-config-29.7.0.tgz}
+    id: registry.npmjs.org/jest-config/29.7.0
+    name: jest-config
+    version: 29.7.0
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    peerDependencies:
+      '@types/node': '*'
+      ts-node: '>=9.0.0'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      ts-node:
+        optional: true
+    dependencies:
+      '@babel/core': registry.npmjs.org/@babel/core@7.21.8
+      '@jest/test-sequencer': registry.npmjs.org/@jest/test-sequencer@29.7.0
+      '@jest/types': registry.npmjs.org/@jest/types@29.6.3
+      '@types/node': registry.npmjs.org/@types/node@9.6.2
+      babel-jest: registry.npmjs.org/babel-jest@29.7.0(@babel/core@7.21.8)
+      chalk: registry.npmjs.org/chalk@4.1.2
+      ci-info: registry.npmjs.org/ci-info@3.8.0
+      deepmerge: registry.npmjs.org/deepmerge@4.3.1
+      glob: registry.npmjs.org/glob@7.2.3
+      graceful-fs: registry.npmjs.org/graceful-fs@4.2.11
+      jest-circus: registry.npmjs.org/jest-circus@29.7.0
+      jest-environment-node: registry.npmjs.org/jest-environment-node@29.7.0
+      jest-get-type: registry.npmjs.org/jest-get-type@29.6.3
+      jest-regex-util: registry.npmjs.org/jest-regex-util@29.6.3
+      jest-resolve: registry.npmjs.org/jest-resolve@29.7.0
+      jest-runner: registry.npmjs.org/jest-runner@29.7.0
+      jest-util: registry.npmjs.org/jest-util@29.7.0
+      jest-validate: registry.npmjs.org/jest-validate@29.7.0
+      micromatch: registry.npmjs.org/micromatch@4.0.5
+      parse-json: registry.npmjs.org/parse-json@5.2.0
+      pretty-format: registry.npmjs.org/pretty-format@29.7.0
+      slash: registry.npmjs.org/slash@3.0.0
+      strip-json-comments: registry.npmjs.org/strip-json-comments@3.1.1
+      ts-node: registry.npmjs.org/ts-node@10.9.1(@types/node@9.6.2)(typescript@4.9.5)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -27365,8 +27716,8 @@ packages:
       '@jest/types': registry.npmjs.org/@jest/types@29.6.3
       chalk: registry.npmjs.org/chalk@4.1.2
       jest-get-type: registry.npmjs.org/jest-get-type@29.4.3
-      jest-util: registry.npmjs.org/jest-util@29.5.0
-      pretty-format: registry.npmjs.org/pretty-format@29.5.0
+      jest-util: registry.npmjs.org/jest-util@29.7.0
+      pretty-format: registry.npmjs.org/pretty-format@29.7.0
     dev: true
 
   registry.npmjs.org/jest-each@29.7.0:
@@ -27433,13 +27784,13 @@ packages:
       canvas:
         optional: true
     dependencies:
-      '@jest/environment': registry.npmjs.org/@jest/environment@29.5.0
-      '@jest/fake-timers': registry.npmjs.org/@jest/fake-timers@29.5.0
-      '@jest/types': registry.npmjs.org/@jest/types@29.5.0
+      '@jest/environment': registry.npmjs.org/@jest/environment@29.7.0
+      '@jest/fake-timers': registry.npmjs.org/@jest/fake-timers@29.7.0
+      '@jest/types': registry.npmjs.org/@jest/types@29.6.3
       '@types/jsdom': registry.npmjs.org/@types/jsdom@20.0.1
       '@types/node': registry.npmjs.org/@types/node@18.15.11
-      jest-mock: registry.npmjs.org/jest-mock@29.5.0
-      jest-util: registry.npmjs.org/jest-util@29.5.0
+      jest-mock: registry.npmjs.org/jest-mock@29.7.0
+      jest-util: registry.npmjs.org/jest-util@29.7.0
       jsdom: registry.npmjs.org/jsdom@20.0.3
     transitivePeerDependencies:
       - bufferutil
@@ -27739,7 +28090,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       jest-get-type: registry.npmjs.org/jest-get-type@29.4.3
-      pretty-format: registry.npmjs.org/pretty-format@29.5.0
+      pretty-format: registry.npmjs.org/pretty-format@29.7.0
     dev: true
 
   registry.npmjs.org/jest-leak-detector@29.7.0:
@@ -27846,7 +28197,7 @@ packages:
       chalk: registry.npmjs.org/chalk@4.1.2
       graceful-fs: registry.npmjs.org/graceful-fs@4.2.11
       micromatch: registry.npmjs.org/micromatch@4.0.5
-      pretty-format: registry.npmjs.org/pretty-format@29.5.0
+      pretty-format: registry.npmjs.org/pretty-format@29.7.0
       slash: registry.npmjs.org/slash@3.0.0
       stack-utils: registry.npmjs.org/stack-utils@2.0.6
     dev: true
@@ -28434,7 +28785,7 @@ packages:
       jest-resolve: registry.npmjs.org/jest-resolve@26.6.2
       natural-compare: registry.npmjs.org/natural-compare@1.4.0
       pretty-format: registry.npmjs.org/pretty-format@26.6.2
-      semver: registry.npmjs.org/semver@7.5.2
+      semver: registry.npmjs.org/semver@7.5.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -28466,7 +28817,7 @@ packages:
       jest-util: registry.npmjs.org/jest-util@27.5.1
       natural-compare: registry.npmjs.org/natural-compare@1.4.0
       pretty-format: registry.npmjs.org/pretty-format@27.5.1
-      semver: registry.npmjs.org/semver@7.5.2
+      semver: registry.npmjs.org/semver@7.5.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -28498,8 +28849,8 @@ packages:
       jest-message-util: registry.npmjs.org/jest-message-util@29.5.0
       jest-util: registry.npmjs.org/jest-util@29.5.0
       natural-compare: registry.npmjs.org/natural-compare@1.4.0
-      pretty-format: registry.npmjs.org/pretty-format@29.5.0
-      semver: registry.npmjs.org/semver@7.5.2
+      pretty-format: registry.npmjs.org/pretty-format@29.7.0
+      semver: registry.npmjs.org/semver@7.5.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -28780,7 +29131,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@types/node': registry.npmjs.org/@types/node@18.15.11
-      jest-util: registry.npmjs.org/jest-util@29.5.0
+      jest-util: registry.npmjs.org/jest-util@29.7.0
       merge-stream: registry.npmjs.org/merge-stream@2.0.0
       supports-color: registry.npmjs.org/supports-color@8.1.1
     dev: true
@@ -28851,12 +29202,37 @@ packages:
       node-notifier:
         optional: true
     dependencies:
-      '@jest/core': registry.npmjs.org/@jest/core@29.5.0(ts-node@10.9.1)
-      '@jest/types': registry.npmjs.org/@jest/types@29.5.0
+      '@jest/core': registry.npmjs.org/@jest/core@29.7.0(ts-node@10.9.1)
+      '@jest/types': registry.npmjs.org/@jest/types@29.6.3
       import-local: registry.npmjs.org/import-local@3.1.0
-      jest-cli: registry.npmjs.org/jest-cli@29.5.0(@types/node@14.18.45)(ts-node@10.9.1)
+      jest-cli: registry.npmjs.org/jest-cli@29.7.0(@types/node@14.18.45)(ts-node@10.9.1)
     transitivePeerDependencies:
       - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+    dev: true
+
+  registry.npmjs.org/jest@29.5.0(@types/node@18.15.11)(ts-node@10.9.1):
+    resolution: {integrity: sha512-juMg3he2uru1QoXX078zTa7pO85QyB9xajZc6bU+d9yEGwrKX6+vGmJQ3UdVZsvTEUARIdObzH68QItim6OSSQ==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/jest/-/jest-29.5.0.tgz}
+    id: registry.npmjs.org/jest/29.5.0
+    name: jest
+    version: 29.5.0
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/core': registry.npmjs.org/@jest/core@29.7.0(ts-node@10.9.1)
+      '@jest/types': registry.npmjs.org/@jest/types@29.6.3
+      import-local: registry.npmjs.org/import-local@3.1.0
+      jest-cli: registry.npmjs.org/jest-cli@29.7.0(@types/node@18.15.11)(ts-node@10.9.1)
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
       - supports-color
       - ts-node
     dev: true
@@ -28874,12 +29250,13 @@ packages:
       node-notifier:
         optional: true
     dependencies:
-      '@jest/core': registry.npmjs.org/@jest/core@29.5.0(ts-node@10.9.1)
-      '@jest/types': registry.npmjs.org/@jest/types@29.5.0
+      '@jest/core': registry.npmjs.org/@jest/core@29.7.0(ts-node@10.9.1)
+      '@jest/types': registry.npmjs.org/@jest/types@29.6.3
       import-local: registry.npmjs.org/import-local@3.1.0
-      jest-cli: registry.npmjs.org/jest-cli@29.5.0(@types/node@9.6.2)(ts-node@10.9.1)
+      jest-cli: registry.npmjs.org/jest-cli@29.7.0(@types/node@9.6.2)(ts-node@10.9.1)
     transitivePeerDependencies:
       - '@types/node'
+      - babel-plugin-macros
       - supports-color
       - ts-node
     dev: true
@@ -28897,10 +29274,10 @@ packages:
       node-notifier:
         optional: true
     dependencies:
-      '@jest/core': registry.npmjs.org/@jest/core@29.7.0
+      '@jest/core': registry.npmjs.org/@jest/core@29.7.0(ts-node@10.9.1)
       '@jest/types': registry.npmjs.org/@jest/types@29.6.3
       import-local: registry.npmjs.org/import-local@3.1.0
-      jest-cli: registry.npmjs.org/jest-cli@29.7.0(@types/node@14.18.45)
+      jest-cli: registry.npmjs.org/jest-cli@29.7.0(@types/node@14.18.45)(ts-node@10.9.1)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -31865,7 +32242,7 @@ packages:
     dependencies:
       growly: registry.npmjs.org/growly@1.3.0
       is-wsl: registry.npmjs.org/is-wsl@2.2.0
-      semver: registry.npmjs.org/semver@7.5.2
+      semver: registry.npmjs.org/semver@7.5.4
       shellwords: registry.npmjs.org/shellwords@0.1.1
       uuid: registry.npmjs.org/uuid@8.3.2
       which: registry.npmjs.org/which@2.0.2
@@ -31907,7 +32284,7 @@ packages:
     dependencies:
       hosted-git-info: registry.npmjs.org/hosted-git-info@4.1.0
       is-core-module: registry.npmjs.org/is-core-module@2.12.0
-      semver: registry.npmjs.org/semver@7.5.2
+      semver: registry.npmjs.org/semver@7.5.4
       validate-npm-package-license: registry.npmjs.org/validate-npm-package-license@3.0.4
 
   registry.npmjs.org/normalize-path@2.1.1:
@@ -37282,7 +37659,6 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: registry.npmjs.org/lru-cache@6.0.0
-    dev: true
 
   registry.npmjs.org/send@0.18.0(supports-color@6.1.0):
     resolution: {integrity: sha512-qqWzuOjSFOuqPjFe4NOsMLafToQQwBSOEpS+FwEt3A2V3vKubTquT3vmLTQpFgMXp8AlFWFuP1qKaJZOtPpVXg==, registry: https://registry.yarnpkg.com/, tarball: https://registry.npmjs.org/send/-/send-0.18.0.tgz}
