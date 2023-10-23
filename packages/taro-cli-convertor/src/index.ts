@@ -428,41 +428,42 @@ export default class Convertor {
                 node.object = t.identifier('Taro')
                 needInsertImportTaro = true
               } else if (t.isIdentifier(prettier) && prettier.name === 'dataset') {
-                node.object = t.callExpression(t.identifier('getDataset'),[object])
-                if (hasCacheOptionsRequired) {
-                  traverse(ast,{
-                    VariableDeclaration (astPath) {
-                      const { kind, declarations } = astPath.node
-                      if (kind === 'const') {
-                        declarations.forEach((declaration) => {
-                          const { id, init } = declaration
-                          if ( t.isObjectPattern(id)
-                            && t.isCallExpression(init)
-                            && t.isIdentifier(init.callee)
-                            &&init.callee.name === 'require'
-                            &&t.isStringLiteral(init.arguments[0])
-                          ) {
-                            const currentFilePath = sourceFilePath
-                            const cacheOptionsPath = path.resolve(self.root, 'utils', '_cacheOptions.js')
-                            const importOptionsUrl = promoteRelativePath(path.relative(currentFilePath, cacheOptionsPath))
-                            if (init.arguments[0].value === importOptionsUrl && !hasDatasetRequired) {
-                              const datasetVariableDeclarator =t.objectProperty(t.identifier('getDataset'), t.identifier('getDataset'), false, true)
-                              id.properties.push(datasetVariableDeclarator)
-                              hasDatasetRequired = true
-                            }
-                          }
-                        })
-                      }
-                    }
-                  })
-                } else {
-                  const requireCacheOptionsAst = self.createConvertToolsRequireAst(self, sourceFilePath)
-                  // 若已经引入过 cacheOptions 则不在引入，防止重复引入问题
-                  if (!hasCacheOptionsRequired) {
-                    ast.program.body.unshift(requireCacheOptionsAst)
-                    hasCacheOptionsRequired = true
-                  }
-                  self.generateConvertToolsFile()
+                node.object = t.callExpression(t.identifier('getTarget'),[object, t.identifier('Taro')])
+                // 创建导入 cacheOptions 对象的 ast 节点
+                if (!hasDatasetRequired) {
+                  const requireCacheOptionsAst = t.variableDeclaration('const', [
+                    t.variableDeclarator(
+                      t.objectPattern([
+                        t.objectProperty(t.identifier('getTarget'), t.identifier('getTarget'), false, true),
+                      ]),
+                      t.callExpression(t.identifier('require'), [t.stringLiteral('@tarojs/with-weapp')])
+                    ),
+                  ])
+                  ast.program.body.unshift(requireCacheOptionsAst)
+                  hasDatasetRequired = true
+                  needInsertImportTaro = true
+                }
+              }
+            },
+            OptionalMemberExpression (astPath) {
+              const node = astPath.node
+              const object = node.object
+              const prettier = node.property
+              if (t.isIdentifier(prettier) && prettier.name === 'dataset') {
+                node.object = t.callExpression(t.identifier('getTarget'),[object, t.identifier('Taro')])
+                // 创建导入 getTarget 对象的 ast 节点, 并且防止重复引用
+                if (!hasDatasetRequired) {
+                  const requireCacheOptionsAst = t.variableDeclaration('const', [
+                    t.variableDeclarator(
+                      t.objectPattern([
+                        t.objectProperty(t.identifier('getTarget'), t.identifier('getTarget'), false, true),
+                      ]),
+                      t.callExpression(t.identifier('require'), [t.stringLiteral('@tarojs/with-weapp')])
+                    ),
+                  ])
+                  ast.program.body.unshift(requireCacheOptionsAst)
+                  hasDatasetRequired = true
+                  needInsertImportTaro = true
                 }
               }
             },
