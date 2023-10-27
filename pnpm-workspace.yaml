@@ -2,5 +2,6 @@ packages:
   - 'packages/**'
   - 'examples/mini-program-example'
   - 'examples/wechat-app'
+  - 'examples/wuba-taro-plugin'
   - '!packages/taro-cli/templates/**'
   - '!**/__tests__/**'

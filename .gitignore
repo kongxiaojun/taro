@@ -76,3 +76,4 @@ common/autoinstallers/*/.npmrc
 
 # wuba
 wechat-app/
+wuba-taro-plugin/
