@@ -99,6 +99,7 @@ interface ITaroizeOptions {
   path?: string
   rootPath?: string
   scriptPath?: string
+  logFilePath?: string
 }
 
 // convert.config,json配置参数
@@ -402,6 +403,16 @@ export default class Convertor {
               if (callee.type === 'Identifier') {
                 if (callee.name === 'require') {
                   const args = node.arguments as Array<t.StringLiteral>
+                  if (args.length === 0) {
+                    // require()
+                    return
+                  }
+
+                  if (!t.isStringLiteral(args[0])) {
+                    // require 暂不支持动态导入，如require('aa' + aa)，后续收录到报告中
+                    throw new Error(`require暂不支持动态导入, filePath: ${sourceFilePath}, context: ${astPath}`)
+                  }
+
                   const value = args[0].value
                   analyzeImportUrl(self.root, sourceFilePath, scriptFiles, args[0], value, self.isTsProject)
                 } else if (WX_GLOBAL_FN.has(callee.name)) {
@@ -514,11 +525,16 @@ export default class Convertor {
                       t.isJSXAttribute(attr.node) &&
                       attr.node.name.name === 'is'
                   )
-                  // 处理<template is=字符串+变量 拼接的情况(组件的动态名称)
+                  // 处理<template is=包含变量的情况(组件的动态名称)
                   if (is && t.isJSXAttribute(is.node)) {
                     const value = is.node.value
                     if (value && t.isJSXExpressionContainer(value)) {
-                      if (t.isBinaryExpression(value.expression) && value.expression.operator === '+') {
+                      const expression = value.expression
+                      // 1、<template is={{var}}> 2、<template is="string{{var}}">
+                      if (
+                        t.isIdentifier(expression) ||
+                        (t.isBinaryExpression(expression) && expression.operator === '+')
+                      ) {
                         // 加上map, template原名和新名字的映射
                         const componentMapList: any[] = []
                         for (const order in imports) {
@@ -550,7 +566,7 @@ export default class Convertor {
                           const ComponentNameVariableDeclaration = t.variableDeclaration('let', [
                             t.variableDeclarator(
                               t.identifier('ComponentName'),
-                              t.memberExpression(t.identifier('ComponentMap'), value.expression, true)
+                              t.memberExpression(t.identifier('ComponentMap'), expression, true)
                             ),
                           ])
                           returnPath.insertBefore(ComponentNameVariableDeclaration)
@@ -1050,6 +1066,7 @@ ${code}
         rootPath: this.root,
         framework: this.framework,
         isApp: true,
+        logFilePath: globals.logFilePath,
       })
       const { ast, scriptFiles } = this.parseAst({
         ast: taroizeResult.ast,
@@ -1247,6 +1264,7 @@ ${code}
         }
         param.path = path.dirname(pageJSPath)
         param.rootPath = this.root
+        param.logFilePath = globals.logFilePath
         const taroizeResult = taroize({
           ...param,
           framework: this.framework,
@@ -1335,6 +1353,7 @@ ${code}
         }
         param.path = path.dirname(componentJSPath)
         param.rootPath = this.root
+        param.logFilePath = globals.logFilePath
         const taroizeResult = taroize({
           ...param,
           framework: this.framework,
