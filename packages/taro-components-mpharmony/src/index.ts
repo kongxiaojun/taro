@@ -74,3 +74,5 @@ export { WebView } from '@tarojs/components/lib/react'
 // export { MatchMedia } from './components/match-media/match-media'
 // export { default as PageContainer } from './components/page-container/page-container'
 export { StickyHeader, StickySection, RootPortal, GridView, ListView, MatchMedia, PageContainer } from '@tarojs/components/lib/react'
+
+export { Sticky } from './components/sticky/sticky'
