@@ -50,7 +50,7 @@ export default class Index extends React.Component {
           getStrPathArr(definition.apis)
           getStrPathArr(definition.components)
           let result = ''
-          strPathArr.forEach(strPath => {
+          strPathArr.forEach((strPath) => {
             try {
               result = result + strPath + ' ' + Taro.canIUse(strPath) + '\n'
             } catch (error) {
@@ -62,13 +62,27 @@ export default class Index extends React.Component {
           const { apiName } = data
           TestConsole.consoleTest(`Taro.canIUse ${apiName}`)
           TestConsole.consoleSuccess.call(this, Taro.canIUse(apiName), apiIndex)
-          TestConsole.consoleDebug('字面量示例1：share-element.rect-tween-type.cubic-bezier(x1,----', Taro.canIUse('share-element.rect-tween-type.cubic-bezier(x1,'))
-          TestConsole.consoleDebug('字面量示例2：live-pusher.aspect.9:16----', Taro.canIUse("live-pusher.aspect.9:16"))
-          TestConsole.consoleDebug('字面量示例3：live-pusher.audio-reverb-type.4----', Taro.canIUse("live-pusher.audio-reverb-type.4"))
+          TestConsole.consoleDebug(
+            '字面量示例1：share-element.rect-tween-type.cubic-bezier(x1,----',
+            Taro.canIUse('share-element.rect-tween-type.cubic-bezier(x1,')
+          )
+          TestConsole.consoleDebug('字面量示例2：live-pusher.aspect.9:16----', Taro.canIUse('live-pusher.aspect.9:16'))
+          TestConsole.consoleDebug(
+            '字面量示例3：live-pusher.audio-reverb-type.4----',
+            Taro.canIUse('live-pusher.audio-reverb-type.4')
+          )
+          TestConsole.consoleDebug('字面量示例4：checkbox-group----', Taro.canIUse("checkbox-group"))
+          TestConsole.consoleDebug('字面量示例5：button----', Taro.canIUse("button"))
+          TestConsole.consoleDebug('字面量示例6：button.size----', Taro.canIUse("button.size"))
+          TestConsole.consoleDebug('字面量示例7：button.size.mini----', Taro.canIUse("button.size.mini"))
+          
           const apiName1 = 'share-element.rect-tween-type.cubic-bezier(x1,'
-          const apiName2 = "live-pusher.aspect.9:16"
-          const apiName3 = "live-pusher.audio-reverb-type.4"
-          TestConsole.consoleDebug('变量示例1：share-element.rect-tween-type.cubic-bezier(x1,----', Taro.canIUse(apiName1))
+          const apiName2 = 'live-pusher.aspect.9:16'
+          const apiName3 = 'live-pusher.audio-reverb-type.4'
+          TestConsole.consoleDebug(
+            '变量示例1：share-element.rect-tween-type.cubic-bezier(x1,----',
+            Taro.canIUse(apiName1)
+          )
           TestConsole.consoleDebug('变量示例2：live-pusher.aspect.9:16----', Taro.canIUse(apiName2))
           TestConsole.consoleDebug('变量示例3：live-pusher.audio-reverb-type.4----', Taro.canIUse(apiName3))
         },

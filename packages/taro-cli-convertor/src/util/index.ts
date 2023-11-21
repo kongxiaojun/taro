@@ -126,12 +126,19 @@ export function analyzeImportUrl (
   scriptFiles: Set<string>,
   source: t.StringLiteral,
   value: string,
-  isTsProject?: boolean
+  isTsProject?: boolean,
+  pluginName?: string
 ) {
   // 将参数记录到log文件
   printToLogFile(
     `package: taro-cli-convertor, funName: analyzeImportUrl, sourceFilePath: ${sourceFilePath}, value: ${value} ${getLineBreak()}`
   )
+
+  if (isPluginMainJs(value, pluginName)) {
+    // 插件的入口文件单独转换
+    return
+  }
+
   const valueExtname = path.extname(value)
   const rpath = getRelativePath(rootPath, sourceFilePath, value)
   if (!rpath) {
@@ -144,7 +151,7 @@ export function analyzeImportUrl (
   }
   if (value.indexOf('.') === 0) {
     if (REG_SCRIPT.test(valueExtname) || REG_TYPESCRIPT.test(valueExtname)) {
-      const vpath = path.resolve(sourceFilePath, '..', value)
+      const vpath = path.join(sourceFilePath, '..', value)
       let fPath = value
       if (fs.existsSync(vpath)) {
         fPath = vpath
@@ -153,7 +160,7 @@ export function analyzeImportUrl (
       }
       scriptFiles.add(fPath)
     } else {
-      let vpath = resolveScriptPath(path.resolve(sourceFilePath, '..', value))
+      let vpath = resolveScriptPath(path.join(sourceFilePath, '..', value))
       if (vpath) {
         if (!fs.existsSync(vpath)) {
           printLog(processTypeEnum.ERROR, '引用文件', `文件 ${sourceFilePath} 中引用 ${value} 不存在！`)
@@ -185,6 +192,22 @@ export function analyzeImportUrl (
     }
     scriptFiles.add(value)
   }
+}
+
+/**
+ * 判断导入模块的路径是否是plugin的module
+ *
+ * @param modulePath
+ * @param pluginName
+ * @returns
+ */
+function isPluginMainJs (modulePath: string, pluginName: string | undefined) {
+  if (pluginName === undefined) {
+    return false
+  }
+
+  const regex = new RegExp(`/${pluginName}/`)
+  return regex.test(modulePath)
 }
 
 export const incrementId = () => {

@@ -1,3 +1,18 @@
+import { temporarilyNotSupport } from '../../utils'
+
+/**
+ * 创建 live-pusher 上下文 LivePusherContext 对象
+ * 
+ * @canNotUse createLivePusherContext
+ */
+export const createLivePusherContext = /* @__PURE__ */ temporarilyNotSupport('createLivePusherContext')
+
+/**
+ * LivePusherContext 实例
+ * 
+ * @canNotUse LivePusherContext 
+ */
+
 export * from './audio'
 export * from './background-audio'
 export * from './camera'

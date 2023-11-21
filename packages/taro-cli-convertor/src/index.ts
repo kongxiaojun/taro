@@ -229,7 +229,7 @@ export default class Convertor {
       this.getSitemapLocation()
       this.getSubPackages()
     } catch (error) {
-      throw new Error(`初始化失败 ${getLineBreak()} ${error.stack}`)
+      throw new Error(`初始化失败 ${getLineBreak()} ${error.message}`)
     }
   }
 
@@ -394,6 +394,8 @@ export default class Convertor {
     const self = this
     // 转换后js页面的所有自定义标签
     const scriptComponents: string[] = []
+    // js页面所有的导入模块
+    const scriptImports: string[] = []
     let componentClassName: string
     let needInsertImportTaro = false
     let hasCacheOptionsRequired = false
@@ -480,7 +482,21 @@ export default class Convertor {
               const node = astPath.node
               const source = node.source
               const value = source.value
-              analyzeImportUrl(self.root, sourceFilePath, scriptFiles, source, value, self.isTsProject)
+              analyzeImportUrl(
+                self.root,
+                sourceFilePath,
+                scriptFiles,
+                source,
+                value,
+                self.isTsProject,
+                self.pluginInfo.pluginName
+              )
+              // 获取导入语句中的所有导入名称（importName）并将其添加到scriptImports里面
+              const specifiers = node.specifiers
+              specifiers.forEach((specifier) => {
+                const importName = specifier.local.name
+                scriptImports.push(importName)
+              })
             },
             CallExpression (astPath) {
               printToLogFile(`package: taro-cli-convertor, 解析CallExpression: ${astPath} ${getLineBreak()}`)
@@ -502,7 +518,15 @@ export default class Convertor {
                   }
 
                   const value = args[0].value
-                  analyzeImportUrl(self.root, sourceFilePath, scriptFiles, args[0], value, self.isTsProject)
+                  analyzeImportUrl(
+                    self.root,
+                    sourceFilePath,
+                    scriptFiles,
+                    args[0],
+                    value,
+                    self.isTsProject,
+                    self.pluginInfo.pluginName
+                  )
                 } else if (WX_GLOBAL_FN.has(callee.name)) {
                   calleePath.replaceWith(t.memberExpression(t.identifier('Taro'), callee as t.Identifier))
                   needInsertImportTaro = true
@@ -604,6 +628,10 @@ export default class Convertor {
               if (jsxName.isJSXIdentifier()) {
                 const componentName = jsxName.node.name
                 if (!DEFAULT_Component_SET.has(componentName) && scriptComponents.indexOf(componentName) === -1) {
+                  // 比较引入组件名和标签名是否同名，若同名，则在组件名上加入后缀Component
+                  if (scriptImports.includes(componentName)) {
+                    jsxName.node.name = `${componentName}Component`
+                  }
                   scriptComponents.push(componentName)
                 }
                 if (/^\S(\S)*Tmpl$/.test(componentName)) {
@@ -820,7 +848,7 @@ export default class Convertor {
             }
             if (depComponents && depComponents.size) {
               depComponents.forEach((componentObj) => {
-                const name = pascalCase(componentObj.name.toLowerCase())
+                let name = pascalCase(componentObj.name.toLowerCase())
                 // 如果不是js页面用到的组件，无需导入
                 if (scriptComponents.indexOf(name) === -1) {
                   return
@@ -828,6 +856,10 @@ export default class Convertor {
                 // 如果用到了，从scriptComponents中移除
                 const index = scriptComponents.indexOf(name)
                 scriptComponents.splice(index, 1)
+                // 同名的自定义组件名称加后缀区分后，其组件标签也要加上Component保持统一
+                if (scriptImports.includes(name)) {
+                  name = `${name}Component`
+                }
                 let componentPath = componentObj.path
                 if (!componentPath.startsWith(self.root) && !componentPath.startsWith(self.pluginInfo.pluginRoot)) {
                   console.error(
@@ -1449,7 +1481,7 @@ ${code}
                 if (unResolveComponentPath.startsWith(root)) {
                   componentPath = unResolveComponentPath
                 } else {
-                  componentPath = path.resolve(pageConfigPath, '..', pageUsingComponents[component])
+                  componentPath = path.join(pageConfigPath, '..', pageUsingComponents[component])
                   // 支持将组件库放在工程根目录下
                   if (!fs.existsSync(resolveScriptPath(componentPath))) {
                     componentPath = path.join(root, pageUsingComponents[component])
@@ -1736,7 +1768,7 @@ ${code}
         // 解析入口文件信息
         const entryFilePath = pluginConfigJson.main
         if (entryFilePath) {
-          pluginInfo.entryFilePath = path.resolve(pluginInfo.pluginRoot, entryFilePath)
+          pluginInfo.entryFilePath = path.join(pluginInfo.pluginRoot, entryFilePath)
         }
       } catch (err) {
         console.log('解析plugin.json失败，请检查！')
