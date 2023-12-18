@@ -326,7 +326,7 @@
       "offHeadersReceived": true
     },
     "RewardedVideoAd": false,
-    "ScrollView": {
+    "ScrollViewContext": {
       "scrollTo": true,
       "scrollIntoView": true
     },
@@ -471,7 +471,8 @@
     "canvasGetImageData": {
       "object": {
         "canvasId": true,
-        "data": true,
+        "x": true,
+        "y": true,
         "height": true,
         "width": true
       },
@@ -485,8 +486,8 @@
       "object": {
         "canvasId": true,
         "data": true,
-        "height": true,
-        "width": true
+        "x": true,
+        "y": true
       }
     },
     "canvasToTempFilePath": {
@@ -631,23 +632,7 @@
         "tempFilePath": true
       }
     },
-    "compressVideo": {
-      "object": {
-        "src": true,
-        "quality": {
-          "low": true,
-          "medium": true,
-          "high": true
-        },
-        "bitrate": true,
-        "fps": true,
-        "resolution": true
-      },
-      "success": {
-        "tempFilePath": true,
-        "size": true
-      }
-    },
+    "compressVideo": true,
     "connectSocket": {
       "object": {
         "url": true,
