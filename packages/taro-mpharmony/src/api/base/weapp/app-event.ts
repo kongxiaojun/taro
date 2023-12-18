@@ -1,8 +1,8 @@
 import Taro from '@tarojs/api'
+import { safeExecute } from '@tarojs/runtime'
 import { isNil } from 'lodash'
 import { parse } from 'query-string'
 
-import { temporarilyNotSupport } from '../../../utils'
 import { CallbackManager } from '../../../utils/handler'
 
 const unhandledRejectionCallbackManager = new CallbackManager<[Taro.onUnhandledRejection.Result]>()
@@ -45,18 +45,6 @@ const getApp = () => {
     scene: 0,
     /** shareTicket，详见[获取更多转发信息](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/share.html) */
     shareTicket: '',
-  }
-}
-
-const appShowListener = () => {
-  if (document.visibilityState !== 'hidden') {
-    appShowCallbackManager.trigger(getApp())
-  }
-}
-
-const appHideListener = () => {
-  if (document.visibilityState === 'hidden') {
-    appHideCallbackManager.trigger(getApp())
   }
 }
 
@@ -119,14 +107,44 @@ export const onError: typeof Taro.onError = (callback) => {
  * 
  * @canNotUse onAudioInterruptionEnd
  */
-export const onAudioInterruptionEnd = /* @__PURE__ */ temporarilyNotSupport('onAudioInterruptionEnd')
+export { onAudioInterruptionEnd } from '@tarojs/taro-h5'
 
 /**
  * 监听音频因为受到系统占用而被中断开始事件
  * 
  * @canNotUse onAudioInterruptionBegin
  */
-export const onAudioInterruptionBegin = /* @__PURE__ */ temporarilyNotSupport('onAudioInterruptionBegin')
+export { onAudioInterruptionBegin } from '@tarojs/taro-h5'
+
+
+// app 以及 page onShow/onHide 生命周期回调处理
+// ---------------------------------------------------
+const appPageShowListener = () => {
+  if (document.visibilityState !== 'hidden') {
+    appShowCallbackManager.trigger(getApp())
+    Taro.Current.page?.onShow?.()
+  }
+}
+
+const appPageHideListener = () => {
+  if (document.visibilityState === 'hidden') {
+    if (Taro.Current.page?.path) {
+      safeExecute(Taro.Current.page?.path, 'onHide')
+    }
+    appHideCallbackManager.trigger(getApp())
+  }
+}
+
+window.addEventListener('visibilitychange', appPageShowListener)
+window.addEventListener('visibilitychange', appPageHideListener)
+
+appShowCallbackManager.add((opt: any) => {
+  Taro.Current.app?.onShow?.(opt)
+})
+
+appHideCallbackManager.add(() => {
+  Taro.Current.app?.onHide?.()
+})
 
 /**
  * 监听小程序切前台事件
@@ -135,10 +153,7 @@ export const onAudioInterruptionBegin = /* @__PURE__ */ temporarilyNotSupport('o
  * @__callback [path, query, scene, shareTicket, referrerInfo]
  */
 export const onAppShow: typeof Taro.onAppShow = (callback) => {
-  appShowCallbackManager.add(callback)
-  if (appShowCallbackManager.count() === 1) {
-    window.addEventListener('visibilitychange', appShowListener)
-  }
+  appShowCallbackManager.insert(-1, callback)
 }
 
 /**
@@ -147,11 +162,27 @@ export const onAppShow: typeof Taro.onAppShow = (callback) => {
  * @canUse onAppHide
  */
 export const onAppHide: typeof Taro.onAppHide = (callback) => {
-  appHideCallbackManager.add(callback)
-  if (appHideCallbackManager.count() === 1) {
-    window.addEventListener('visibilitychange', appHideListener)
-  }
+  appHideCallbackManager.insert(-1, callback)
 }
+
+/**
+ * 取消监听小程序切前台事件
+ * 
+ * @canUse offAppShow
+ */
+export const offAppShow: typeof Taro.offAppShow = (callback) => {
+  appShowCallbackManager.removeEvery(callback)
+}
+
+/**
+ * 取消监听小程序切后台事件
+ * 
+ * @canUse offAppHide
+ */
+export const offAppHide: typeof Taro.offAppHide = (callback) => {
+  appHideCallbackManager.removeEvery(callback)
+}
+
 
 /**
  * 取消监听未处理的 Promise 拒绝事件
@@ -210,35 +241,11 @@ export const offError: typeof Taro.offError = (callback) => {
  * 
  * @canNotUse offAudioInterruptionEnd
  */
-export const offAudioInterruptionEnd = /* @__PURE__ */ temporarilyNotSupport('offAudioInterruptionEnd')
+export { offAudioInterruptionEnd } from '@tarojs/taro-h5'
 
 /**
  * 取消监听音频因为受到系统占用而被中断开始事件
  * 
  * @canNotUse offAudioInterruptionBegin
  */
-export const offAudioInterruptionBegin = /* @__PURE__ */ temporarilyNotSupport('offAudioInterruptionBegin')
-
-/**
- * 取消监听小程序切前台事件
- * 
- * @canUse offAppShow
- */
-export const offAppShow: typeof Taro.offAppShow = (callback) => {
-  appShowCallbackManager.remove(callback)
-  if (appShowCallbackManager.count() === 0) {
-    window.removeEventListener('visibilitychange', appShowListener)
-  }
-}
-
-/**
- * 取消监听小程序切后台事件
- * 
- * @canUse offAppHide
- */
-export const offAppHide: typeof Taro.offAppHide = (callback) => {
-  appHideCallbackManager.remove(callback)
-  if (appHideCallbackManager.count() === 0) {
-    window.removeEventListener('visibilitychange', appHideListener)
-  }
-}
+export { offAudioInterruptionBegin } from '@tarojs/taro-h5'

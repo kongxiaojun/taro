@@ -240,24 +240,37 @@
     "InterstitialAd": true,
     "IsoDep": false,
     "LivePlayerContext": {
-      "exitCasting": true,
       "exitFullScreen": true,
       "exitPictureInPicture": true,
       "mute": true,
       "pause": true,
       "play": true,
-      "reconnectCasting": true,
       "requestFullScreen": true,
       "requestPictureInPicture": true,
       "resume": true,
       "snapshot": true,
-      "startCasting": true,
-      "stop": true,
-      "switchCasting": true
+      "stop": true
     },
     "LivePusherContext": false,
     "LogManager": true,
-    "MapContext": false,
+    "MapContext": {
+      "getCenterLocation": true,
+      "setLocMarkerIcon": true,
+      "translateMarker": true,
+      "moveAlong": true,
+      "includePoints": true,
+      "getRegion": true,
+      "getRotate": true,
+      "getSkew": true,
+      "getScale": true,
+      "setCenterOffset": true,
+      "addGroundOverlay": true,
+      "setBoundary": true,
+      "updateGroundOverlay": true,
+      "removeGroundOverlay": true,
+      "addMarkers": true,
+      "removeMarkers": true
+    },
     "MediaAudioPlayer": false,
     "MediaContainer": false,
     "MediaQueryObserver": {
@@ -659,7 +672,23 @@
       "log": true,
       "warn": true
     },
-    "createAnimation": true,
+    "createAnimation": {
+      "object": {
+        "duration": true,
+        "timingFunction": {
+          "linear": true,
+          "ease": true,
+          "ease-in": true,
+          "ease-in-out": true,
+          "ease-out": true,
+          "step-start": true,
+          "step-end": true
+        },
+        "delay": true,
+        "transformOrigin": true,
+        "unit": true
+      }
+    },
     "createAudioContext": true,
     "createBLEConnection": {
       "object": {
@@ -671,24 +700,14 @@
     "createBufferURL": false,
     "createCacheManager": false,
     "createCameraContext": true,
-    "createCanvasContext": {
-      "object": {
-        "canvasId": true,
-        "inst": true
-      }
-    },
+    "createCanvasContext": true,
     "createInferenceSession": false,
     "createInnerAudioContext": true,
     "createIntersectionObserver": true,
     "createInterstitialAd": true,
-    "createLivePlayerContext": {
-      "object": {
-        "id": true,
-        "inst": true
-      }
-    },
+    "createLivePlayerContext": true,
     "createLivePusherContext": false,
-    "createMapContext": false,
+    "createMapContext": true,
     "createMediaAudioPlayer": false,
     "createMediaContainer": false,
     "createMediaQueryObserver": true,
@@ -699,12 +718,7 @@
     "createTCPSocket": false,
     "createUDPSocket": false,
     "createVKSession": false,
-    "createVideoContext": {
-      "object": {
-        "id": true,
-        "inst": true
-      }
-    },
+    "createVideoContext": true,
     "createVideoDecoder": false,
     "createWebAudioContext": false,
     "createWorker": false,
@@ -886,6 +900,22 @@
     "getImageInfo": {
       "object": {
         "src": true
+      },
+      "success": {
+        "height": true,
+        "orientation": {
+          "up": true,
+          "up-mirrored": true,
+          "down": true,
+          "down-mirrored": true,
+          "left-mirrored": true,
+          "right": true,
+          "right-mirrored": true,
+          "left": true
+        },
+        "path": true,
+        "type": true,
+        "width": true
       }
     },
     "getInferenceEnvInfo": false,
@@ -1179,6 +1209,25 @@
     "getVideoInfo": {
       "object": {
         "src": true
+      },
+      "success": {
+        "orientation": {
+          "up": true,
+          "down": true,
+          "left": true,
+          "right": true,
+          "up-mirrored": true,
+          "down-mirrored": true,
+          "left-mirrored": true,
+          "right-mirrored": true
+        },
+        "type": true,
+        "duration": true,
+        "size": true,
+        "height": true,
+        "width": true,
+        "fps": true,
+        "bitrate": true
       }
     },
     "getWeRunData": false,
@@ -1305,7 +1354,7 @@
     "offDeviceMotionChange": true,
     "offError": true,
     "offGetWifiList": true,
-    "offGyroscopeChange": true,
+    "offGyroscopeChange": false,
     "offHCEMessage": false,
     "offKeyboardHeightChange": true,
     "offLocalServiceDiscoveryStop": false,
@@ -1601,6 +1650,28 @@
     "reportMonitor": false,
     "reportPerformance": false,
     "request": {
+      "object": {
+        "url": true,
+        "data": true,
+        "header": true,
+        "timeout": true,
+        "method": {
+          "OPTIONS": true,
+          "GET": true,
+          "HEAD": true,
+          "POST": true,
+          "PUT": true,
+          "PATCH": true,
+          "DELETE": true,
+          "TRACE": true,
+          "CONNECT": true
+        },
+        "responseType": {
+          "text": true,
+          "arraybuffer": true
+        },
+        "enableCache": true
+      },
       "success": {
         "data": true,
         "header": true,
@@ -1612,7 +1683,15 @@
     "requestOrderPayment": false,
     "requestPayment": true,
     "requestSubscribeDeviceMessage": false,
-    "requestSubscribeMessage": true,
+    "requestSubscribeMessage": {
+      "object": {
+        "tmplIds": true
+      },
+      "success": {
+        "errMsg": true,
+        "TEMPLATE_ID": true
+      }
+    },
     "requirePrivacyAuthorize": false,
     "reserveChannelsLive": false,
     "revokeBufferURL": false,
@@ -1636,7 +1715,37 @@
         "filePath": true
       }
     },
-    "scanCode": false,
+    "scanCode": {
+      "object": {
+        "onlyFromCamera": true,
+        "scanType": {
+          "barCode": true,
+          "qrCode": true,
+          "datamatrix": true,
+          "pdf417": true
+        }
+      },
+      "success": {
+        "charSet": true,
+        "rawData": true,
+        "result": true,
+        "scanType": {
+          "QR_CODE": true,
+          "AZTEC": true,
+          "CODABAR": true,
+          "CODE_39": true,
+          "CODE_93": true,
+          "CODE_128": true,
+          "DATA_MATRIX": true,
+          "EAN_8": true,
+          "EAN_13": true,
+          "ITF": true,
+          "PDF_417": true,
+          "UPC_A": true,
+          "UPC_E": true
+        }
+      }
+    },
     "seekBackgroundAudio": false,
     "sendHCEMessage": false,
     "sendSms": false,
@@ -1930,26 +2039,41 @@
     "block": true,
     "button": {
       "size": {
-        "default\nmini": false
+        "default": true,
+        "mini": true
       },
       "type": {
-        "primary\ndefault\nwarn": false
+        "primary": true,
+        "default": true,
+        "warn": true
       },
       "plain": true,
       "disabled": true,
       "loading": true,
       "form-type": {
-        "submit\nreset": false
+        "submit": true,
+        "reset": true
       },
       "open-type": {
-        "contact\nshare\ngetPhoneNumber\ngetRealtimePhoneNumber\ngetUserInfo\nlaunchApp\nopenSetting\nfeedback\nchooseAvatar\nagreePrivacyAuthorization": false
+        "contact": false,
+        "share": false,
+        "getPhoneNumber": false,
+        "getRealtimePhoneNumber": false,
+        "getUserInfo": false,
+        "launchApp": false,
+        "openSetting": false,
+        "feedback": false,
+        "chooseAvatar": false,
+        "agreePrivacyAuthorization": false
       },
       "hover-class": true,
       "hover-stop-propagation": false,
       "hover-start-time": true,
       "hover-stay-time": true,
       "lang": {
-        "en\nzh_CN\nzh_TW": false
+        "en": false,
+        "zh_CN": false,
+        "zh_TW": false
       },
       "session-from": false,
       "send-message-title": false,
@@ -1960,19 +2084,28 @@
     },
     "camera": {
       "mode": {
-        "normal\nscanCode": false
+        "normal": false,
+        "scanCode": false
       },
       "resolution": {
-        "low\nmedium\nhigh": false
+        "low": false,
+        "medium": false,
+        "high": false
       },
       "device-position": {
-        "front\nback": false
+        "front": false,
+        "back": false
       },
       "flash": {
-        "auto\non\noff\ntorch": false
+        "auto": false,
+        "on": false,
+        "off": false,
+        "torch": false
       },
       "frame-size": {
-        "small\nmedium\nlarge": false
+        "small": false,
+        "medium": false,
+        "large": false
       }
     },
     "canvas": {
@@ -2032,10 +2165,14 @@
     },
     "functional-page-navigator": {
       "version": {
-        "develop\ntrial\nrelease": false
+        "develop": false,
+        "trial": false,
+        "release": false
       },
       "name": {
-        "loginAndGetUserInfo\nrequestPayment\nchooseAddress": false
+        "loginAndGetUserInfo": false,
+        "requestPayment": false,
+        "chooseAddress": false
       },
       "args": false
     },
@@ -2048,24 +2185,53 @@
     },
     "icon": {
       "type": {
-        "success\nsuccess_no_circle\ninfo\nwarn\nwaiting\ncancel\ndownload\nsearch\nclear\ncircle\ninfo_circle": false
+        "success": true,
+        "success_no_circle": true,
+        "info": true,
+        "warn": true,
+        "waiting": true,
+        "cancel": true,
+        "download": true,
+        "search": true,
+        "clear": true,
+        "circle": false,
+        "info_circle": false
       },
       "size": true,
       "color": true
     },
     "image": {
       "src": true,
+      "mode": {
+        "scaleToFill": true,
+        "aspectFit": true,
+        "aspectFill": true,
+        "widthFix": true,
+        "heightFix": true,
+        "top": true,
+        "bottom": true,
+        "center": true,
+        "left": true,
+        "right": true
+      },
       "webp": false,
       "lazy-load": true,
       "show-menu-by-longpress": false,
-      "fade-in": false,
-      "mode": false
+      "fade-in": false
     },
     "inline-payment-panel": false,
     "input": {
       "value": true,
       "type": {
-        "text\nnumber\nidcard\ndigit\n'safe-password'\nnickname\nnumberpad\ndigitpad\nidcardpad": false
+        "text": true,
+        "number": true,
+        "idcard": false,
+        "digit": true,
+        "safe-password": false,
+        "nickname": false,
+        "numberpad": false,
+        "digitpad": false,
+        "idcardpad": false
       },
       "password": true,
       "placeholder": true,
@@ -2077,7 +2243,11 @@
       "auto-focus": true,
       "focus": true,
       "confirm-type": {
-        "send\nsearch\nnext\ngo\ndone": false
+        "send": false,
+        "search": true,
+        "next": false,
+        "go": false,
+        "done": true
       },
       "confirm-hold": false,
       "cursor": false,
@@ -2103,21 +2273,25 @@
     "live-player": {
       "src": true,
       "mode": {
-        "live\nRTC": false
+        "live": true,
+        "RTC": true
       },
       "autoplay": true,
       "muted": true,
       "orientation": {
-        "vertical\nhorizontal": false
+        "vertical": true,
+        "horizontal": true
       },
       "object-fit": {
-        "contain\nfillCrop": false
+        "contain": true,
+        "fillCrop": true
       },
       "background-mute": false,
       "min-cache": true,
       "max-cache": true,
       "sound-mode": {
-        "speaker\near": false
+        "speaker": true,
+        "ear": true
       },
       "auto-pause-if-navigate": true,
       "picture-in-picture-mode": {
@@ -2146,7 +2320,8 @@
       "enable-camera": false,
       "auto-focus": false,
       "orientation": {
-        "vertical\nhorizontal": false
+        "vertical": false,
+        "horizontal": false
       },
       "beauty": false,
       "whiteness": false,
@@ -2165,24 +2340,46 @@
       "mirror": false,
       "remote-mirror": false,
       "local-mirror": {
-        "auto\nenable\ndisable": false
+        "auto": false,
+        "enable": false,
+        "disable": false
       },
       "audio-reverb-type": {
-        "0\n1\n2\n3\n4\n5\n6\n7": false
+        "0": false,
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false
       },
       "enable-mic": false,
       "enable-agc": false,
       "enable-ans": false,
       "audio-volume-type": {
-        "auto\nmedia\nvoicecall": false
+        "auto": false,
+        "media": false,
+        "voicecall": false
       },
       "video-width": false,
       "video-height": false,
       "beauty-style": {
-        "smooth\nnature": false
+        "smooth": false,
+        "nature": false
       },
       "filter": {
-        "standard\npink\nnostalgia\nblues\nromantic\ncool\nfresher\nsolor\naestheticism\nwhitening\ncerisered": false
+        "standard": false,
+        "pink": false,
+        "nostalgia": false,
+        "blues": false,
+        "romantic": false,
+        "cool": false,
+        "fresher": false,
+        "solor": false,
+        "aestheticism": false,
+        "whitening": false,
+        "cerisered": false
       },
       "picture-in-picture-mode": false,
       "custom-effect": false,
@@ -2195,7 +2392,38 @@
     },
     "login": false,
     "lottie": false,
-    "map": false,
+    "map": {
+      "longitude": true,
+      "latitude": true,
+      "scale": true,
+      "min-scale": true,
+      "max-scale": true,
+      "markers": true,
+      "covers": false,
+      "polyline": true,
+      "circles": true,
+      "controls": false,
+      "include-points": false,
+      "show-location": false,
+      "polygons": true,
+      "subkey": true,
+      "layer-style": true,
+      "rotate": true,
+      "skew": true,
+      "show-compass": true,
+      "show-scale": true,
+      "enable-overlooking": true,
+      "enable-zoom": true,
+      "enable-scroll": true,
+      "enable-rotate": false,
+      "enable-satellite": true,
+      "enable-traffic": true,
+      "enable-poi": false,
+      "enable-building": true,
+      "enable-auto-max-overlooking": true,
+      "enable3d": true,
+      "setting": false
+    },
     "match-media": {
       "min-width": false,
       "max-width": false,
@@ -2246,18 +2474,26 @@
     },
     "navigator": {
       "target": {
-        "self\nminiProgram": false
+        "self": false,
+        "miniProgram": false
       },
       "url": true,
       "open-type": {
-        "navigate\nredirect\nswitchTab\nreLaunch\nnavigateBack\nexit": false
+        "navigate": true,
+        "redirect": true,
+        "switchTab": true,
+        "reLaunch": true,
+        "navigateBack": true,
+        "exit": true
       },
       "delta": true,
       "app-id": false,
       "path": false,
       "extra-data": false,
       "version": {
-        "develop\ntrial\nrelease": false
+        "develop": false,
+        "trial": false,
+        "release": false
       },
       "hover-class": true,
       "hover-stop-propagation": false,
@@ -2268,11 +2504,20 @@
     "official-account": false,
     "open-data": {
       "type": {
-        "groupName\nuserNickName\nuserAvatarUrl\nuserGender\nuserCity\nuserProvince\nuserCountry\nuserLanguage": false
+        "groupName": false,
+        "userNickName": false,
+        "userAvatarUrl": false,
+        "userGender": false,
+        "userCity": false,
+        "userProvince": false,
+        "userCountry": false,
+        "userLanguage": false
       },
       "open-gid": false,
       "lang": {
-        "en\nzh_CN\nzh_TW": false
+        "en": false,
+        "zh_CN": false,
+        "zh_TW": false
       },
       "default-text": false,
       "default-avatar": false
@@ -2283,7 +2528,10 @@
       "z-index": false,
       "overlay": false,
       "position": {
-        "top\nbottom\nright\ncenter": false
+        "top": false,
+        "bottom": false,
+        "right": false,
+        "center": false
       },
       "round": false,
       "overlay-style": false,
@@ -2305,7 +2553,41 @@
     },
     "picker": {
       "mode": {
-        "selector\nmultiSelector\ntime\ndate\nregion": false
+        "selector": {
+          "range": true,
+          "range-key": true,
+          "value": true
+        },
+        "multiSelector": {
+          "range": true,
+          "range-key": true,
+          "value": true
+        },
+        "time": {
+          "value": true,
+          "start": true,
+          "end": true
+        },
+        "date": {
+          "value": true,
+          "start": true,
+          "end": true,
+          "fields": {
+            "year": true,
+            "month": true,
+            "day": true
+          }
+        },
+        "region": {
+          "value": false,
+          "custom-item": false,
+          "level": {
+            "province": false,
+            "city": false,
+            "region": false,
+            "sub-district": false
+          }
+        }
       },
       "disabled": true
     },
@@ -2345,7 +2627,9 @@
       "user-select": true,
       "nodes": true,
       "space": {
-        "ensp\nemsp\nnbsp": false
+        "ensp": false,
+        "emsp": false,
+        "nbsp": false
       }
     },
     "root-portal": {
@@ -2390,7 +2674,31 @@
         "nearest": true
       }
     },
-    "share-element": false,
+    "share-element": {
+      "key": false,
+      "mapkey": false,
+      "transform": false,
+      "duration": false,
+      "easing-function": false,
+      "transition-on-gesture": false,
+      "shuttle-on-push": {
+        "from": false,
+        "to": false
+      },
+      "shuttle-on-pop": false,
+      "rect-tween-type": {
+        "materialRectArc": false,
+        "materialRectCenterArc": false,
+        "linear": false,
+        "elasticIn": false,
+        "elasticOut": false,
+        "elasticInOut": false,
+        "bounceIn": false,
+        "bounceOut": false,
+        "bounceInOut": false,
+        "cubic-bezier(x1,": false
+      }
+    },
     "slider": {
       "min": true,
       "max": true,
@@ -2427,7 +2735,11 @@
       "snap-to-edge": false,
       "display-multiple-items": true,
       "easing-function": {
-        "default\nlinear\neaseInCubic\neaseOutCubic\neaseInOutCubic": false
+        "default": false,
+        "linear": false,
+        "easeInCubic": false,
+        "easeOutCubic": false,
+        "easeInOutCubic": false
       },
       "scroll-with-animation": false,
       "cache-extent": false
@@ -2451,7 +2763,9 @@
       "selectable": false,
       "user-select": false,
       "space": {
-        "ensp\nemsp\nnbsp": false
+        "ensp": false,
+        "emsp": false,
+        "nbsp": false
       },
       "decode": false,
       "max-lines": false
@@ -2505,13 +2819,16 @@
       "show-center-play-btn": true,
       "enable-progress-gesture": true,
       "object-fit": {
-        "contain\nfill\ncover": false
+        "contain": true,
+        "fill": true,
+        "cover": true
       },
       "poster": true,
       "show-mute-btn": true,
       "title": false,
       "play-btn-position": {
-        "bottom\ncenter": false
+        "bottom": false,
+        "center": false
       },
       "enable-play-gesture": true,
       "auto-pause-if-navigate": false,
@@ -2552,10 +2869,12 @@
     },
     "voip-room": {
       "mode": {
-        "camera\nvideo": false
+        "camera": false,
+        "video": false
       },
       "device-position": {
-        "front\nback": false
+        "front": false,
+        "back": false
       },
       "open-id": false,
       "object-fit": {

@@ -1,6 +1,6 @@
 import Taro from '@tarojs/api'
 
-import { shouldBeObject, temporarilyNotSupport } from '../../utils'
+import { shouldBeObject } from '../../utils'
 import { MethodHandler } from '../../utils/handler'
 
 /**
@@ -8,7 +8,7 @@ import { MethodHandler } from '../../utils/handler'
  *
  * @canNotUse openSystemBluetoothSetting
  */
-export const openSystemBluetoothSetting = /* @__PURE__ */ temporarilyNotSupport('openSystemBluetoothSetting')
+export { openSystemBluetoothSetting } from '@tarojs/taro-h5'
 
 /**
  * 跳转系统授权管理页
@@ -53,30 +53,31 @@ export const getWindowInfo: typeof Taro.getWindowInfo = () => {
   const info = native.getWindowInfo()
   const windowInfo: Taro.getWindowInfo.Result = {
     pixelRatio: info.pixelRatio,
-    screenWidth: info.pixelRatio,
+    screenWidth: info.screenWidth,
     screenHeight: info.screenHeight,
-    windowWidth: info.windowWidth,
-    windowHeight: info.windowHeight,
+    windowWidth: info.screenWidth,
+    // @ts-ignore
+    windowHeight: info.screenHeight - (window.currentNavigationStyle === 'default' ? (window.navigationHeight || 0) : 0),
     statusBarHeight: info.statusBarHeight,
     safeArea: info.safeArea || {
       /** 安全区域右下角纵坐标 */
-      bottom: info.windowHeight,
-      /** 安全区域的高度，单位逻辑像素, 窗口可用区域高度-状态栏高度-导航栏高度 */
-      height: info.windowHeight - info.statusBarHeight - 40,
+      bottom: info.screenHeight,
+      /** 安全区域的高度，单位逻辑像素, 窗口可用区域高度-状态栏高度 */
+      height: info.screenHeight - info.statusBarHeight,
       /** 安全区域左上角横坐标 */
       left: 0,
       /** 安全区域右下角横坐标 */
-      right: info.windowWidth,
-      /** 安全区域左上角纵坐标, 状态栏高度+导航栏高度（当前固定为40px） */
-      top: info.statusBarHeight + 40,
+      right: info.screenWidth,
+      /** 安全区域左上角纵坐标, 状态栏高度 */
+      top: info.statusBarHeight,
       /** 安全区域的宽度，单位逻辑像素 */
-      width: info.windowWidth
+      width: info.screenWidth
     },
   }
   return windowInfo
 }
 
-const lastSystemSettingResult : Taro.getSystemSetting.Result = {}
+const lastSystemSettingResult: Taro.getSystemSetting.Result = {}
 let lastGetSystemSettingTime = 0
 
 /**
@@ -204,17 +205,17 @@ export const getSystemInfoSync: typeof Taro.getSystemInfoSync = () => {
     /** 设备型号 */
     model: info.model,
     /** 设备像素比 */
-    pixelRatio: info.pixelRatio,
+    pixelRatio: windowInfo.pixelRatio,
     /** 屏幕宽度，单位px */
-    screenWidth: info.screenWidth,
+    screenWidth: windowInfo.screenWidth,
     /** 屏幕高度，单位px */
-    screenHeight: info.screenHeight,
+    screenHeight: windowInfo.screenHeight,
     /** 可使用窗口宽度，单位px */
-    windowWidth: info.windowWidth,
+    windowWidth: windowInfo.windowWidth,
     /** 可使用窗口高度，单位px */
-    windowHeight: info.windowHeight,
+    windowHeight: windowInfo.windowHeight,
     /** 状态栏的高度，单位px */
-    statusBarHeight: info.statusBarHeight,
+    statusBarHeight: windowInfo.statusBarHeight,
     /** 微信设置的语言 */
     language: info.language,
     /** 微信版本号 */

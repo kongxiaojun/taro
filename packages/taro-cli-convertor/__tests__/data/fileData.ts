@@ -264,3 +264,159 @@ export const PLUGIN_FILE_DATA = {
     <text>这是插件组件component1</text>
   `,
 }
+
+export const DEMO_JS_FILES = {
+  '/app.json': `
+    {
+      "pages":[
+        "pages/index/index",
+        "pages/index/other"
+      ]
+    }
+  `,
+  '/pages/index/index.js': `
+    const app = getApp()
+      Page({
+      data: {
+        info: 'this is index page',
+      },
+      onLoad() {}
+    })
+  `,
+  '/pages/index/index.wxml': `
+    <view>
+      <text>{{info}}</text>
+    </view>
+  `,
+  '/pages/index/other.js': `
+    const app = getApp()
+      Page({
+      data: {
+        message: 'this is other page',
+      },
+      onLoad() {}
+    })
+  `,
+  '/pages/index/other.wxml': `
+    <view>
+      <text>{{message}}</text>
+    </view>
+  `,
+}
+
+export const USINGCOMPONENTS_FILE_DATA = {
+  '/miniprogram/app.json': `
+    {
+      "pages": [
+        "pages/index/index"
+      ],
+      "plugins": {
+        "hello-plugin": {
+          "version": "dev",
+          "provider": "wx9e5d25b6307be4bc"
+        }
+      },
+      "usingComponents": {
+        "cpt": "/components/cpt/cpt"
+      }
+    }
+  `, 
+  '/miniprogram/app.js':`app({})`,
+  '/miniprogram/pages/index/index.json':`
+    {
+      "usingComponents": {
+        "cpt2": "/components/cpt2/cpt2",
+        "cpt3": "/components/cpt3/cpt3",
+        "hello-component": "plugin://hello-plugin/hello-component"
+      }
+    }
+  `,
+  '/miniprogram/pages/index/index.wxml':`
+    <hello-component items="{{ items }}" />
+    <view>
+      <cpt2></cpt2>
+    </view>
+  `,
+  '/miniprogram/components/cpt/cpt.js':`
+    Component({
+      properties: {
+        text: {
+          type: String,
+          value: 'cpt'
+        },
+        buttonText: {
+          type: String,
+          value: 'Click Me!'
+        }
+      }
+    })
+  `,
+  '/miniprogram/components/cpt/cpt.json':`
+  {
+    "component": true,
+    "usingComponents": {
+      "hello-component": "plugin://hello-plugin/hello-component"
+    }
+  }
+  `,
+  '/miniprogram/components/cpt/cpt.wxml':`
+    <hello-component items="{{ items }}" />
+    <view>cpt</view>
+  `,
+  '/miniprogram/components/cpt2/cpt2.js':`
+    Component({
+      properties: {
+        text: {
+          type: String,
+          value: 'cpt2'
+        },
+        buttonText: {
+          type: String,
+          value: 'Click Me!'
+        }
+      }
+    })
+  `,
+  '/miniprogram/components/cpt2/cpt2.json':`
+  {
+    "component": true,
+    "usingComponents": {
+    }
+  }
+  `,
+  '/miniprogram/components/cpt2/cpt2.wxml':`
+    <view>
+      <cpt></cpt>
+      cpt2
+    </view>
+  `,
+
+  '/miniprogram/components/cpt3/cpt3.js':`
+    Component({
+      properties: {
+        text: {
+          type: String,
+          value: 'cpt3'
+        },
+        buttonText: {
+          type: String,
+          value: 'Click Me!'
+        }
+      }
+    })
+  `,
+  '/miniprogram/components/cpt3/cpt3.json':`
+  {
+    "component": true,
+    "usingComponents": {
+      "cpt2": "/components/cpt2/cpt2"
+    }
+  }
+  `,
+  '/miniprogram/components/cpt3/cpt3.wxml':`
+    <view>
+      <cpt2></cpt2>
+      cpt3
+    </view>
+  `,
+}

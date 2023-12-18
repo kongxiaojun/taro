@@ -149,45 +149,69 @@ export class Map implements ComponentInterface {
     this.loadMapScript().then(() => {
       // 如果容器元素存在
       if (this.mapRef) {
+        this.mapRef.addEventListener('touchmove', (e) => {
+          if (e.cancelable) {
+            e.preventDefault()
+          }
+        })
         // 创建地图对象
         this.map = new BMapGL.Map(this.mapRef)
         // 移除百度地图版权信息
         this.map.removeControl(this.map.getMapType())
         // 创建中心点坐标对象
         // 中心经纬度为必填值
-        if (this.latitude < -90 || this.latitude > 90 || this.longitude < -180 || this.longitude > 180 || !this.longitude || !this.latitude) {
+        if (this.latitude < -90 || this.latitude > 90 || this.longitude < -180 || this.longitude > 180 || isNaN(this.latitude) || isNaN(this.longitude)) {
           console.error('请正确设置中心经纬度')
           return
         }
-        const minScale = this.minScale ? this.minScale : 3
-        const maxScale = this.maxScale ? this.maxScale : 20
+        let scale = isNaN(this.scale) ? 16 : this.scale
+        let minScale = isNaN(this.minScale) ? 3 : this.minScale
+        let maxScale = isNaN(this.maxScale) ? 16 : this.maxScale
         const point = new BMapGL.Point(this.longitude, this.latitude)
-        if (this.minScale < 3 || this.minScale > 20) {
+
+        if (minScale < 3 || minScale > 20) {
+          minScale = 3
           this.map.setMinZoom(3)
         } else {
           // 设置最小缩放级别
-          this.map.setMinZoom(minScale) 
+          this.map.setMinZoom(minScale)
         }
-        if (this.maxScale > 20 || this.maxScale < 3) {
+
+        if (maxScale > 20 || maxScale < 3) {
+          maxScale = 20
           this.map.setMaxZoom(20)
         } else {
           // 设置最大缩放级别
           this.map.setMaxZoom(maxScale)
         }
-        if (this.minScale > this.maxScale) {
-          this.map.setMinZoom(minScale)
-          this.map.setMaxZoom(maxScale)
+
+        if (minScale > maxScale) {
+          minScale = 3
+          this.map.setMinZoom(3)
+          maxScale = 20
+          this.map.setMaxZoom(20)
         }
 
         // 设置地图中心和缩放级别
-        if (this.scale >= minScale && this.scale <= maxScale) {
-          this.map.centerAndZoom(point, this.scale) // 使用this.scale来设置缩放级别
-        } else if (this.scale <= minScale) {
-          this.map.centerAndZoom(point, minScale)
-        } else if (this.scale >= this.maxScale) {
-          this.map.centerAndZoom(point, maxScale)
+        if (minScale <= 16 && maxScale >= 16) {
+          if (scale >= minScale && scale <= maxScale) {
+            // 使用this.scale来设置缩放级别
+            this.map.centerAndZoom(point, scale)
+          } else {
+            scale = 16
+            this.map.centerAndZoom(point, scale)
+          }
         } else {
-          this.map.centerAndZoom(point, 16)
+          if (scale >= minScale && scale <= maxScale) {
+            // 使用this.scale来设置缩放级别
+            this.map.centerAndZoom(point, scale)
+          } else if (scale < minScale) {
+            scale = minScale
+            this.map.centerAndZoom(point, minScale)
+          } else {
+            scale = maxScale
+            this.map.centerAndZoom(point, maxScale)
+          }
         }
 
         // 添加标记点markers
@@ -260,7 +284,7 @@ export class Map implements ComponentInterface {
         const enable3D = this.enable3D === true ? this.enable3D : false
         const enableOverlooking = this.enableOverlooking === true ? this.enableOverlooking : false
         const enableAutoMaxOverlooking = this.enableAutoMaxOverlooking === true ? this.enableAutoMaxOverlooking : false
-        const skew =this.skew ? this.skew : 0
+        const skew = this.skew ? this.skew : 0
         if (enable3D === true) {
           if (enableOverlooking === true) {
             // /开启最大俯视角
@@ -366,17 +390,23 @@ export class Map implements ComponentInterface {
     })
   }
 
+  disconnectedCallback () {
+    if (this.map) {
+      this.map.destroy()
+    }
+  }
+
   addMarkers (markers) {
     // 维护已存在的marker id 列表
-    const existingIds: string[] = [] 
+    const existingIds: string[] = []
     markers.forEach((marker) => {
       if (existingIds.includes(marker.id)) {
         // 如果id已存在，直接返回，不执行后续操作
         console.error('请输入不同的marker的id')
         return
       }
-      existingIds.push(marker.id) 
-      if (marker.latitude && marker.longitude && marker.iconPath&&marker.id) {
+      existingIds.push(marker.id)
+      if (marker.latitude && marker.longitude && marker.iconPath && marker.id) {
         if (marker.latitude < -90 || marker.latitude > 90 || marker.longitude < -180 || marker.longitude > 180) {
           console.error('请正确设置marker的经纬度')
           return
@@ -390,8 +420,26 @@ export class Map implements ComponentInterface {
           markerObj.setZIndex(marker.zIndex)
         }
         if (marker.width && marker.height) {
-          const icon = new BMapGL.Icon(marker.iconPath, new BMapGL.Size(marker.width, marker.height))
-          markerObj.setIcon(icon)
+          const canvas = document.createElement('canvas')
+          canvas.width = marker.width * 2
+          canvas.height = marker.height * 2
+          // 获取 Canvas 上下文
+          const ctx = canvas.getContext('2d')!
+          // 创建一个新的图片对象
+          const img = new Image()
+          // 设置图片的跨域属性
+          img.crossOrigin = 'Anonymous'
+          img.src = marker.iconPath
+          // 当图片加载完成后，将其绘制到Canvas上
+          img.onload = function () {
+            ctx.drawImage(img, 0, 0, marker.width * 2, marker.height * 2)
+            // 创建 BMapGL.Icon 对象，并将 Canvas 元素作为图标的内容
+            // 设置锚点偏移量为(0, 0)，表示图标的左上角将与经纬度对齐
+            const icon = new BMapGL.Icon(canvas.toDataURL(), new BMapGL.Size(marker.width, marker.height), {
+              anchor: new BMapGL.Size(0, 0)
+            })
+            markerObj.setIcon(icon)
+          }
         } else {
           const img = new Image()
           img.src = marker.iconPath
@@ -404,12 +452,22 @@ export class Map implements ComponentInterface {
           }
         }
         const rotate = marker.rotate ? marker.rotate : 0
-        if (rotate) {
+        if (rotate >= 0 && rotate <= 360) {
           markerObj.setRotation(rotate)
         }
-        if (marker.anchor) {
-          const offsetX = (marker.anchor?.x ?? 0) * ((marker.width as number) || 0)
-          const offsetY = (marker.anchor?.y ?? 0) * ((marker.height as number) || 0)
+        // 如果anchor.x和anchor.y被定义，则使用它们的值，否则使用默认值
+        const anchorX = marker.anchor?.x ?? 0.5
+        const anchorY = marker.anchor?.y ?? 1
+        if (anchorX >= 0 && anchorX <= 1 && anchorY >= 0 && anchorY <= 1) {
+          // 锚点设置为图标宽度的负值乘以x，以向左移动
+          const offsetX = -(anchorX) * ((marker.width as number) || 0)
+          // 锚点设置为图标高度的负值乘以y，以向上移动
+          const offsetY = -(anchorY) * ((marker.height as number) || 0)
+          // 使用计算出的偏移量设置标注对象的偏移
+          markerObj.setOffset(new BMapGL.Size(offsetX, offsetY))
+        } else {
+          const offsetX = -0.5 * ((marker.width as number) || 0)
+          const offsetY = -1 * ((marker.height as number) || 0)
           markerObj.setOffset(new BMapGL.Size(offsetX, offsetY))
         }
         // 创建title
@@ -559,8 +617,8 @@ export class Map implements ComponentInterface {
     option.iconPath = 'https://img0.baidu.com/it/u=2604176863,3349829508&fm=253&fmt=auto&app=138&f=PNG?w=243&h=243'
     const icon = new BMapGL.Icon(option.iconPath, new BMapGL.Size(20, 30))
     // 将经纬度从BD09转换为GCJ02
-    const gcj02Point = coordtransform.bd09togcj02(this.longitude, this.latitude)
-    const marker = new BMapGL.Marker(new BMapGL.Point(gcj02Point[0], gcj02Point[1]), { icon })
+    const gcj02Point = [this.longitude, this.latitude]
+    const marker = new BMapGL.Marker(new BMapGL.Point(this.longitude, this.latitude), { icon })
     marker.isCenterMarker = true // 标记该覆盖物是中心点图标
     // 添加新的图标
     this.map.addOverlay(marker)
@@ -628,7 +686,19 @@ export class Map implements ComponentInterface {
   /* 缩放视野展示所有经纬度 */
   _includePoints = (option) => {
     const bPoints = option.points.map((point) => new BMapGL.Point(point.longitude, point.latitude))
-    this.map.setViewport(bPoints)
+    const view = this.map.getViewport(bPoints)
+    this.latitude = view.center.lat
+    this.longitude = view.center.lng
+    this.scale = view.zoom
+    this.map.centerAndZoom(view.center, view.zoom)
+    const bounds = this.map.getBounds()
+    let flag = true
+    for (let i = 0; i < bPoints.length; i++) {
+      if (!bounds.containsPoint(bPoints[i])) {
+        flag = false
+      }
+    }
+    return flag
   }
 
   /* 获取当前地图的视野范围 */
@@ -647,13 +717,19 @@ export class Map implements ComponentInterface {
   /* 获取当前地图的旋转角 */
   _getRotate = () => {
     // 获取地图当前旋转角度
-    const rotation = this.rotate
+    let rotation = this.rotate
+    if (rotation < 0 || rotation > 360) {
+      rotation = 0
+    }
     return rotation
   }
 
   /* 获取当前地图的倾斜角 */
   _getSkew = () => {
-    const Skew = this.skew
+    let Skew = this.skew
+    if (Skew < 0 || Skew > 40) {
+      Skew = 0
+    }
     return Skew
   }
 
@@ -846,13 +922,16 @@ export class Map implements ComponentInterface {
   _removeMarkers = (option) => {
     // 获取所有覆盖物
     const overlays = this.map.getOverlays()
+    let newTargetMarker = {}
     option.markerIds.forEach((id) => {
       // 查找指定 id 的 Marker 对象
       const targetMarker = overlays.find(
         (overlay: any) => overlay instanceof BMapGL.Marker && String(overlay.id) === id
       )
+      newTargetMarker = targetMarker
       this.map.removeOverlay(targetMarker)
     })
+    return newTargetMarker
   }
 
   /* 沿指定路径移动 marker，用于轨迹回放等场景。动画完成时触发回调事件，若动画进行中，对同一 marker 再次调用 moveAlong 方法，前一次的动画将被打断 */
@@ -949,7 +1028,9 @@ export class Map implements ComponentInterface {
         // 创建 img 元素并设置样式
         const img = document.createElement('img')
         img.src = this._imageUrl
-        img.style.opacity = this._opacity
+        // 确保opacity值在0到1之间
+        const validOpacity = (this._opacity < 0) ? '1' : this._opacity
+        img.style.opacity = validOpacity
         div.appendChild(img)
         this._div = div
       }
@@ -995,7 +1076,8 @@ export class Map implements ComponentInterface {
       this._div.style.width = imageWidth + 'px'
       this._div.style.height = imageHeight + 'px'
       this._div.style.display = this._visible ? 'block' : 'none'
-      this._div.getElementsByTagName('img')[0].style.opacity = this._opacity
+      const validOpacity = (this._opacity < 0) ? '1' : this._opacity
+      this._div.getElementsByTagName('img')[0].style.opacity = validOpacity
     }
 
     // 创建 GroundOverlay 实例
@@ -1031,7 +1113,8 @@ export class Map implements ComponentInterface {
         const imgElement = element.querySelector('img')
         if (imgElement) {
           // 找到了对应的元素
-          element.style.opacity = opacity
+          const validOpacity = (opacity < 0) ? '1' : opacity
+          element.style.opacity = validOpacity
           imgElement.style.display = visible ? 'block' : 'none'
           element.style.zIndex = zIndex
 
@@ -1072,16 +1155,15 @@ export class Map implements ComponentInterface {
   _removeGroundOverlay = (option) => {
     // 获取所有图层
     const overlays = this.map.getOverlays()
-
+    let newTargetOverlay = ''
     // 找到要更新的图层
     const targetOverlay = overlays.find((overlay) => overlay._id === option.id)
-
+    newTargetOverlay = targetOverlay
     if (targetOverlay) {
       // 如果找到了对应的图层，执行删除操作
       this.map.removeOverlay(targetOverlay)
-    } else {
-      console.error(`未找到id为${option.id}的自定义图片图层`)
     }
+    return newTargetOverlay
   }
 
   /* 限制地图的显示范围。此接口同时会限制地图的最小缩放整数级别。 */
@@ -1110,13 +1192,13 @@ export class Map implements ComponentInterface {
     return (
       <Host>
         <div
-          id = "mapContainer"
-          ref = {(dom) => {
+          id="mapContainer"
+          ref={(dom) => {
             if (dom) {
               this.mapRef = dom as HTMLDivElement
             }
           }}
-          style = {{ height: '400px' }}
+          style={{ height: '400px' }}
         ></div>
       </Host>
     )
