@@ -48,6 +48,23 @@ export default class Index extends React.Component {
         },
       },
       {
+        id: 'navigateToCacheIndex',
+        func: () => {
+          Taro.navigateTo({
+            url: '/pages/api/cache/index'
+          })
+        }
+      },
+      {
+        id: 'Navigateback,native侧实现',
+        func: () => {
+          // @ts-ignore
+          native.NativeBack({
+            delta: 1
+          })
+        }
+      },
+      {
         id: 'navigateBackMiniProgram',
         func: null,
       },
@@ -57,11 +74,12 @@ export default class Index extends React.Component {
       },
     ],
   }
-  render() {
+
+  render () {
     const { list } = this.state
     return (
-      <View className='api-page'>
-        <ButtonList buttonList={list} />
+      <View className="api-page">
+        <ButtonList buttonList={list}/>
       </View>
     )
   }
