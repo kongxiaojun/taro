@@ -32,50 +32,14 @@ import { navigateBack as navigateBacks, navigateTo as navigateTos } from '@taroj
 export { redirectTo, reLaunch, switchTab } from '@tarojs/router'
 
 export const navigateBack: typeof Taro.navigateBack = async (option: Taro.navigateBack.Option) => {
-  const backTimes: number = await new Promise((resolve, reject) => {
-    // @ts-ignore
-    native.getToNativeUrlDistance({
-      success: (res) => {
-        // @ts-ignore
-        resolve(res - 1 < option.delta ? res - 1 : option.delta)
-      },
-      fail: () => {
-        reject(new Error(''))
-      }
-    })
-  })
-  if (backTimes < 2) {
-    const currentUrl2: string = await new Promise((resolve, reject) => {
+  const currentUrl = window.location.href
+  if (currentUrl.endsWith('from=native')) {
+    return new Promise(() => [
       // @ts-ignore
-      native.getCurrentUrl2({
-        success: (res) => {
-          // eslint-disable-next-line no-console
-          console.log('zhou getCurrentUrl2 success, res = ' + res)
-          // @ts-ignore
-          resolve(res)
-        },
-        fail: () => {
-          reject(new Error(''))
-        }
-      })
-    })
-    if (currentUrl2 !== '') {
-      // @ts-ignore
-      native.WebBackTo(option)
-      return navigateBacks(option)
-    } else {
-      return new Promise(() => [
-        // @ts-ignore
-        native.WebBackTo()
-      ])
-    }
+      native.webBackToNative()
+    ])
   } else {
-    // 多级回退
-    // eslint-disable-next-line no-console
-    console.log('zhou 多级回退, backTimes = ' + backTimes)
-    // @ts-ignore
-    native.removeUrls({ backTimes })
-    return navigateBacks({ delta: backTimes } as Taro.navigateBack.Option)
+    return navigateBacks(option)
   }
 }
 
@@ -103,8 +67,6 @@ export const navigateTo: typeof Taro.navigateTo = (option: Taro.navigateTo.Optio
       })
     ])
   } else {
-    // @ts-ignore
-    native.NavigateWebToWeb(option)
     return navigateTos(option)
   }
 }
