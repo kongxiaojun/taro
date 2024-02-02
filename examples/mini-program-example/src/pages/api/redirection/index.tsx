@@ -56,15 +56,6 @@ export default class Index extends React.Component {
         }
       },
       {
-        id: 'Navigateback,native侧实现',
-        func: () => {
-          // @ts-ignore
-          native.NativeBack({
-            delta: 1
-          })
-        }
-      },
-      {
         id: 'navigateBackMiniProgram',
         func: null,
       },

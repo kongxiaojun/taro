@@ -32,42 +32,50 @@ import { navigateBack as navigateBacks, navigateTo as navigateTos } from '@taroj
 export { redirectTo, reLaunch, switchTab } from '@tarojs/router'
 
 export const navigateBack: typeof Taro.navigateBack = async (option: Taro.navigateBack.Option) => {
-  if (option.delta === 1) {
-    return new Promise(() => [
+  const backTimes: number = await new Promise((resolve, reject) => {
+    // @ts-ignore
+    native.getToNativeUrlDistance({
+      success: (res) => {
+        // @ts-ignore
+        resolve(res - 1 < option.delta ? res - 1 : option.delta)
+      },
+      fail: () => {
+        reject(new Error(''))
+      }
+    })
+  })
+  if (backTimes < 2) {
+    const currentUrl2: string = await new Promise((resolve, reject) => {
       // @ts-ignore
-      native.NatvieBack({
-        delta: option.delta,
-        complete: option.complete,
-        success: (res: any) => {
-          // eslint-disable-next-line no-console
-          console.log(option.delta, res)
-        },
-        fail: (err: any) => {
-          // eslint-disable-next-line no-console
-          console.log(err)
-        }
-      })
-    ])
-  } else {
-    const delta: number = await new Promise((resolve, reject) => {
-      // @ts-ignore
-      native.getUrlDistance({
+      native.getCurrentUrl2({
         success: (res) => {
           // eslint-disable-next-line no-console
-          console.log('zhou xxx res = ' + res)
+          console.log('zhou getCurrentUrl2 success, res = ' + res)
           // @ts-ignore
-          resolve(res < option.delta ? res : option.delta)
+          resolve(res)
         },
         fail: () => {
           reject(new Error(''))
         }
       })
     })
-    // @ts-ignore
-    native.deleteNodes(delta)
+    if (currentUrl2 !== '') {
+      // @ts-ignore
+      native.WebBackTo(option)
+      return navigateBacks(option)
+    } else {
+      return new Promise(() => [
+        // @ts-ignore
+        native.WebBackTo()
+      ])
+    }
+  } else {
+    // 多级回退
     // eslint-disable-next-line no-console
-    console.log('zhou xxx delta = ' + delta)
-    return navigateBacks({ delta })
+    console.log('zhou 多级回退, backTimes = ' + backTimes)
+    // @ts-ignore
+    native.removeUrls({ backTimes })
+    return navigateBacks({ delta: backTimes } as Taro.navigateBack.Option)
   }
 }
 
