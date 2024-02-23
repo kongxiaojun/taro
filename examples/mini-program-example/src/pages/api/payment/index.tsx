@@ -48,13 +48,38 @@ export default class Index extends React.Component {
         id: 'faceVerifyForPay',
         func: null,
       },
+      {
+        id: '一级回退',
+        func: () => {
+          Taro.navigateBack({ delta: 1 })
+        }
+      },
+      {
+        id: '二级回退',
+        func: () => {
+          Taro.navigateBack({ delta: 2 })
+        }
+      },
+      {
+        id: '三级回退',
+        func: () => {
+          Taro.navigateBack({ delta: 3 })
+        }
+      },
+      {
+        id: '十级回退',
+        func: () => {
+          Taro.navigateBack({ delta: 10 })
+        }
+      },
     ],
   }
-  render() {
+
+  render () {
     const { list } = this.state
     return (
-      <View className='api-page'>
-        <ButtonList buttonList={list} />
+      <View className="api-page">
+        <ButtonList buttonList={list}/>
       </View>
     )
   }

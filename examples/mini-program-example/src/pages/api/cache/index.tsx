@@ -55,6 +55,22 @@ export default class Index extends React.Component {
         func: null,
       },
       {
+        id: '跳转到原生',
+        func: () => {
+          Taro.navigateTo({
+            url: '/pages/api/routing/index'
+          })
+        }
+      },
+      {
+        id: '跳转到支付页面',
+        func: () => {
+          Taro.navigateTo({
+            url: '/pages/api/payment/index'
+          })
+        }
+      },
+      {
         id: 'removeStorageSync',
         inputData: {
           key: 'setStorageKey',
@@ -235,11 +251,12 @@ export default class Index extends React.Component {
       },
     ],
   }
-  render() {
+
+  render () {
     const { list } = this.state
     return (
-      <View className='api-page'>
-        <ButtonList buttonList={list} />
+      <View className="api-page">
+        <ButtonList buttonList={list}/>
       </View>
     )
   }
