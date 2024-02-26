@@ -29,13 +29,14 @@
 import Taro from '@tarojs/api'
 import { navigateBack as navigateBacks, navigateTo as navigateTos } from '@tarojs/router'
 
+import native from '../NativeApi'
+
 export { redirectTo, reLaunch, switchTab } from '@tarojs/router'
 
 export const navigateBack: typeof Taro.navigateBack = async (option: Taro.navigateBack.Option) => {
   const currentUrl = window.location.href
   if (currentUrl.endsWith('from=native')) {
     return new Promise(() => [
-      // @ts-ignore
       native.webBackToNative()
     ])
   } else {
@@ -50,7 +51,6 @@ export const navigateTo: typeof Taro.navigateTo = (option: Taro.navigateTo.Optio
   // @ts-ignore
   if (pageMap.has(option.url)) {
     return new Promise(() => [
-      // @ts-ignore
       native.NavigateTo({
         // @ts-ignore
         url: pageMap.get(option.url),

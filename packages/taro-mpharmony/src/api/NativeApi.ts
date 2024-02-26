@@ -46,6 +46,18 @@ class NativeApi {
   }
 
   // @ts-ignore
+  @window.MethodChannel.jsBridgeMode({ isAsync: true, autoRelease: true })
+  NavigateTo (options: any) {
+    return options
+  }
+
+  // @ts-ignore
+  @window.MethodChannel.jsBridgeMode({ isAsync: true, autoRelease: true })
+  webBackToNative (): any {
+    return ''
+  }
+
+  // @ts-ignore
   @window.MethodChannel.jsBridgeMode({ isAsync: false, autoRelease: true })
   setNavigationBarColor (options: any) {
     return options
