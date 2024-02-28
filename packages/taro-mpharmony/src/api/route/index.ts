@@ -67,6 +67,8 @@ export const navigateTo: typeof Taro.navigateTo = (option: Taro.navigateTo.Optio
       })
     ])
   } else {
+    // @ts-ignore
+    native.setOrCreateAppStorage('tabBarVisible', false)
     return navigateTos(option)
   }
 }

@@ -53,6 +53,12 @@ class NativeApi {
 
   // @ts-ignore
   @window.MethodChannel.jsBridgeMode({ isAsync: true, autoRelease: true })
+  setOrCreateAppStorage (): any {
+    return ''
+  }
+
+  // @ts-ignore
+  @window.MethodChannel.jsBridgeMode({ isAsync: true, autoRelease: true })
   webBackToNative (): any {
     return ''
   }
