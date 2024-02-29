@@ -619,6 +619,42 @@ class NativeApi {
   requestSubscribeMessage (option: any): any {
     return option
   }
+
+  // @ts-ignore
+  @window.MethodChannel.jsBridgeMode({ isAsync: false, autoRelease: true })
+  getExecStatus (option: any): any { // 获取缓存数据
+    return option
+  }
+
+  // @ts-ignore
+  @window.MethodChannel.jsBridgeMode({ isAsync: false, autoRelease: true })
+  setStorageSync (option: any): any {
+    return option
+  }
+
+  // @ts-ignore
+  @window.MethodChannel.jsBridgeMode({ isAsync: false, autoRelease: true })
+  removeStorageSync (option: any): any {
+    return option
+  }
+
+  // @ts-ignore
+  @window.MethodChannel.jsBridgeMode({ isAsync: false, autoRelease: true })
+  getStorageSync (option: any): any {
+    return option
+  }
+
+  // @ts-ignore
+  @window.MethodChannel.jsBridgeMode({ isAsync: false, autoRelease: true })
+  getStorageInfoSync (): any {
+    return ''
+  }
+
+  // @ts-ignore
+  @window.MethodChannel.jsBridgeMode({ isAsync: false, autoRelease: true })
+  clearStorageSync (): any {
+    return ''
+  }
 }
 
 const native = new NativeApi()

@@ -2,9 +2,12 @@ import Taro from '@tarojs/taro'
 import { getParameterError, shouldBeObject } from 'src/utils'
 import { MethodHandler } from 'src/utils/handler'
 
+import native from '../NativeApi'
+import { displayExecRes, getStorageStatus } from './util'
+
 /**
  * 拉取 backgroundFetch 客户端缓存数据
- * 
+ *
  * @canUse setBackgroundFetchToken
  * @null_implementation
  */
@@ -33,10 +36,14 @@ export const setBackgroundFetchToken: typeof Taro.setBackgroundFetchToken = func
     })
   }
 
-  try {
-    localStorage.setItem('token', token)
-    handle.success()
-  } catch (error) {
-    handle.fail()
+  native.setStorageSync({ key: 'token', data: token })
+  const status = getStorageStatus('setStorageSync', 'token')
+  displayExecRes(status, name)
+  if (!status.done) {
+    return handle.fail({
+      errMsg: status.errorMsg
+    })
+  } else {
+    return handle.success({ errMsg: 'ok' })
   }
 }
