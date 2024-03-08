@@ -3,7 +3,6 @@ import { getParameterError, shouldBeObject } from 'src/utils'
 import { MethodHandler } from 'src/utils/handler'
 
 import native from '../NativeApi'
-import { displayExecRes, getStorageStatus } from './util'
 
 /**
  * 拉取 backgroundFetch 客户端缓存数据
@@ -36,14 +35,16 @@ export const setBackgroundFetchToken: typeof Taro.setBackgroundFetchToken = func
     })
   }
 
-  native.setStorageSync({ key: 'token', data: token })
-  const status = getStorageStatus('setStorageSync', 'token')
-  displayExecRes(status, name)
-  if (!status.done) {
-    return handle.fail({
-      errMsg: status.errorMsg
+  return new Promise((resolve, reject) => {
+    native.setStorage({
+      key: 'setStorageSync',
+      data: 'token',
+      success: (res: any) => {
+        handle.success({ errMsg: res.errMsg }, { resolve,reject })
+      },
+      fail: (err: any) => {
+        handle.fail({ errMsg: err.errMsg }, { resolve,reject })
+      }
     })
-  } else {
-    return handle.success({ errMsg: 'ok' })
-  }
+  })
 }
