@@ -1,5 +1,5 @@
 import { CacheStorageProxy } from './NativeApiStorageProxy'
-import { NativeChangeListener, SyncCacheProxyHandler } from './NativeApiSyncCacheProxy'
+import { NativeDataChangeListener, SyncCacheProxyHandler } from './NativeApiSyncCacheProxy'
 
 export class NativeApi {
 
@@ -22,7 +22,7 @@ export class NativeApi {
   @window.MethodChannel?.jsBridgeMode({ isAsync: false, autoRelease: false })
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  obtainNativeChangeListener (listener: NativeChangeListener | null) {
+  obtainNativeChangeListener (listener: NativeDataChangeListener | null) {
     return null
   }
 
