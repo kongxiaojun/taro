@@ -30,7 +30,8 @@
     "src/**",
     "build.rs",
     "Cargo.toml",
-    "postinstall.js"
+    "postinstall.js",
+    "*.node"
   ],
   "repository": {
     "type": "git",
