@@ -1,6 +1,6 @@
 {
   "name": "@tarojs/binding",
-  "version": "3.6.28-harmony-hybrid-alpha.15",
+  "version": "3.6.28-harmony-hybrid-alpha.16",
   "description": "Node binding for taro",
   "main": "binding.js",
   "typings": "binding.d.ts",
