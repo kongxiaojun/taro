@@ -552,7 +552,8 @@
     "chooseLicensePlate": false,
     "chooseLocation": {
       "object": {
-        "mapOpts": true
+        "latitude": true,
+        "longitude": true
       },
       "success": {
         "address": true,
