@@ -8,16 +8,15 @@ import { RouterConfig } from './router'
 import stacks from './router/stack'
 import { routesAlias } from './utils'
 
-import type { Path } from 'history'
 import type { NavigateBackOption, NavigateOption, Option } from '../types/api'
 
 type MethodName = 'navigateTo' | 'navigateBack' | 'switchTab' | 'redirectTo' | 'reLaunch'
 
 const routeEvtChannel = EventChannel.routeChannel
 
-// Note: 该方法仅用于处理 navigateTo、redirectTo、reLaunch 方法的 url 参数，主要处理相对路径
-function processNavigateUrlWithRelativePath (option: Option): Partial<Path> {
+function processNavigateUrl (option: Option) {
   const pathPieces = parsePath(option.url)
+
   // 处理相对路径
   if (pathPieces.pathname?.includes('./')) {
     const parts = routesAlias.getOrigin(history.location.pathname).split('/')
@@ -31,19 +30,14 @@ function processNavigateUrlWithRelativePath (option: Option): Partial<Path> {
     pathPieces.pathname = parts.join('/')
   }
 
-  // hack fix history v5 bug: https://github.com/remix-run/history/issues/814
-  if (!pathPieces.search) pathPieces.search = ''
-
-  return pathPieces
-}
-
-// Note: 该方法仅用于处理 navigateTo、redirectTo、reLaunch 方法的 url 参数，主要处理自定义路由、basename
-function processNavigateUrlWithAliasAndBasename (pathPieces: Partial<Path>): Partial<Path> {
   // 处理自定义路由
   pathPieces.pathname = routesAlias.getAlias(addLeadingSlash(pathPieces.pathname))
 
   // 处理 basename
   pathPieces.pathname = prependBasename(pathPieces.pathname)
+
+  // hack fix history v5 bug: https://github.com/remix-run/history/issues/814
+  if (!pathPieces.search) pathPieces.search = ''
 
   return pathPieces
 }
@@ -66,20 +60,7 @@ async function navigate (option: Option | NavigateBackOption, method: MethodName
 
     try {
       if ('url' in option) {
-        let pathPieces = processNavigateUrlWithRelativePath(option)
-        // Note: 因为 RouterConfig.isPage 方法不对 customRoutes 和 basename 进行处理，所以这里也不处理
-        if (!RouterConfig.isPage(addLeadingSlash(pathPieces.pathname))) {
-          const res = { errMsg: `${method}:fail page ${option.url} is not found` }
-          fail?.(res)
-          complete?.(res)
-          if (fail || complete) {
-            return resolve(res)
-          } else {
-            return reject(res)
-          }
-        }
-        // Note: 判断是否为合法的 url 之后，再进行自定义路由和 basename 的处理
-        pathPieces = processNavigateUrlWithAliasAndBasename(pathPieces)
+        const pathPieces = processNavigateUrl(option)
         const state = { timestamp: Date.now() }
         if (pathPieces.pathname) {
           const originPath = routesAlias.getOrigin(pathPieces.pathname)
