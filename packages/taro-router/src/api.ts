@@ -14,7 +14,7 @@ type MethodName = 'navigateTo' | 'navigateBack' | 'switchTab' | 'redirectTo' | '
 
 const routeEvtChannel = EventChannel.routeChannel
 
-function processNavigateUrl (option: Option) {
+function processNavigateUrl (option: Option): Partial<Path> {
   const pathPieces = parsePath(option.url)
 
   // 处理相对路径
@@ -22,23 +22,19 @@ function processNavigateUrl (option: Option) {
     const parts = routesAlias.getOrigin(history.location.pathname).split('/')
     parts.pop()
     pathPieces.pathname.split('/').forEach((item) => {
-      if (item === '.') {
-        return
-      }
+      if (item === '.') return
       item === '..' ? parts.pop() : parts.push(item)
     })
     pathPieces.pathname = parts.join('/')
   }
-
+  // 确保是 / 开头的路径
+  pathPieces.pathname = addLeadingSlash(pathPieces.pathname)
   // 处理自定义路由
   pathPieces.pathname = routesAlias.getAlias(addLeadingSlash(pathPieces.pathname))
-
   // 处理 basename
   pathPieces.pathname = prependBasename(pathPieces.pathname)
-
   // hack fix history v5 bug: https://github.com/remix-run/history/issues/814
   if (!pathPieces.search) pathPieces.search = ''
-
   return pathPieces
 }
 
@@ -62,19 +58,6 @@ async function navigate (option: Option | NavigateBackOption, method: MethodName
       if ('url' in option) {
         const pathPieces = processNavigateUrl(option)
         const state = { timestamp: Date.now() }
-        if (pathPieces.pathname) {
-          const originPath = routesAlias.getOrigin(pathPieces.pathname)
-          if (!RouterConfig.isPage(addLeadingSlash(originPath)) && !RouterConfig.isPage(addLeadingSlash(pathPieces.pathname))) {
-            const res = { errMsg: `${method}:fail page ${originPath} is not found` }
-            fail?.(res)
-            complete?.(res)
-            if (fail || complete) {
-              return resolve(res)
-            } else {
-              return reject(res)
-            }
-          }
-        }
         if (method === 'navigateTo') {
           history.push(pathPieces, state)
         } else if (method === 'redirectTo' || method === 'switchTab') {
